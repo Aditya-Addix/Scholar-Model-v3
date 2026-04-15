@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADDIX Labs | Scholar Model v3 Sandbox</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                        mono: ['Roboto Mono', 'monospace'],
+                    },
+                    colors: {
+                        appbg: '#F3F4F6',
+                        herobg: '#F9FAFB',
+                        primary: '#3B82F6',
+                        success: '#10B981',
+                        error: '#EF4444',
+                        warning: '#F59E0B',
+                        halt: '#FF4500' // Orange-Red
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .data-value { font-family: 'Roboto Mono', monospace; }
+        
+        /* Custom input glow */
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            border-color: #3B82F6;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-appbg text-gray-800 antialiased min-h-screen">
+
+    <!-- 1. Header (Identity) -->
+    <header class="sticky top-0 bg-white shadow-sm z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="https://addixlabs.in" class="flex items-center gap-3 group">
+                <img src="logo.png" alt="ADDIX Labs Logo" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.src='https://placehold.co/100x40/0B1120/FFFFFF?text=ADDIX'">
+                <span class="font-bold text-xl tracking-tight text-gray-900 hidden sm:block">ADDIX Labs</span>
+            </a>
+            <nav class="flex space-x-6 sm:space-x-8">
+                <a href="#theory" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Theory</a>
+                <a href="#sandbox" class="text-sm font-semibold text-primary border-b-2 border-primary pb-1">Sandbox</a>
+                <a href="#performance" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Performance</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 2. Hero Banner (The Story) -->
+    <section class="bg-herobg border-b border-gray-200 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 tracking-tight">ADDIX Labs: Precision-Perfected Algo Trading</h1>
+            <p class="text-lg text-gray-600 max-w-2xl font-light">Master the markets in a deterministic, zero-risk simulation environment.</p>
+        </div>
+    </section>
+
+    <!-- 3. The Layout (Dashboard Grid) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Card 1: System Diagnostics -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <h2 class="text-md font-semibold text-gray-800 mb-4 flex items-center"><svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>System Diagnostics</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-xs font-medium text-gray-500 uppercase">CPU Usage</span>
+                            <span class="text-xs font-bold data-value text-gray-700">3.6%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div class="bg-primary h-1.5 rounded-full" style="width: 3.6%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-xs font-medium text-gray-500 uppercase">RAM Usage</span>
+                            <span class="text-xs font-bold data-value text-gray-700">42.2%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div class="bg-warning h-1.5 rounded-full" style="width: 42.2%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">API Token</span>
+                        <span class="flex items-center text-xs font-medium text-success"><span class="w-2 h-2 rounded-full bg-success mr-2 animate-pulse"></span>Active</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Bot Status</span>
+                        <span class="flex items-center text-xs font-medium text-success"><span class="w-2 h-2 rounded-full bg-success mr-2"></span>Online</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Algo Engine</span>
+                        <span class="flex items-center text-xs font-medium text-success"><span class="w-2 h-2 rounded-full bg-success mr-2"></span>Synced</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Market Intelligence -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <h2 class="text-md font-semibold text-gray-800 mb-4 flex items-center"><svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>Market Intelligence</h2>
+                
+                <div class="grid grid-cols-2 gap-4 mb-5">
+                    <div class="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium mb-1">NIFTY LTP</p>
+                        <p class="text-lg font-bold data-value text-gray-900">24008.2</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium mb-1">COA State</p>
+                        <p class="text-sm font-bold text-success uppercase tracking-wide">Strong</p>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                    <div class="inline-flex items-center justify-center px-3 py-1 bg-white rounded-full border border-yellow-300 shadow-sm mb-2">
+                        <span class="text-sm font-bold text-yellow-700 tracking-wide data-value">Decision: 🟡 WAIT</span>
+                    </div>
+                    <p class="text-xs font-semibold text-yellow-600 uppercase tracking-widest mt-1">Entry Reason: NO CLEAR EDGE</p>
+                </div>
+            </div>
+
+            <!-- Card 3: Paper Trade Monitor -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <h2 class="text-md font-semibold text-gray-800 mb-4 flex items-center"><svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>Paper Trade Monitor</h2>
+                
+                <div class="flex flex-col gap-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm font-medium text-gray-600">Simulated Trades</span>
+                        <span class="text-lg font-bold data-value text-gray-900">0</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm font-medium text-gray-600">Paper PnL</span>
+                        <span class="text-lg font-bold data-value text-gray-500 flex items-center"><span class="mr-2 text-sm">⚪</span> 0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm font-medium text-gray-600">Kill Switch</span>
+                        <span class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded border border-gray-200 cursor-not-allowed">OFF</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Simulation Controls -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 md:col-span-2 lg:col-span-1">
+                <h2 class="text-md font-semibold text-gray-800 mb-4 flex items-center"><svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>Simulation Controls</h2>
+                
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Practice API Token</label>
+                    <div class="flex gap-2">
+                        <input type="password" value="sandbox-token-7a8b9" class="w-full text-sm data-value px-3 py-2 border border-gray-300 rounded-lg input-glow text-gray-700 bg-gray-50" readonly>
+                        <button class="px-3 py-2 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-200 transition-colors border border-gray-200">Update</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <button class="w-full py-2.5 bg-primary text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-blue-600 transition-colors focus:ring-4 focus:ring-blue-100">
+                        Start Bot
+                    </button>
+                    <button class="w-full py-2.5 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg shadow-sm hover:bg-gray-200 transition-colors border border-gray-200">
+                        Pause
+                    </button>
+                </div>
+                
+                <button class="w-full py-3 bg-halt text-white text-sm font-bold rounded-lg shadow-md hover:bg-red-600 transition-colors tracking-widest disabled:opacity-50 focus:ring-4 focus:ring-red-100">
+                    HALT SIMULATION
+                </button>
+            </div>
+
+            <!-- Card 5: Manual Levels -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 md:col-span-2 lg:col-span-2">
+                <h2 class="text-md font-semibold text-gray-800 mb-4 flex items-center"><svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>Manual Levels Override</h2>
+                
+                <form class="grid grid-cols-1 sm:grid-cols-3 gap-5" onsubmit="event.preventDefault();">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">EOS (End of Support)</label>
+                        <input type="text" placeholder="e.g. 23950" class="w-full px-3 py-2 text-sm data-value border border-gray-300 rounded-lg input-glow transition-all placeholder-gray-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">MaxPain</label>
+                        <input type="text" placeholder="e.g. 24000" class="w-full px-3 py-2 text-sm data-value border border-gray-300 rounded-lg input-glow transition-all placeholder-gray-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">EOR (End of Resistance)</label>
+                        <input type="text" placeholder="e.g. 24100" class="w-full px-3 py-2 text-sm data-value border border-gray-300 rounded-lg input-glow transition-all placeholder-gray-400">
+                    </div>
+                    
+                    <div class="sm:col-span-3 flex justify-end mt-2">
+                        <button type="button" class="px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg shadow hover:bg-gray-800 transition-colors">
+                            Apply Levels
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>
