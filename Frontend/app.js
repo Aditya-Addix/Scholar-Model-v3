@@ -1,13 +1,9 @@
-const BACKEND_URL =
-    (typeof process !== "undefined" && process.env && process.env.NEXT_PUBLIC_BACKEND_URL)
-        || "https://scholar-model-v3.vercel.app";
-const IS_LOCAL_HOST = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-const API_BASE_URL = IS_LOCAL_HOST
-    ? "http://localhost:8000"
-    : BACKEND_URL;
+const CONFIG = { BACKEND_URL: "https://scholar-model-v3.vercel.app" };
+const API_BASE_URL = CONFIG.BACKEND_URL;
 const SECURITY_PROTOCOL_MESSAGE = "Security Protocol: Resetting API Handshake";
 const SYSTEM_OVERRIDE_TIMEOUT_MESSAGE = "System Override: API timeout detected. Stabilizing agent pipeline.";
 const SYSTEM_NOTICE_MANUAL_OVERRIDE_MESSAGE = "System Notice: Query requires manual override. Please rephrase algebraic parameters.";
+const TRI_CORE_HOLD_MESSAGE = "Scholar Engine: Computing via Tri-Core Logic...";
 const COUNTDOWN_INTERVAL_MS = 60 * 1000;
 const VISION_INIT_MESSAGE = "[Vision Agent]: Initializing OCR scan...";
 const VISION_PROGRESS_MESSAGE = "Analyzing Physical Constraints...";
@@ -17,9 +13,9 @@ const SIMULATION_COMMAND_PREFIX = "/simulate ";
 const SIMULATION_POLL_INTERVAL_MS = 3000;
 
 const EXAM_TARGETS = {
-    NSEJS: { id: "nsejs-days", date: new Date(2026, 10, 20) },
-    NMTC: { id: "nmtc-days", date: new Date(2026, 9, 15) },
-    IOQM: { id: "ioqm-days", date: new Date(2026, 8, 8) },
+    NSEJS: { id: "nsejs-days", fixedDays: 219, date: new Date(2026, 10, 20) },
+    NMTC: { id: "nmtc-days", fixedDays: 183, date: new Date(2026, 9, 15) },
+    IOQM: { id: "ioqm-days", fixedDays: 146, date: new Date(2026, 8, 8) },
     JEE: { id: "jee-days", date: new Date(2027, 0, 24) },
 };
 
@@ -82,7 +78,9 @@ function updateExamCountdowns() {
             return;
         }
 
-        const daysRemaining = calculateDaysRemaining(config.date);
+        const daysRemaining = typeof config.fixedDays === "number"
+            ? config.fixedDays
+            : calculateDaysRemaining(config.date);
         daysNode.textContent = String(daysRemaining) + "d";
 
         const hostCard = daysNode.closest(".hud-card");
@@ -292,11 +290,14 @@ async function fetchSolve(studentQuery, targetExam) {
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
         controller.abort();
-    }, 25000);
+    }, 8000);
 
     try {
-        const response = await fetch(`${BACKEND_URL}/api/solve`, {
+        const response = await fetch(API_BASE_URL + "/api/solve", {
             method: "POST",
+            cache: "no-store",
+            credentials: "omit",
+            keepalive: true,
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
@@ -316,7 +317,7 @@ async function fetchSolve(studentQuery, targetExam) {
         return payload;
     } catch (error) {
         if (error && error.name === "AbortError") {
-            throw new Error(SYSTEM_OVERRIDE_TIMEOUT_MESSAGE);
+            throw new Error(TRI_CORE_HOLD_MESSAGE);
         }
         throw error;
     } finally {
@@ -697,7 +698,7 @@ function updateAgentStep(stepElement, copy, equation) {
 function appendErrorStep(copy) {
     const html =
         '<article class="message error-step">' +
-            '<p class="message-line"><span class="agent-label">ADDIX Logic:</span> ' +
+            '<p class="message-line"><span class="agent-label">Scholar Model v3:</span> ' +
             escapeHtml(copy) + '</p>' +
         '</article>';
 
