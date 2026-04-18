@@ -1585,11 +1585,18 @@ LOCAL_FRONTEND_ORIGINS = [
     "http://localhost:5173",
 ]
 
+PRODUCTION_FRONTEND_ORIGINS = [
+    "https://scholar-model-v3.vercel.app",
+    "https://addix-scholars.vercel.app",
+]
+
 origins = [
     origin.strip()
     for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
     if origin.strip()
 ]
+
+ALLOWED_ORIGINS = list(dict.fromkeys([*origins, *LOCAL_FRONTEND_ORIGINS, *PRODUCTION_FRONTEND_ORIGINS]))
 
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
@@ -1608,7 +1615,7 @@ async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -1618,13 +1625,16 @@ app.add_middleware(
 @app.middleware("http")
 async def scholar_auth_middleware(request: Request, call_next):
     if request.method == "OPTIONS":
+        request_origin = str(request.headers.get("origin", "")).strip()
+        allowed_origin = request_origin if request_origin in ALLOWED_ORIGINS else ""
         return JSONResponse(
             status_code=200,
             content={"ok": True},
             headers={
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Origin": allowed_origin,
                 "Access-Control-Allow-Methods": "*",
                 "Access-Control-Allow-Headers": "*",
+                "Vary": "Origin",
             },
         )
 

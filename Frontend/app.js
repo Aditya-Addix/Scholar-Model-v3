@@ -1,4 +1,4 @@
-const BACKEND_URL = "http://127.0.0.1:8000";
+const BACKEND_URL = "https://scholar-model-v3.onrender.com";
 const API_BASE_URL = BACKEND_URL;
 const AUTH_TOKEN_STORAGE_KEY = "addix-auth-token";
 const AUTH_USER_EMAIL_STORAGE_KEY = "addix-user-email";
@@ -1056,7 +1056,7 @@ async function triggerPyqVariantGeneration(topic, chipButton) {
 
     let response;
     try {
-        response = await safeFetch("/api/pyq/generate", {
+        response = await safeFetch(API_BASE_URL + "/api/pyq/generate", {
             method: "POST",
             headers: buildScholarAuthHeaders(),
             body: JSON.stringify({ exam: examContext, topic: safeTopic }),
@@ -1174,7 +1174,7 @@ function saveProgressData() {
 }
 
 async function fetchAnalyticsSnapshot() {
-    const response = await authFetch("/api/analytics", { method: "GET" });
+    const response = await authFetch(API_BASE_URL + "/api/analytics", { method: "GET" });
     if (!response.ok) {
         throw new Error("analytics-fetch-failed");
     }
@@ -1182,7 +1182,7 @@ async function fetchAnalyticsSnapshot() {
 }
 
 async function fetchUserStatsSnapshot() {
-    const response = await authFetch("/api/stats", { method: "GET" });
+    const response = await authFetch(API_BASE_URL + "/api/stats", { method: "GET" });
     if (!response.ok) {
         throw new Error("stats-fetch-failed");
     }
@@ -1204,7 +1204,7 @@ async function hydrateStatsFromDatabase() {
 
 async function syncAnalyticsDelta(dateKey, deltas) {
     try {
-        await authFetch("/api/analytics/sync", {
+        await authFetch(API_BASE_URL + "/api/analytics/sync", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1911,7 +1911,7 @@ async function requestSessionDebrief() {
     }
 
     try {
-        const response = await authFetch("/api/debrief", {
+        const response = await authFetch(API_BASE_URL + "/api/debrief", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(conversationHistory),
@@ -1963,7 +1963,7 @@ function bindFocusMode() {
 }
 
 async function loadVaultEntries() {
-    const response = await authFetch("/api/vault", { method: "GET" });
+    const response = await authFetch(API_BASE_URL + "/api/vault", { method: "GET" });
     if (!response.ok) {
         throw new Error("vault-fetch-failed");
     }
@@ -2040,7 +2040,7 @@ async function saveMessageToVault(button) {
             return;
         }
 
-        const createResponse = await authFetch("/api/vault", {
+        const createResponse = await authFetch(API_BASE_URL + "/api/vault", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -2127,7 +2127,7 @@ async function deleteVaultEntry(entryId) {
     if (!id) {
         return;
     }
-    const response = await authFetch("/api/vault/" + encodeURIComponent(id), {
+    const response = await authFetch(API_BASE_URL + "/api/vault/" + encodeURIComponent(id), {
         method: "DELETE",
     });
     if (!response.ok) {
