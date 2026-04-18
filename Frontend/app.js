@@ -1,5 +1,4 @@
-const BACKEND_URL = "https://scholar-model-v3.onrender.com";
-const API_BASE_URL = BACKEND_URL;
+const API_BASE_URL = "https://scholar-model-v3.onrender.com";
 const AUTH_TOKEN_STORAGE_KEY = "addix-auth-token";
 const AUTH_USER_EMAIL_STORAGE_KEY = "addix-user-email";
 const PREMIUM_STATUS_STORAGE_KEY = "addix-premium-status";

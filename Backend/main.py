@@ -1598,6 +1598,9 @@ origins = [
 ]
 
 ALLOWED_ORIGINS = list(dict.fromkeys([*origins, *LOCAL_FRONTEND_ORIGINS, *PRODUCTION_FRONTEND_ORIGINS]))
+DEBUG_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ORIGINS = ["*"] if DEBUG_ALLOW_ALL_ORIGINS else ALLOWED_ORIGINS
+CORS_ALLOW_CREDENTIALS = False if DEBUG_ALLOW_ALL_ORIGINS else True
 
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
@@ -1616,8 +1619,8 @@ async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_origins=CORS_ALLOW_ORIGINS,
+    allow_credentials=CORS_ALLOW_CREDENTIALS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -1627,7 +1630,8 @@ app.add_middleware(
 async def scholar_auth_middleware(request: Request, call_next):
     if request.method == "OPTIONS":
         request_origin = str(request.headers.get("origin", "")).strip()
-        allowed_origin = request_origin if request_origin in ALLOWED_ORIGINS else ""
+        allow_all_origins = "*" in CORS_ALLOW_ORIGINS
+        allowed_origin = "*" if allow_all_origins else (request_origin if request_origin in ALLOWED_ORIGINS else "")
         return JSONResponse(
             status_code=200,
             content={"ok": True},
