@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-04-13T15:19:12.177066+00:00",
+  "phase": "Phase 2 Pitch Hardening",
+  "total_requests": 2160,
+  "kinematics_pass_rate_percent": 100.0,
+  "integral_calculus_pass_rate_percent": 100.0,
+  "goal_marketing_grade": true,
+  "domain_breakdown": {
+    "Math": {
+      "total": 859,
+      "passed": 859,
+      "failed": 0
+    },
+    "Chemistry": {
+      "total": 868,
+      "passed": 868,
+      "failed": 0
+    },
+    "Physics": {
+      "total": 433,
+      "passed": 433,
+      "failed": 0
+    }
+  },
+  "chapter_breakdown": {
+    "Math": {
+      "Integral Calculus": {
+        "total": 429,
+        "passed": 429,
+        "failed": 0
+      },
+      "Differential Calculus": {
+        "total": 430,
+        "passed": 430,
+        "failed": 0
+      }
+    },
+    "Chemistry": {
+      "pH": {
+        "total": 434,
+        "passed": 434,
+        "failed": 0
+      },
+      "Mole Concept": {
+        "total": 434,
+        "passed": 434,
+        "failed": 0
+      }
+    },
+    "Physics": {
+      "Kinematics": {
+        "total": 433,
+        "passed": 433,
+        "failed": 0
+      }
+    }
+  }
+}

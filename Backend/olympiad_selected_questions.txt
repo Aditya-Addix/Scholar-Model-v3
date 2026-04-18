@@ -1,0 +1,13 @@
+ADDIX Labs - Gold Standard Test Bank
+------------------------------------
+
+Case 1 (NSEP 2025 - Physics - Q28):
+Knowing that the acceleration due to gravity on the Earth surface is g and the radius of the Earth is R, a small body of mass m falls on the Earth from a height h = R/5 above the Earth's surface. During the freefall, the potential energy of the falling body decreases by:
+
+Case 2 (NSEC 2025 - Chemistry - Q4):
+In the spacecrafts of NASA, the oxygen required for the astronauts is obtained from the following chemical reaction:
+KClO3(s) + Fe(s) -> O2(g) + KCl(s) + FeO(s)
+The requirement of O2 per astronaut per day is 500 L as measured at 1 atm and 300 K. The minimum mass of KClO3 (Molar mass of KClO3 = 122.5 g/mol) needed for two astronauts to be in the spacecraft for ten days in a space mission is:
+
+Case 3 (M1/IOQM 2025 - Math Olympiad - Q4):
+How many isosceles integer-sided triangles are there with perimeter 23?

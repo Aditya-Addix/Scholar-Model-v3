@@ -1,0 +1,38 @@
+{
+  "NSEJS": {
+    "Physics": [
+      "Kinematics",
+      "Dynamics",
+      "Work, Energy and Power",
+      "Heat and Thermodynamics",
+      "Optics",
+      "Electricity and Magnetism"
+    ],
+    "Math": [
+      "Algebra",
+      "Coordinate Geometry",
+      "Trigonometry",
+      "Number Theory",
+      "Combinatorics"
+    ]
+  },
+  "JEE": {
+    "Physics": [
+      "Kinematics",
+      "Laws of Motion",
+      "Rotational Mechanics",
+      "Electrostatics",
+      "Current Electricity",
+      "Modern Physics"
+    ],
+    "Math": [
+      "Sets and Relations",
+      "Quadratic Equations",
+      "Sequences and Series",
+      "Permutations and Combinations",
+      "Coordinate Geometry",
+      "Calculus",
+      "Probability"
+    ]
+  }
+}

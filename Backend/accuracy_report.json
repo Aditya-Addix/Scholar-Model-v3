@@ -1,0 +1,3066 @@
+{
+  "started_at": "2026-04-13T15:05:36.048556+00:00",
+  "finished_at": "2026-04-13T15:49:42.645111+00:00",
+  "duration_minutes": 60,
+  "requests_total": 864,
+  "passed": 101,
+  "failed": 763,
+  "pass_rate_percent": 11.69,
+  "domain_breakdown": {
+    "Physics": {
+      "total": 321,
+      "passed": 101,
+      "failed": 220
+    },
+    "Chemistry": {
+      "total": 315,
+      "passed": 0,
+      "failed": 315
+    },
+    "Math": {
+      "total": 228,
+      "passed": 0,
+      "failed": 228
+    }
+  },
+  "chapter_breakdown": {
+    "Physics": {
+      "Motion": {
+        "total": 46,
+        "passed": 33,
+        "failed": 13
+      },
+      "Gravitation": {
+        "total": 45,
+        "passed": 0,
+        "failed": 45
+      },
+      "Optics": {
+        "total": 44,
+        "passed": 0,
+        "failed": 44
+      },
+      "Thermodynamics": {
+        "total": 46,
+        "passed": 34,
+        "failed": 12
+      },
+      "Force & Laws": {
+        "total": 47,
+        "passed": 34,
+        "failed": 13
+      },
+      "Sound": {
+        "total": 46,
+        "passed": 0,
+        "failed": 46
+      },
+      "Work & Energy": {
+        "total": 47,
+        "passed": 0,
+        "failed": 47
+      }
+    },
+    "Chemistry": {
+      "Stoichiometry": {
+        "total": 48,
+        "passed": 0,
+        "failed": 48
+      },
+      "Structure of Atom": {
+        "total": 44,
+        "passed": 0,
+        "failed": 44
+      },
+      "pH": {
+        "total": 44,
+        "passed": 0,
+        "failed": 44
+      },
+      "Chemical Bonding": {
+        "total": 44,
+        "passed": 0,
+        "failed": 44
+      },
+      "Matter in Surroundings": {
+        "total": 45,
+        "passed": 0,
+        "failed": 45
+      },
+      "Atoms & Molecules": {
+        "total": 45,
+        "passed": 0,
+        "failed": 45
+      },
+      "Periodic Table": {
+        "total": 45,
+        "passed": 0,
+        "failed": 45
+      }
+    },
+    "Math": {
+      "Number Theory (IOQM level)": {
+        "total": 48,
+        "passed": 0,
+        "failed": 48
+      },
+      "Polynomials": {
+        "total": 46,
+        "passed": 0,
+        "failed": 46
+      },
+      "Triangles (Euclidean & Trigonometric)": {
+        "total": 43,
+        "passed": 0,
+        "failed": 43
+      },
+      "Coordinate Geometry": {
+        "total": 47,
+        "passed": 0,
+        "failed": 47
+      },
+      "Number Systems": {
+        "total": 44,
+        "passed": 0,
+        "failed": 44
+      }
+    }
+  },
+  "rewrite_events": [
+    {
+      "timestamp": "2026-04-13T15:08:04.948758+00:00",
+      "domain": "Physics",
+      "reason": "minute=1 domain_rate=45.00",
+      "mode_from": 2,
+      "mode_to": 0
+    },
+    {
+      "timestamp": "2026-04-13T15:10:38.542738+00:00",
+      "domain": "Physics",
+      "reason": "minute=2 domain_rate=42.11",
+      "mode_from": 0,
+      "mode_to": 1
+    },
+    {
+      "timestamp": "2026-04-13T15:12:34.309920+00:00",
+      "domain": "Physics",
+      "reason": "minute=3 domain_rate=41.82",
+      "mode_from": 1,
+      "mode_to": 2
+    },
+    {
+      "timestamp": "2026-04-13T15:14:32.319421+00:00",
+      "domain": "Physics",
+      "reason": "minute=4 domain_rate=41.67",
+      "mode_from": 2,
+      "mode_to": 0
+    },
+    {
+      "timestamp": "2026-04-13T15:16:59.595015+00:00",
+      "domain": "Physics",
+      "reason": "minute=5 domain_rate=42.70",
+      "mode_from": 0,
+      "mode_to": 1
+    },
+    {
+      "timestamp": "2026-04-13T15:19:12.350516+00:00",
+      "domain": "Physics",
+      "reason": "minute=6 domain_rate=43.40",
+      "mode_from": 1,
+      "mode_to": 2
+    },
+    {
+      "timestamp": "2026-04-13T15:21:02.639666+00:00",
+      "domain": "Physics",
+      "reason": "minute=7 domain_rate=43.09",
+      "mode_from": 2,
+      "mode_to": 0
+    },
+    {
+      "timestamp": "2026-04-13T15:23:30.189279+00:00",
+      "domain": "Physics",
+      "reason": "minute=8 domain_rate=43.26",
+      "mode_from": 0,
+      "mode_to": 1
+    },
+    {
+      "timestamp": "2026-04-13T15:25:35.663235+00:00",
+      "domain": "Physics",
+      "reason": "minute=9 domain_rate=43.12",
+      "mode_from": 1,
+      "mode_to": 2
+    },
+    {
+      "timestamp": "2026-04-13T15:28:37.256110+00:00",
+      "domain": "Physics",
+      "reason": "minute=10 domain_rate=42.70",
+      "mode_from": 2,
+      "mode_to": 0
+    },
+    {
+      "timestamp": "2026-04-13T15:32:47.214652+00:00",
+      "domain": "Physics",
+      "reason": "minute=11 domain_rate=42.86",
+      "mode_from": 0,
+      "mode_to": 1
+    },
+    {
+      "timestamp": "2026-04-13T15:37:05.711526+00:00",
+      "domain": "Physics",
+      "reason": "minute=12 domain_rate=43.26",
+      "mode_from": 1,
+      "mode_to": 2
+    },
+    {
+      "timestamp": "2026-04-13T15:40:54.335290+00:00",
+      "domain": "Physics",
+      "reason": "minute=13 domain_rate=42.42",
+      "mode_from": 2,
+      "mode_to": 0
+    },
+    {
+      "timestamp": "2026-04-13T15:42:51.627445+00:00",
+      "domain": "Physics",
+      "reason": "minute=14 domain_rate=40.56",
+      "mode_from": 0,
+      "mode_to": 1
+    },
+    {
+      "timestamp": "2026-04-13T15:44:29.528220+00:00",
+      "domain": "Physics",
+      "reason": "minute=15 domain_rate=37.97",
+      "mode_from": 1,
+      "mode_to": 2
+    },
+    {
+      "timestamp": "2026-04-13T15:46:07.410173+00:00",
+      "domain": "Physics",
+      "reason": "minute=16 domain_rate=35.44",
+      "mode_from": 2,
+      "mode_to": 0
+    },
+    {
+      "timestamp": "2026-04-13T15:47:45.648021+00:00",
+      "domain": "Physics",
+      "reason": "minute=17 domain_rate=33.33",
+      "mode_from": 0,
+      "mode_to": 1
+    },
+    {
+      "timestamp": "2026-04-13T15:49:42.642371+00:00",
+      "domain": "Physics",
+      "reason": "minute=18 domain_rate=31.46",
+      "mode_from": 1,
+      "mode_to": 2
+    }
+  ],
+  "sampled_failures": [
+    {
+      "case_id": "PHY-GRV-1",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=3kg, h=5m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-281",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Balance equation H2 + O2 -> H2O. Variant 1.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-1",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 2 and 8.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-141",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Find number of electrons in neutral sodium atom. Variant 1.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-1",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.1m and object distance u=10m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-351",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Find pH when [H+] = 1e-3 M. Variant 1.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-1",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=300m/s and frequency f=100Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-1",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 2x + 1 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-211",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Identify ionic bonding in NaCl. Variant 1.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-1",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(30 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-1",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Classify state changes in matter in surroundings for temperature rise. Variant 1.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-1",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=1kg and v=2m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-1",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (0,1) and (1,2).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-1",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(1) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-71",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "How many molecules are present in 1 mole sample? Variant 1.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-421",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Locate chlorine group and period in periodic table. Variant 1.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-2",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=3kg, h=10m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-282",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Find limiting reagent for reaction with 2 mol H2 and 1 mol O2. Variant 2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-2",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 3 and 9.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-142",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Explain isotopes using chlorine example in structure of atom. Variant 2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-2",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.125m and object distance u=10m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-352",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Is pH=2 acidic or basic? Variant 2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-2",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=300m/s and frequency f=150Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-2",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 3x + 2 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-212",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Explain covalent bond in methane. Variant 2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-2",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(45 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-2",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Explain latent heat in matter in surroundings with example. Variant 2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-2",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=1kg and v=4m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-2",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (0,1) and (2,3).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-2",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(2) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-72",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Find molar mass of CO2 from atoms and molecules perspective. Variant 2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-422",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Explain periodic trend in atomic radius across period. Variant 2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-3",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=3kg, h=15m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-283",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Calculate theoretical yield for simple combustion reaction. Variant 3.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-3",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 4 and 10.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-143",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "What are shells and subshells in atom model? Variant 3.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-3",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.2m and object distance u=10m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-353",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Compute pOH for pH=9. Variant 3.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-3",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=300m/s and frequency f=200Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-3",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=1kg and v=6m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-4",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 5 and 11.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-213",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Determine valency of oxygen in bonding. Variant 3.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-3",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 3x + 2 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-3",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(3) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-4",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=3kg, h=20m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-3",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(60 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-4",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.25m and object distance u=10m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-423",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Find valence electron count for group 1 elements. Variant 3.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-284",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Balance equation H2 + O2 -> H2O. Variant 4.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-144",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Find number of electrons in neutral sodium atom. Variant 4.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-4",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=300m/s and frequency f=250Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-3",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (0,1) and (3,4).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-354",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Find pH when [H+] = 1e-3 M. Variant 4.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-3",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Differentiate melting and boiling in surrounding conditions. Variant 3.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-73",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Compute number of moles in 22g CO2. Variant 3.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-4",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=1kg and v=8m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-5",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 6 and 12.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-214",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Identify ionic bonding in NaCl. Variant 4.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-4",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 4x + 4 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-4",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(4) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-5",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=3kg, h=25m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-4",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(30 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-5",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.5m and object distance u=10m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-424",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Locate chlorine group and period in periodic table. Variant 4.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-285",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Find limiting reagent for reaction with 2 mol H2 and 1 mol O2. Variant 5.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-145",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Explain isotopes using chlorine example in structure of atom. Variant 5.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-5",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=300m/s and frequency f=300Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-4",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (0,1) and (4,5).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-355",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Is pH=2 acidic or basic? Variant 5.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-4",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Classify state changes in matter in surroundings for temperature rise. Variant 4.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-74",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "How many molecules are present in 1 mole sample? Variant 4.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-5",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=1kg and v=10m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-6",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 7 and 13.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-215",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Explain covalent bond in methane. Variant 5.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-5",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 4x + 3 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-5",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(5) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-6",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=4kg, h=5m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-5",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(45 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-6",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.1m and object distance u=12m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-425",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Explain periodic trend in atomic radius across period. Variant 5.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-5",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (0,1) and (5,6).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-6",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=320m/s and frequency f=100Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-75",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Find molar mass of CO2 from atoms and molecules perspective. Variant 5.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-6",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(6) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-286",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Calculate theoretical yield for simple combustion reaction. Variant 6.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-7",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 8 and 14.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-6",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 5x + 6 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-426",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Find valence electron count for group 1 elements. Variant 6.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-7",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=4kg, h=10m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-356",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Compute pOH for pH=9. Variant 6.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-6",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(60 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-5",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Explain latent heat in matter in surroundings with example. Variant 5.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-6",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=2kg and v=2m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-146",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "What are shells and subshells in atom model? Variant 6.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-7",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.125m and object distance u=12m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-216",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Determine valency of oxygen in bonding. Variant 6.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-6",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (1,2) and (2,3).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-7",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=320m/s and frequency f=150Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-76",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Compute number of moles in 22g CO2. Variant 6.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-7",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(7) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-287",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Balance equation H2 + O2 -> H2O. Variant 7.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-8",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 9 and 15.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-7",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 5x + 4 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-427",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Locate chlorine group and period in periodic table. Variant 7.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-8",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=4kg, h=15m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-357",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Find pH when [H+] = 1e-3 M. Variant 7.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-7",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(30 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-6",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Differentiate melting and boiling in surrounding conditions. Variant 6.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-7",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=2kg and v=4m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-147",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Find number of electrons in neutral sodium atom. Variant 7.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-8",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.2m and object distance u=12m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-217",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Identify ionic bonding in NaCl. Variant 7.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-7",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (1,2) and (3,4).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-8",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=320m/s and frequency f=200Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-77",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "How many molecules are present in 1 mole sample? Variant 7.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-8",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(8) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-288",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Find limiting reagent for reaction with 2 mol H2 and 1 mol O2. Variant 8.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-9",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 10 and 16.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-8",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 6x + 8 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-428",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Explain periodic trend in atomic radius across period. Variant 8.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-9",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=4kg, h=20m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-8",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (1,2) and (4,5).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-7",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Classify state changes in matter in surroundings for temperature rise. Variant 7.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-9",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.25m and object distance u=12m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-358",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Is pH=2 acidic or basic? Variant 8.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-10",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=4kg, h=25m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-218",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Explain covalent bond in methane. Variant 8.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-8",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(45 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-10",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 11 and 17.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-289",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Calculate theoretical yield for simple combustion reaction. Variant 9.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-9",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 6x + 5 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-148",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Explain isotopes using chlorine example in structure of atom. Variant 8.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-9",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(9) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-8",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=2kg and v=6m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-429",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Find valence electron count for group 1 elements. Variant 9.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-9",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=320m/s and frequency f=250Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-78",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Find molar mass of CO2 from atoms and molecules perspective. Variant 8.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-9",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (1,2) and (5,6).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-8",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Explain latent heat in matter in surroundings with example. Variant 8.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-10",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.5m and object distance u=12m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-359",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Compute pOH for pH=9. Variant 9.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-11",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=5kg, h=5m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-219",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Determine valency of oxygen in bonding. Variant 9.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-9",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(60 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-11",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 12 and 18.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-290",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Balance equation H2 + O2 -> H2O. Variant 10.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-10",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 7x + 10 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-149",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "What are shells and subshells in atom model? Variant 9.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-10",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(10) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-9",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=2kg and v=8m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-430",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Locate chlorine group and period in periodic table. Variant 10.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-10",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=320m/s and frequency f=300Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-79",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Compute number of moles in 22g CO2. Variant 9.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-10",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (1,2) and (6,7).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-9",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Differentiate melting and boiling in surrounding conditions. Variant 9.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-11",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.1m and object distance u=14m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-360",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Find pH when [H+] = 1e-3 M. Variant 10.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-12",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=5kg, h=10m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-220",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Identify ionic bonding in NaCl. Variant 10.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-10",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(30 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-12",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 13 and 19.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-291",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Find limiting reagent for reaction with 2 mol H2 and 1 mol O2. Variant 11.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-11",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(11) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-150",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Find number of electrons in neutral sodium atom. Variant 10.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-10",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=2kg and v=10m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-292",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Calculate theoretical yield for simple combustion reaction. Variant 12.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-80",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "How many molecules are present in 1 mole sample? Variant 10.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-10",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Classify state changes in matter in surroundings for temperature rise. Variant 10.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-11",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (2,3) and (3,4).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-361",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Is pH=2 acidic or basic? Variant 11.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-11",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 7x + 6 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-13",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=5kg, h=15m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-11",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(45 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-431",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Explain periodic trend in atomic radius across period. Variant 11.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-11",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=340m/s and frequency f=100Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-13",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 14 and 20.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-221",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Explain covalent bond in methane. Variant 11.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-12",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.125m and object distance u=14m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-12",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(12) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-151",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Explain isotopes using chlorine example in structure of atom. Variant 11.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-11",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=3kg and v=2m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-293",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Balance equation H2 + O2 -> H2O. Variant 13.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-81",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Find molar mass of CO2 from atoms and molecules perspective. Variant 11.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-11",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Explain latent heat in matter in surroundings with example. Variant 11.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-12",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (2,3) and (4,5).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-362",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Compute pOH for pH=9. Variant 12.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-12",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 8x + 12 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-14",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=5kg, h=20m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-12",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(60 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-432",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Find valence electron count for group 1 elements. Variant 12.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-12",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=340m/s and frequency f=150Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-14",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 15 and 21.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-222",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Determine valency of oxygen in bonding. Variant 12.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-13",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.2m and object distance u=14m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-13",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(13) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-152",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "What are shells and subshells in atom model? Variant 12.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-12",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=3kg and v=4m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-294",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Find limiting reagent for reaction with 2 mol H2 and 1 mol O2. Variant 14.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-82",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Compute number of moles in 22g CO2. Variant 12.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-12",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Differentiate melting and boiling in surrounding conditions. Variant 12.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-13",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (2,3) and (5,6).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-363",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Find pH when [H+] = 1e-3 M. Variant 13.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-364",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Is pH=2 acidic or basic? Variant 14.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-14",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(14) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-153",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Find number of electrons in neutral sodium atom. Variant 13.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-433",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Locate chlorine group and period in periodic table. Variant 13.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-15",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=5kg, h=25m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-13",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(30 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-295",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Calculate theoretical yield for simple combustion reaction. Variant 15.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-13",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 8x + 7 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-83",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "How many molecules are present in 1 mole sample? Variant 13.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-13",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=3kg and v=6m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-14",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (2,3) and (6,7).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-223",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Identify ionic bonding in NaCl. Variant 13.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-15",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 16 and 22.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-13",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=340m/s and frequency f=200Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-14",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.25m and object distance u=14m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-13",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Classify state changes in matter in surroundings for temperature rise. Variant 13.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-365",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Compute pOH for pH=9. Variant 15.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-15",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(15) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-154",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Explain isotopes using chlorine example in structure of atom. Variant 14.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-434",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Explain periodic trend in atomic radius across period. Variant 14.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-16",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=6kg, h=5m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-14",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(45 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-296",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Balance equation H2 + O2 -> H2O. Variant 16.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-14",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 9x + 14 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-84",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Find molar mass of CO2 from atoms and molecules perspective. Variant 14.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-14",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=3kg and v=8m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-15",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (2,3) and (7,8).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-224",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Explain covalent bond in methane. Variant 14.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-16",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 17 and 23.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-14",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=340m/s and frequency f=250Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-15",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.5m and object distance u=14m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-14",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Explain latent heat in matter in surroundings with example. Variant 14.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-366",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Find pH when [H+] = 1e-3 M. Variant 16.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-16",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(16) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-155",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "What are shells and subshells in atom model? Variant 15.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-435",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Find valence electron count for group 1 elements. Variant 15.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-17",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=6kg, h=10m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-15",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(60 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-297",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Find limiting reagent for reaction with 2 mol H2 and 1 mol O2. Variant 17.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-15",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 9x + 8 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-225",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Determine valency of oxygen in bonding. Variant 15.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-16",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(30 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-16",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 10x + 16 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-18",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=6kg, h=15m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-15",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Differentiate melting and boiling in surrounding conditions. Variant 15.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-298",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Calculate theoretical yield for simple combustion reaction. Variant 18.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-436",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Locate chlorine group and period in periodic table. Variant 16.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-17",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 18 and 24.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-15",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=3kg and v=10m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-85",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Compute number of moles in 22g CO2. Variant 15.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-17",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(17) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-367",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Is pH=2 acidic or basic? Variant 17.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-16",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (3,4) and (4,5).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-156",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Find number of electrons in neutral sodium atom. Variant 16.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-15",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=340m/s and frequency f=300Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-16",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.1m and object distance u=16m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-226",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Identify ionic bonding in NaCl. Variant 16.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-17",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(45 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-17",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 10x + 9 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-19",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=6kg, h=20m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-16",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Classify state changes in matter in surroundings for temperature rise. Variant 16.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-299",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Balance equation H2 + O2 -> H2O. Variant 19.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-437",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Explain periodic trend in atomic radius across period. Variant 17.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-18",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 19 and 25.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-16",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=4kg and v=2m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-86",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "How many molecules are present in 1 mole sample? Variant 16.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-18",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(18) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-368",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Compute pOH for pH=9. Variant 18.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-17",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (3,4) and (5,6).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-157",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Explain isotopes using chlorine example in structure of atom. Variant 17.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-16",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=360m/s and frequency f=100Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-17",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.125m and object distance u=16m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-227",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Explain covalent bond in methane. Variant 17.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-18",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(60 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-18",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 11x + 18 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-20",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=6kg, h=25m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-17",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Explain latent heat in matter in surroundings with example. Variant 17.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-300",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Find limiting reagent for reaction with 2 mol H2 and 1 mol O2. Variant 20.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-438",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Find valence electron count for group 1 elements. Variant 18.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-19",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 20 and 26.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-17",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=4kg and v=4m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-17",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=360m/s and frequency f=150Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-18",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=4kg and v=6m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-369",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Find pH when [H+] = 1e-3 M. Variant 19.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-158",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "What are shells and subshells in atom model? Variant 18.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-18",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (3,4) and (6,7).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-20",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 21 and 27.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-19",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 11x + 10 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-439",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Locate chlorine group and period in periodic table. Variant 19.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-18",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Differentiate melting and boiling in surrounding conditions. Variant 18.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-19",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(30 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-301",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Calculate theoretical yield for simple combustion reaction. Variant 21.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-87",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Find molar mass of CO2 from atoms and molecules perspective. Variant 17.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-19",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(19) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-21",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=7kg, h=5m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-228",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Determine valency of oxygen in bonding. Variant 18.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-18",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.2m and object distance u=16m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-18",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=360m/s and frequency f=200Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-19",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=4kg and v=8m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-370",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Is pH=2 acidic or basic? Variant 20.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-159",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Find number of electrons in neutral sodium atom. Variant 19.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-19",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (3,4) and (7,8).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-21",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 22 and 28.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-20",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 12x + 20 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-440",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Explain periodic trend in atomic radius across period. Variant 20.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-19",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Classify state changes in matter in surroundings for temperature rise. Variant 19.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-20",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(45 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-302",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Balance equation H2 + O2 -> H2O. Variant 22.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-88",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Compute number of moles in 22g CO2. Variant 18.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-20",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(20) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-22",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=7kg, h=10m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-229",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Identify ionic bonding in NaCl. Variant 19.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-19",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.25m and object distance u=16m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-19",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=360m/s and frequency f=250Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-20",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=4kg and v=10m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-371",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Compute pOH for pH=9. Variant 21.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-160",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "Explain isotopes using chlorine example in structure of atom. Variant 20.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-20",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (3,4) and (8,9).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-22",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 23 and 29.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-21",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 12x + 11 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-441",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Find valence electron count for group 1 elements. Variant 21.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-21",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=5kg and v=2m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-20",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Explain latent heat in matter in surroundings with example. Variant 20.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-89",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "How many molecules are present in 1 mole sample? Variant 19.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-230",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Explain covalent bond in methane. Variant 20.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-20",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.5m and object distance u=16m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-23",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 24 and 30.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-21",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(21) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-20",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=360m/s and frequency f=300Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-21",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(60 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-22",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 13x + 22 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-372",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Find pH when [H+] = 1e-3 M. Variant 22.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-303",
+      "domain": "Chemistry",
+      "chapter": "Stoichiometry",
+      "status": "200",
+      "prompt": "Find limiting reagent for reaction with 2 mol H2 and 1 mol O2. Variant 23.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-CG-21",
+      "domain": "Math",
+      "chapter": "Coordinate Geometry",
+      "status": "200",
+      "prompt": "Find distance between (4,5) and (5,6).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-161",
+      "domain": "Chemistry",
+      "chapter": "Structure of Atom",
+      "status": "200",
+      "prompt": "What are shells and subshells in atom model? Variant 21.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-GRV-23",
+      "domain": "Physics",
+      "chapter": "Gravitation",
+      "status": "200",
+      "prompt": "Compute gravitational potential energy for m=7kg, h=15m, g=9.8m/s^2.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-442",
+      "domain": "Chemistry",
+      "chapter": "Periodic Table",
+      "status": "200",
+      "prompt": "Locate chlorine group and period in periodic table. Variant 22.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-WEN-22",
+      "domain": "Physics",
+      "chapter": "Work & Energy",
+      "status": "200",
+      "prompt": "Find kinetic energy for m=5kg and v=4m/s.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-21",
+      "domain": "Chemistry",
+      "chapter": "Matter in Surroundings",
+      "status": "200",
+      "prompt": "Differentiate melting and boiling in surrounding conditions. Variant 21.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-90",
+      "domain": "Chemistry",
+      "chapter": "Atoms & Molecules",
+      "status": "200",
+      "prompt": "Find molar mass of CO2 from atoms and molecules perspective. Variant 20.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-231",
+      "domain": "Chemistry",
+      "chapter": "Chemical Bonding",
+      "status": "200",
+      "prompt": "Determine valency of oxygen in bonding. Variant 21.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-OPT-21",
+      "domain": "Physics",
+      "chapter": "Optics",
+      "status": "200",
+      "prompt": "Use lens formula with focal length f=0.1m and object distance u=18m.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NT-24",
+      "domain": "Math",
+      "chapter": "Number Theory (IOQM level)",
+      "status": "200",
+      "prompt": "Find gcd of 25 and 31.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-NS-22",
+      "domain": "Math",
+      "chapter": "Number Systems",
+      "status": "200",
+      "prompt": "Is sqrt(22) rational or irrational?",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "PHY-SND-21",
+      "domain": "Physics",
+      "chapter": "Sound",
+      "status": "200",
+      "prompt": "Wave speed v=380m/s and frequency f=100Hz. Find wavelength.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-TRI-22",
+      "domain": "Math",
+      "chapter": "Triangles (Euclidean & Trigonometric)",
+      "status": "200",
+      "prompt": "Evaluate sin(30 degrees).",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "MTH-POLY-23",
+      "domain": "Math",
+      "chapter": "Polynomials",
+      "status": "200",
+      "prompt": "Find roots of polynomial x^2 - 13x + 12 = 0.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    },
+    {
+      "case_id": "CHE-373",
+      "domain": "Chemistry",
+      "chapter": "pH",
+      "status": "200",
+      "prompt": "Is pH=2 acidic or basic? Variant 23.",
+      "answer": "Symbolic Solver: No deterministic result available for this specific query."
+    }
+  ],
+  "baseline_failure_analysis": {
+    "found": true,
+    "failed_total": 26610,
+    "thermodynamics_failed": 20471,
+    "source_started_at": "2026-04-13T13:58:47.387010+00:00",
+    "source_finished_at": "2026-04-13T14:58:47.404514+00:00"
+  }
+}
