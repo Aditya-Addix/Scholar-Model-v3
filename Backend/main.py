@@ -1586,6 +1586,7 @@ LOCAL_FRONTEND_ORIGINS = [
 ]
 
 PRODUCTION_FRONTEND_ORIGINS = [
+    "https://scholar-model-v3-7dnx.vercel.app",
     "https://scholar-model-v3.vercel.app",
     "https://addix-scholars.vercel.app",
 ]
