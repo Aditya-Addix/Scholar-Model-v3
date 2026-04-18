@@ -3,39 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scholar Model v3</title>
+    <meta name="theme-color" content="#050505">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ADDIX Scholars">
+    <title>ADDIX Scholars | ADDIX Labs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/anime.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="stylesheet" href="style.css">
     <script defer src="app.js"></script>
 </head>
-<body>
+<body class="gate-locked">
+    <div id="labs-gate" class="labs-gate" aria-live="assertive">
+        <div class="labs-gate-panel">
+            <img src="logo.png" alt="ADDIX Labs" class="labs-gate-logo">
+            <h2 class="labs-gate-title">ADDIX LABS | SECURE ACCESS</h2>
+            <p class="labs-gate-copy">Authorized personnel only. Enter access code to continue.</p>
+            <div class="labs-gate-controls">
+                <input id="labsAccessInput" class="labs-gate-input" type="password" autocomplete="off" placeholder="Enter secure access code" aria-label="Secure access code">
+                <button id="labsVerifyButton" class="labs-gate-button" type="button">Verify</button>
+            </div>
+            <p id="labsGateFeedback" class="labs-gate-feedback" role="alert"></p>
+        </div>
+    </div>
+    <div id="addixScholarsShell" class="addix-scholars-shell">
     <header class="site-header panel-surface">
+        <button id="mobileSidebarToggle" class="mobile-hamburger" type="button" aria-label="Open menu" aria-controls="scholarSidebar" aria-expanded="false">
+            <span class="mobile-hamburger-line" aria-hidden="true"></span>
+            <span class="mobile-hamburger-line" aria-hidden="true"></span>
+            <span class="mobile-hamburger-line" aria-hidden="true"></span>
+        </button>
         <div class="brand-container">
             <div class="header-brand">
-                <img src="logo.png" alt="Scholar Model v3" class="logo">
-                <span class="brand-version">Scholar Model v3</span>
+                <img src="logo.png" alt="ADDIX Scholars" class="logo">
+                <span class="brand-version">ADDIX LABS</span>
+                <div class="status-indicator" id="status-indicator"></div>
+            </div>
+        </div>
+        <div id="marathonTimerShell" class="marathon-timer-shell" aria-label="Deep work marathon timer">
+            <p id="marathonTimerDisplay" class="marathon-timer-display">00:00:00</p>
+            <div class="marathon-controls">
+                <button id="marathonStartButton" class="marathon-control-button" type="button">▶ Start</button>
+                <button id="marathonPauseButton" class="marathon-control-button" type="button">⏸ Pause</button>
+                <button id="marathonStopButton" class="marathon-control-button" type="button">⏹ Stop</button>
             </div>
         </div>
         <div class="title-container">
-            <h1 class="site-title">Scholar Model v3: Deterministic AI for Precision PCM Learning.</h1>
+            <h1 class="site-title">ADDIX Labs // ADDIX Scholars</h1>
         </div>
     </header>
 
     <main class="app-main">
-        <section class="control-layout" aria-label="Scholar Control Deck">
-            <aside class="scholar-sidebar panel-surface" aria-label="Scholar Sidebar">
+        <section class="control-layout" aria-label="Addix Control Deck">
+            <aside id="scholarSidebar" class="scholar-sidebar panel-surface" aria-label="Addix Sidebar">
+                <div id="systemHealthIndicator" class="system-health-indicator" aria-live="polite" aria-label="Backend link status">
+                    <span id="systemHealthDot" class="system-health-dot status-offline" aria-hidden="true"></span>
+                    <span id="systemHealthLabel" class="system-health-label status-offline">[ OFFLINE ]</span>
+                </div>
                 <p class="sidebar-kicker">Program</p>
-                <img src="logo.png" alt="Scholar Model v3" class="sidebar-logo">
-                <h2 class="scholar-logo">Scholar Model v3</h2>
-                <p class="sidebar-subtext">Scholar Model v3</p>
-                <p class="internal-build-tag">ADDIX Labs Internal Build</p>
+                <img src="logo.png" alt="ADDIX Scholars" class="sidebar-logo">
+                <h2 class="scholar-logo">ADDIX Scholars</h2>
+                <p class="sidebar-subtext">ADDIX Scholars // High-Precision PCM Engine</p>
+                <div class="analytics-dashboard" aria-label="Session analytics dashboard">
+                    <article class="analytics-metric">
+                        <p class="analytics-label">Problems Solved</p>
+                        <p id="problemsSolvedValue" class="analytics-value">0</p>
+                    </article>
+                    <article class="analytics-metric">
+                        <p class="analytics-label">Compute Time Saved</p>
+                        <p id="timeSavedValue" class="analytics-value">0 mins</p>
+                    </article>
+                </div>
+                <section class="preparation-grade-panel" aria-label="Preparation Grade">
+                    <p class="consistency-label">Preparation Grade</p>
+                    <div class="prep-rings-grid">
+                        <article class="prep-ring-card">
+                            <svg class="prep-ring-svg prep-ring-physics" viewBox="0 0 84 84" aria-hidden="true">
+                                <circle class="prep-ring-track" cx="42" cy="42" r="30"></circle>
+                                <circle class="prep-ring-progress" cx="42" cy="42" r="30" data-subject="Physics"></circle>
+                            </svg>
+                            <p class="prep-ring-value" id="prepRingPhysicsValue">0%</p>
+                            <p class="prep-ring-label">Physics</p>
+                        </article>
+                        <article class="prep-ring-card">
+                            <svg class="prep-ring-svg prep-ring-chemistry" viewBox="0 0 84 84" aria-hidden="true">
+                                <circle class="prep-ring-track" cx="42" cy="42" r="30"></circle>
+                                <circle class="prep-ring-progress" cx="42" cy="42" r="30" data-subject="Chemistry"></circle>
+                            </svg>
+                            <p class="prep-ring-value" id="prepRingChemistryValue">0%</p>
+                            <p class="prep-ring-label">Chemistry</p>
+                        </article>
+                        <article class="prep-ring-card">
+                            <svg class="prep-ring-svg prep-ring-math" viewBox="0 0 84 84" aria-hidden="true">
+                                <circle class="prep-ring-track" cx="42" cy="42" r="30"></circle>
+                                <circle class="prep-ring-progress" cx="42" cy="42" r="30" data-subject="Math"></circle>
+                            </svg>
+                            <p class="prep-ring-value" id="prepRingMathValue">0%</p>
+                            <p class="prep-ring-label">Math</p>
+                        </article>
+                    </div>
+                </section>
+                <section class="my-progress-panel" aria-label="My Progress">
+                    <h3 class="my-progress-title">My Progress</h3>
+                    <div class="progress-section">
+                        <div class="consistency-matrix-panel" aria-label="Consistency Matrix">
+                            <p class="consistency-label">Consistency Matrix</p>
+                            <div class="streak-shell" aria-live="polite">
+                                <p class="streak-label">Current Streak</p>
+                                <p id="currentStreakValue" class="streak-value">🔥 0</p>
+                            </div>
+                            <div id="consistencyMatrix" class="consistency-matrix" aria-live="polite"></div>
+                        </div>
+                        <div class="mastery-breakdown-panel" aria-label="Mastery Breakdown">
+                            <p class="consistency-label">Mastery Breakdown</p>
+                            <div id="masteryBreakdown" class="mastery-breakdown"></div>
+                        </div>
+                    </div>
+                </section>
+                <button id="exportWeaknessReportButton" class="premium-export-button" type="button" aria-label="Export weakness report PDF">🔒 Export Weakness Report (PDF)</button>
+                <button id="openBlackBoxButton" class="black-box-trigger" type="button" aria-label="Open black box vault">⬛ Open Black Box</button>
+                <div class="sidebar-footer" aria-hidden="true">
+                    <div class="einstein-mark">E = mc²</div>
+                    <div class="internal-build">ADDIX LABS INTERNAL BUILD</div>
+                </div>
             </aside>
 
             <section class="hud-grid" id="hudGrid" aria-label="Preparation Hub">
@@ -51,6 +154,7 @@
                     </svg>
                     <span class="ring-grade" data-grade-center>A+</span>
                 </div>
+                <div class="hud-card-syllabus-slot syllabus-container" data-syllabus-slot="NSEJS" hidden aria-live="polite"></div>
                 <div class="card-metrics" data-metrics>
                     <span id="nsejs-days" class="days-pill" data-days-label>219d</span>
                     <p class="grade-line">Preparation Grade: <strong data-grade-label>A+</strong></p>
@@ -69,6 +173,7 @@
                     </svg>
                     <span class="ring-grade" data-grade-center>A</span>
                 </div>
+                <div class="hud-card-syllabus-slot syllabus-container" data-syllabus-slot="NMTC" hidden aria-live="polite"></div>
                 <div class="card-metrics" data-metrics>
                     <span id="nmtc-days" class="days-pill" data-days-label>183d</span>
                     <p class="grade-line">Preparation Grade: <strong data-grade-label>A</strong></p>
@@ -87,15 +192,16 @@
                     </svg>
                     <span class="ring-grade" data-grade-center>S</span>
                 </div>
+                <div class="hud-card-syllabus-slot syllabus-container" data-syllabus-slot="IOQM" hidden aria-live="polite"></div>
                 <div class="card-metrics" data-metrics>
                     <span id="ioqm-days" class="days-pill" data-days-label>146d</span>
                     <p class="grade-line">Preparation Grade: <strong data-grade-label>S</strong></p>
                 </div>
             </article>
 
-            <article id="jee-card" class="hud-card" data-exam="JEE" data-days="287d" data-grade="-" data-progress="26">
+            <article id="jee-card" class="hud-card" data-exam="JEE Advanced" data-days="287d" data-grade="-" data-progress="26">
                 <div class="card-head">
-                    <h2>JEE</h2>
+                    <h2>JEE Advanced</h2>
                     <span class="card-subtitle">Foundation Arc</span>
                 </div>
                 <div class="ring-shell">
@@ -105,6 +211,7 @@
                     </svg>
                     <span class="ring-grade" data-grade-center>-</span>
                 </div>
+                <div class="hud-card-syllabus-slot syllabus-container" data-syllabus-slot="JEE Advanced" hidden aria-live="polite"></div>
                 <div class="card-metrics" data-metrics>
                     <span id="jee-days" class="days-pill" data-days-label>287d</span>
                     <p class="grade-line">Preparation Grade: <strong data-grade-label>-</strong></p>
@@ -120,34 +227,156 @@
                     <span class="dot amber"></span>
                     <span class="dot green"></span>
                 </div>
-                <p class="terminal-title">research-lab://multi-agent-solver</p>
-                <span class="online-state"><i class="online-dot"></i>ONLINE</span>
+                <div class="terminal-actions">
+                    <button id="clearChatButton" class="clear-chat-button" type="button" aria-label="Clear chat history">🧹 Clear Chat</button>
+                    <button id="exportSessionButton" class="export-session-button" type="button" aria-label="Export current chat session as PDF">📥 Export Session</button>
+                    <button id="focusModeButton" class="focus-mode-button" type="button" aria-label="Toggle focus mode" aria-pressed="false">⛶ Focus</button>
+                    <button id="debriefSessionButton" class="debrief-session-button" type="button" aria-label="End session and open debrief">End Session &amp; Debrief</button>
+                    <span class="online-state"><i id="status-dot" class="online-dot status-offline"></i><span id="status-text" class="status-offline">[ OFFLINE ]</span></span>
+                </div>
             </div>
+
+            <div class="mode-toggle-bar" aria-label="Cognitive mode selector">
+                <div class="exam-context-shell" aria-label="Target exam selector">
+                    <label class="exam-context-label" for="exam-context-selector">Target Exam</label>
+                    <select id="exam-context-selector" class="exam-context-select">
+                        <option value="NSEJS">NSEJS</option>
+                        <option value="JEE Advanced">JEE Advanced</option>
+                        <option value="IOQM">IOQM</option>
+                        <option value="custom">+ Add Custom Data</option>
+                    </select>
+                </div>
+                <div class="engine-mode-shell" aria-label="Engine mode selector">
+                    <span class="engine-mode-title">Engine Mode:</span>
+                    <span id="engineModeLabel" class="engine-mode-label">SOLVER</span>
+                    <label class="mode-switch engine-mode-switch" for="engineModeToggle">
+                        <input id="engineModeToggle" type="checkbox" aria-label="Toggle between Solver and Tester engine mode">
+                        <span class="mode-slider" aria-hidden="true"></span>
+                    </label>
+                    <span class="engine-mode-target">TESTER</span>
+                </div>
+            </div>
+
+            <section id="syllabus-container" class="syllabus-explorer panel-surface" aria-label="Syllabus Explorer">
+                <div class="syllabus-explorer-header">
+                    <div class="syllabus-explorer-titleblock">
+                        <p class="syllabus-explorer-kicker">Syllabus Explorer</p>
+                        <h3 class="syllabus-explorer-title">PCM Coverage Map</h3>
+                    </div>
+                    <div class="syllabus-explorer-actions">
+                        <p class="syllabus-explorer-copy">Select a standard exam to load the complete chapter-by-chapter matrix, or switch to custom data to route a bespoke syllabus flow.</p>
+                        <button id="generateCheatSheetButton" class="premium-outline-btn" type="button" aria-label="Generate cheat sheet for selected topic">📋 Generate Cheat Sheet</button>
+                        <button id="exportFormulaSheetButton" class="formula-sheet-export-button" type="button" aria-label="Export formula sheet">📥 Export Formula Sheet</button>
+                    </div>
+                </div>
+            </section>
 
             <div class="chat-feed" id="chatFeed" aria-live="polite">
                 <article class="message system-step">
-                    <p class="message-line"><span class="agent-label">System:</span> Solver online. Submit a query to trigger symbolic and numerical agents.</p>
-                    <div class="math-block">$$\nabla \cdot \vec{E} = \frac{\rho}{\varepsilon_0}$$</div>
+                    <p class="message-line"><span class="agent-label">System:</span> ADDIX Scholars Online. Input PCM query for deterministic resolution...</p>
+                    <div id="initial-system-math"></div>
                 </article>
             </div>
 
             <form id="queryForm" class="query-form">
                 <label for="queryInput" class="visually-hidden">Enter a query</label>
-                <div class="chat-input-wrap">
-                    <input id="queryInput" type="text" autocomplete="off" placeholder="Ask any deterministic PCM query..." required>
-                    <button id="scannerTrigger" class="scanner-trigger" type="button" aria-label="Upload or capture image">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M7 5h2.2l1.4-2h2.8l1.4 2H17a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3zm5 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-1.8a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4z"></path>
-                        </svg>
+                <div class="rapid-math-keyboard" aria-label="Rapid math keyboard">
+                    <button class="math-key" type="button" data-symbol="√">√</button>
+                    <button class="math-key" type="button" data-symbol="π">π</button>
+                    <button class="math-key" type="button" data-symbol="θ">θ</button>
+                    <button class="math-key" type="button" data-symbol="Δ">Δ</button>
+                    <button class="math-key" type="button" data-symbol="α">α</button>
+                    <button class="math-key" type="button" data-symbol="β">β</button>
+                    <button class="math-key" type="button" data-symbol="μ">μ</button>
+                    <button class="math-key" type="button" data-symbol="Ω">Ω</button>
+                    <button class="math-key" type="button" data-symbol="∫">∫</button>
+                    <button class="math-key" type="button" data-symbol="±">±</button>
+                    <button class="math-key" type="button" data-symbol="°C">°C</button>
+                </div>
+                <div id="imagePreviewShell" class="image-preview">
+                    <img id="imagePreviewThumb" class="image-preview-thumb" alt="Uploaded problem preview">
+                    <button id="imagePreviewRemoveButton" class="image-preview-remove" type="button" aria-label="Remove attached image">×</button>
+                </div>
+                <div class="query-actions">
+                    <div class="chat-input-wrap">
+                        <button id="btn-upload-image" class="scanner-trigger upload-trigger inline-upload-button" type="button" aria-label="Upload a problem image (Vision Mode)">
+                            <svg class="upload-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <path d="M16.5 6.5l-7.78 7.78a3 3 0 104.24 4.24l8.13-8.13a5 5 0 10-7.07-7.07L5.2 12.85a7 7 0 109.9 9.9l7.78-7.78" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <span class="upload-spinner" aria-hidden="true"></span>
+                        </button>
+                        <button id="btn-upload-pdf" class="pdf-trigger upload-trigger inline-upload-button" type="button" aria-label="Upload a PDF document (Black Box)">
+                            <svg class="upload-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                            </svg>
+                            <span class="upload-spinner" aria-hidden="true"></span>
+                        </button>
+                        <input id="queryInput" type="text" autocomplete="off" placeholder="ADDIX Scholars Online. Input PCM query for deterministic resolution...">
+                    </div>
+                    <button id="sendButton" class="send-button" type="submit">
+                        <span class="brain-icon" aria-hidden="true">🧠</span>
+                        <span class="button-text">Send Query</span>
                     </button>
                 </div>
-                <input type="file" accept="image/*" id="scanner-input" class="visually-hidden" capture="environment">
-                <button id="sendButton" class="send-button" type="submit">
-                    <span class="brain-icon" aria-hidden="true">🧠</span>
-                    <span class="button-text">Send Query</span>
-                </button>
+                <input type="file" id="image-upload" accept="image/png, image/jpeg" class="visually-hidden">
+                <input type="file" id="pdf-upload" accept="application/pdf" class="visually-hidden">
             </form>
+
+            <div id="black-box-modal" class="black-box-modal" aria-hidden="true">
+                <div class="black-box-modal-panel">
+                    <div class="black-box-modal-header">
+                        <h3 class="black-box-title">The Black Box: Error Vault</h3>
+                        <button id="closeBlackBoxButton" class="black-box-close" type="button" aria-label="Close black box vault">Close</button>
+                    </div>
+                    <div id="blackBoxList" class="black-box-list" aria-live="polite"></div>
+                </div>
+            </div>
+
+            <div id="debrief-modal" class="debrief-modal" aria-hidden="true">
+                <div class="debrief-modal-panel" role="dialog" aria-modal="true" aria-labelledby="debriefTitle">
+                    <div class="debrief-modal-header">
+                        <div>
+                            <p class="debrief-kicker">Post-Session Review</p>
+                            <h3 id="debriefTitle" class="debrief-title">Coach's Brutal Debrief</h3>
+                        </div>
+                        <button id="closeDebriefButton" class="debrief-close" type="button" aria-label="Close debrief">Close</button>
+                    </div>
+                    <div id="debriefModalBody" class="debrief-modal-body" aria-live="polite"></div>
+                </div>
+            </div>
+
+            <div id="premium-modal" class="premium-modal" aria-hidden="true">
+                <div class="premium-modal-panel" role="dialog" aria-modal="true" aria-labelledby="premiumTitle">
+                    <div class="premium-modal-header">
+                        <h3 id="premiumTitle" class="premium-title">Premium Feature</h3>
+                        <button id="closePremiumModalButton" class="premium-close" type="button" aria-label="Close premium modal">Close</button>
+                    </div>
+                    <p class="premium-copy">Premium Feature. Upgrade to ADDIX Pro for ₹400/mo to unlock Black Box exports and infinite streaks.</p>
+                    <button id="upgradeToPremiumButton" class="premium-upgrade-button" type="button">Upgrade to Premium</button>
+                </div>
+            </div>
         </section>
     </main>
+    </div>
+    <script>
+        // Initialize heartbeat animation
+        if (typeof anime !== 'undefined') {
+            const statusIndicator = document.getElementById('status-indicator');
+            if (statusIndicator) {
+                anime.loop(
+                    anime({
+                        targets: statusIndicator,
+                        boxShadow: [
+                            { value: '0 0 8px rgba(0, 206, 209, 0.3), inset 0 0 4px rgba(0, 206, 209, 0.2)' },
+                            { value: '0 0 24px rgba(0, 206, 209, 0.8), inset 0 0 8px rgba(0, 206, 209, 0.4)' }
+                        ],
+                        duration: 1500,
+                        easing: 'easeInOutQuad'
+                    })
+                );
+            }
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
+    <title>ADDIX Founder Telemetry</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #0a0a0a;
+            --line: rgba(57, 255, 136, 0.35);
+            --accent: #39ff88;
+            --text: #d8ffe8;
+            --muted: #7da890;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at top right, rgba(57, 255, 136, 0.08), transparent 30%), var(--bg);
+            color: var(--text);
+            font-family: "Inter", "Segoe UI", sans-serif;
+            min-height: 100%;
+        }
+
+        .admin-shell {
+            width: min(1180px, calc(100% - 28px));
+            margin: 20px auto;
+            display: grid;
+            gap: 16px;
+        }
+
+        .admin-header {
+            border: 1px solid var(--line);
+            background: var(--panel);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 0 20px rgba(57, 255, 136, 0.12);
+        }
+
+        .admin-kicker {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .admin-title {
+            margin: 6px 0 2px;
+            font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+            color: var(--accent);
+            letter-spacing: 0.04em;
+        }
+
+        .admin-subtitle {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.84rem;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .kpi-card {
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.95), rgba(8, 8, 8, 0.95));
+            border-radius: 12px;
+            padding: 14px;
+            min-height: 140px;
+            display: grid;
+            align-content: space-between;
+        }
+
+        .kpi-label {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .kpi-value {
+            margin: 8px 0 0;
+            color: var(--accent);
+            font-size: clamp(1.8rem, 3.8vw, 2.6rem);
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 18px rgba(57, 255, 136, 0.22);
+        }
+
+        .volume-panel {
+            border: 1px solid var(--line);
+            background: var(--panel);
+            border-radius: 12px;
+            padding: 14px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .volume-title {
+            margin: 0;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.82rem;
+        }
+
+        .volume-chart {
+            display: grid;
+            grid-template-columns: repeat(20, minmax(0, 1fr));
+            align-items: end;
+            gap: 5px;
+            height: 110px;
+            padding: 10px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(57, 255, 136, 0.2);
+            background: rgba(57, 255, 136, 0.03);
+        }
+
+        .volume-bar {
+            border-radius: 4px 4px 0 0;
+            background: linear-gradient(180deg, rgba(126, 255, 171, 0.95), rgba(57, 255, 136, 0.45));
+            box-shadow: 0 0 10px rgba(57, 255, 136, 0.28);
+            min-height: 8px;
+            transition: height 280ms ease;
+        }
+
+        .admin-status {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+        }
+
+        @media (max-width: 900px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script defer src="admin.js"></script>
+</head>
+<body>
+    <main class="admin-shell">
+        <header class="admin-header">
+            <p class="admin-kicker">Founder Console</p>
+            <h1 class="admin-title">ADDIX Labs Telemetry</h1>
+            <p class="admin-subtitle">Restricted internal dashboard for platform growth and reliability metrics.</p>
+        </header>
+
+        <section class="kpi-grid" aria-label="Telemetry KPIs">
+            <article class="kpi-card">
+                <p class="kpi-label">Total Registered Users</p>
+                <p id="kpiTotalUsers" class="kpi-value">0</p>
+            </article>
+            <article class="kpi-card">
+                <p class="kpi-label">Premium Subscribers</p>
+                <p id="kpiPremiumUsers" class="kpi-value">0</p>
+            </article>
+            <article class="kpi-card">
+                <p class="kpi-label">Questions Solved</p>
+                <p id="kpiQuestionsSolved" class="kpi-value">0</p>
+            </article>
+            <article class="kpi-card">
+                <p class="kpi-label">Black Box Today</p>
+                <p id="kpiBlackBoxToday" class="kpi-value">0</p>
+            </article>
+        </section>
+
+        <section class="volume-panel" aria-label="API call volume">
+            <h2 class="volume-title">Real-Time API Call Volume</h2>
+            <div id="volumeChart" class="volume-chart"></div>
+            <p id="adminStatus" class="admin-status">Booting telemetry collector...</p>
+        </section>
+    </main>
+</body>
+</html>
