@@ -1576,31 +1576,13 @@ app = FastAPI(
     redoc_url=None if IS_PRODUCTION else "/redoc",
 )
 
-LOCAL_FRONTEND_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
-]
-
-PRODUCTION_FRONTEND_ORIGINS = [
+ALLOWED_ORIGINS = [
     "https://scholar-model-v3-7dnx.vercel.app",
     "https://scholar-model-v3.vercel.app",
-    "https://addix-scholars.vercel.app",
+    "http://localhost:5500",
 ]
-
-origins = [
-    origin.strip()
-    for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
-    if origin.strip()
-]
-
-ALLOWED_ORIGINS = list(dict.fromkeys([*origins, *LOCAL_FRONTEND_ORIGINS, *PRODUCTION_FRONTEND_ORIGINS]))
-DEBUG_ALLOW_ALL_ORIGINS = False
-CORS_ALLOW_ORIGINS = ["*"] if DEBUG_ALLOW_ALL_ORIGINS else ALLOWED_ORIGINS
-CORS_ALLOW_CREDENTIALS = False if DEBUG_ALLOW_ALL_ORIGINS else True
+CORS_ALLOW_ORIGINS = ALLOWED_ORIGINS
+CORS_ALLOW_CREDENTIALS = True
 
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
@@ -1637,6 +1619,7 @@ async def scholar_request_middleware(request: Request, call_next):
             content={"ok": True},
             headers={
                 "Access-Control-Allow-Origin": allowed_origin,
+                "Access-Control-Allow-Credentials": "true",
                 "Access-Control-Allow-Methods": "*",
                 "Access-Control-Allow-Headers": "*",
                 "Vary": "Origin",
@@ -3729,7 +3712,7 @@ def _build_dashboard_stats() -> DashboardStatsResponse:
 
 @app.get("/")
 async def root_status() -> Dict[str, str]:
-    return {"status": "ADDIX Systems Online", "tier": "Student"}
+    return {"status": "online"}
 
 
 class VisionAgent:
