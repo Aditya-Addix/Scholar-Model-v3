@@ -22,7 +22,6 @@ try:
     import google.generativeai as genai
 except ImportError:
     genai = None
-from supabase import Client, create_client
 from dotenv import load_dotenv
 from fastapi import FastAPI, BackgroundTasks, Body, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -87,8 +86,6 @@ GEMINI_API_KEY_ENV_NAME = "GEMINI_API_KEY"
 GOOGLE_API_KEY_ENV_NAME = "GOOGLE_API_KEY"
 SCHOLAR_FRONTEND_SECRET_ENV_NAME = "SCHOLAR_FRONTEND_SECRET"
 FOUNDER_EMAIL_ENV_NAME = "FOUNDER_EMAIL"
-SUPABASE_URL_ENV_NAME = "SUPABASE_URL"
-SUPABASE_ANON_KEY_ENV_NAME = "SUPABASE_ANON_KEY"
 DEEPSEEK_BASE_URL = "https://api.deepseek.com/v1"
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 DEEPSEEK_CHAT_MODEL = "llama-3.3-70b-versatile"
@@ -250,13 +247,6 @@ PRIMARY_ASYNC_LLM_CLIENT = (
 )
 PRIMARY_ACTIVE_MODEL = PRIMARY_LLM_MODEL or PRIMARY_MODEL
 PRIMARY_LLM_TRACE = f"{PRIMARY_LLM_PROVIDER} ({PRIMARY_ACTIVE_MODEL})" if PRIMARY_LLM_PROVIDER else "LLM Not Configured"
-
-url = os.environ.get("SUPABASE_URL")
-key = os.environ.get("SUPABASE_ANON_KEY")
-if not url or not key:
-    print("CRITICAL: Supabase credentials missing!")
-supabase: Client | None = create_client(url, key) if (create_client is not None and url and key) else None
-SUPABASE_CLIENT = supabase
 
 
 def _extract_live_thinking(raw_text: str) -> str:
@@ -901,8 +891,6 @@ def _validate_env_mappings() -> None:
         GEMINI_API_KEY_ENV_NAME: os.getenv(GEMINI_API_KEY_ENV_NAME),
         GOOGLE_API_KEY_ENV_NAME: os.getenv(GOOGLE_API_KEY_ENV_NAME),
         SCHOLAR_FRONTEND_SECRET_ENV_NAME: os.getenv(SCHOLAR_FRONTEND_SECRET_ENV_NAME),
-        SUPABASE_URL_ENV_NAME: os.getenv(SUPABASE_URL_ENV_NAME),
-        SUPABASE_ANON_KEY_ENV_NAME: os.getenv(SUPABASE_ANON_KEY_ENV_NAME),
     }
     missing = [name for name, value in required.items() if not value]
 
