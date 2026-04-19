@@ -3280,6 +3280,126 @@ body.tester-mode #queryInput:focus {
     }
 
     .terminal {
-        min-height: calc(100vh - 170px);
+        min-height: calc(100svh - 160px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Chat feed fills remaining viewport height */
+    .chat-feed {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px;
+    }
+
+    /* Input stays visible when mobile keyboard opens */
+    .query-form {
+        position: sticky;
+        bottom: 0;
+        z-index: 50;
+        background: rgba(5, 5, 5, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(0, 255, 255, 0.12);
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        gap: 8px;
+    }
+
+    #queryInput {
+        font-size: 1rem;
+        min-height: 48px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .send-button {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+
+    /* Syllabus cards: horizontal scroll row on mobile */
+    .syllabus-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 10px;
+        padding-bottom: 8px;
+        scroll-snap-type: x mandatory;
+    }
+
+    .syllabus-container::-webkit-scrollbar {
+        height: 3px;
+    }
+
+    .syllabus-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 255, 255, 0.3);
+        border-radius: 3px;
+    }
+
+    .syllabus-category {
+        min-width: min(80vw, 260px);
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        padding: 10px 12px;
+    }
+
+    .syllabus-chip-row {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .syllabus-chip {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+
+    /* Scale fonts for readability */
+    .site-title {
+        font-size: 1rem;
+    }
+
+    .scholar-logo {
+        font-size: 1.3rem;
+    }
+
+    .message {
+        max-width: 100%;
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    .hud-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .analytics-metric {
+        padding: 12px 10px;
+    }
+
+    .analytics-metric .metric-value {
+        font-size: 1.4rem;
+    }
+
+    .analytics-metric .metric-label {
+        font-size: 0.68rem;
+    }
+
+    /* Query actions stack vertically */
+    .query-actions {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    /* Sidebar overlay scrollable */
+    .scholar-sidebar {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 }

@@ -1,3 +1,36 @@
-﻿Geometry: Power of a Point, Ptolemy's Theorem, Cevians.
-Number Theory: Chinese Remainder Theorem, Fermat's Little Theorem.
-Algebra: Roots of Unity, Functional Equations.
+﻿Number Theory: Divisibility and Primes (Infinitude, Bertrand's Postulate, Prime Factorisation)
+Number Theory: Modular Arithmetic (Congruences, Residue Classes, Wilson's Theorem)
+Number Theory: Fermat's Little Theorem and Euler's Theorem
+Number Theory: Chinese Remainder Theorem (Advanced Applications)
+Number Theory: Diophantine Equations (Pythagorean Triples, Pell Equation, Vieta Jumping)
+Number Theory: Arithmetic Functions (Mobius Function, Legendre Symbol, Quadratic Residues)
+Number Theory: p-adic Valuations and Lifting the Exponent Lemma
+Number Theory: Order of an Element Modulo n (Primitive Roots)
+Algebra: Polynomials (Symmetric Functions, Newton's Identities, Chebyshev Polynomials)
+Algebra: Roots of Unity (de Moivre, Cyclotomic Polynomials, Root Filtering)
+Algebra: Vieta's Formulas and Advanced Polynomial Roots
+Algebra: Functional Equations (Cauchy, Jensen's Inequality, Multiplicative Functions)
+Algebra: Inequalities (Schur, Muirhead, SOS Method, Tangent Line Trick)
+Algebra: Sequences and Recurrences (Characteristic Equation, Generating Functions)
+Algebra: Field and Ring Theory Basics (Polynomials over Finite Fields)
+Geometry: Euclidean Geometry (Angle Chasing, Ceva's Theorem, Menelaus' Theorem)
+Geometry: Circle Geometry (Power of a Point, Radical Axes, Inversion)
+Geometry: Ptolemy's Theorem and Generalisations
+Geometry: Projective Geometry (Cross Ratio, Harmonic Division, Poles and Polars)
+Geometry: Trigonometric Form of Ceva and Menelaus
+Geometry: Spiral Similarity and Complex Number Geometry
+Geometry: Barycentric Coordinates
+Geometry: Affine Transformations and Similarity
+Geometry: Geometric Inequalities (Erdos-Mordell, Ptolemy's Inequality)
+Combinatorics: Advanced Counting (Generating Functions, Burnside's Lemma)
+Combinatorics: Graph Theory (Ramsey Theory, Hall's Marriage Theorem, Matchings)
+Combinatorics: Extremal Combinatorics (Turán's Theorem, Zarankiewicz Problem)
+Combinatorics: Probabilistic Method (Basic Applications)
+Combinatorics: Combinatorial Game Theory (Sprague-Grundy Theorem, Nim Values)
+Combinatorics: Coloring Arguments and Invariants (Advanced Applications)
+Combinatorics: Double Counting and Bijective Proofs
+Combinatorics: Lattice Paths and Ballot Problem
+Logic and Proof: Mathematical Induction (Variants and Advanced Applications)
+Logic and Proof: Extremal Principle and Infinite Descent
+Logic and Proof: Pigeonhole Principle (Generalised, Erdos-Szekeres Theorem)
+Logic and Proof: Algorithmic Problem Solving and Constructions

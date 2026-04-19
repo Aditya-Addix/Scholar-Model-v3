@@ -1,249 +1,52 @@
-﻿<#
-.Synopsis
-Activate a Python virtual environment for the current PowerShell session.
-
-.Description
-Pushes the python executable for a virtual environment to the front of the
-$Env:PATH environment variable and sets the prompt to signify that you are
-in a Python virtual environment. Makes use of the command line switches as
-well as the `pyvenv.cfg` file values present in the virtual environment.
-
-.Parameter VenvDir
-Path to the directory that contains the virtual environment to activate. The
-default value for this is the parent of the directory that the Activate.ps1
-script is located within.
-
-.Parameter Prompt
-The prompt prefix to display when this virtual environment is activated. By
-default, this prompt is the name of the virtual environment folder (VenvDir)
-surrounded by parentheses and followed by a single space (ie. '(.venv) ').
-
-.Example
-Activate.ps1
-Activates the Python virtual environment that contains the Activate.ps1 script.
-
-.Example
-Activate.ps1 -Verbose
-Activates the Python virtual environment that contains the Activate.ps1 script,
-and shows extra information about the activation as it executes.
-
-.Example
-Activate.ps1 -VenvDir C:\Users\MyUser\Common\.venv
-Activates the Python virtual environment located in the specified location.
-
-.Example
-Activate.ps1 -Prompt "MyPython"
-Activates the Python virtual environment that contains the Activate.ps1 script,
-and prefixes the current prompt with the specified string (surrounded in
-parentheses) while the virtual environment is active.
-
-.Notes
-On Windows, it may be required to enable this Activate.ps1 script by setting the
-execution policy for the user. You can do this by issuing the following PowerShell
-command:
-
-PS C:\> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-
-For more information on Execution Policies: 
-https://go.microsoft.com/fwlink/?LinkID=135170
-
-#>
-Param(
-    [Parameter(Mandatory = $false)]
-    [String]
-    $VenvDir,
-    [Parameter(Mandatory = $false)]
-    [String]
-    $Prompt
-)
-
-<# Function declarations --------------------------------------------------- #>
-
-<#
-.Synopsis
-Remove all shell session elements added by the Activate script, including the
-addition of the virtual environment's Python executable from the beginning of
-the PATH variable.
-
-.Parameter NonDestructive
-If present, do not remove this function from the global namespace for the
-session.
-
-#>
-function global:deactivate ([switch]$NonDestructive) {
-    # Revert to original values
-
-    # The prior prompt:
-    if (Test-Path -Path Function:_OLD_VIRTUAL_PROMPT) {
-        Copy-Item -Path Function:_OLD_VIRTUAL_PROMPT -Destination Function:prompt
-        Remove-Item -Path Function:_OLD_VIRTUAL_PROMPT
-    }
-
-    # The prior PYTHONHOME:
-    if (Test-Path -Path Env:_OLD_VIRTUAL_PYTHONHOME) {
-        Copy-Item -Path Env:_OLD_VIRTUAL_PYTHONHOME -Destination Env:PYTHONHOME
-        Remove-Item -Path Env:_OLD_VIRTUAL_PYTHONHOME
-    }
-
-    # The prior PATH:
-    if (Test-Path -Path Env:_OLD_VIRTUAL_PATH) {
-        Copy-Item -Path Env:_OLD_VIRTUAL_PATH -Destination Env:PATH
-        Remove-Item -Path Env:_OLD_VIRTUAL_PATH
-    }
-
-    # Just remove the VIRTUAL_ENV altogether:
-    if (Test-Path -Path Env:VIRTUAL_ENV) {
-        Remove-Item -Path env:VIRTUAL_ENV
-    }
-
-    # Just remove VIRTUAL_ENV_PROMPT altogether.
-    if (Test-Path -Path Env:VIRTUAL_ENV_PROMPT) {
-        Remove-Item -Path env:VIRTUAL_ENV_PROMPT
-    }
-
-    # Just remove the _PYTHON_VENV_PROMPT_PREFIX altogether:
-    if (Get-Variable -Name "_PYTHON_VENV_PROMPT_PREFIX" -ErrorAction SilentlyContinue) {
-        Remove-Variable -Name _PYTHON_VENV_PROMPT_PREFIX -Scope Global -Force
-    }
-
-    # Leave deactivate function in the global namespace if requested:
-    if (-not $NonDestructive) {
-        Remove-Item -Path function:deactivate
-    }
-}
-
-<#
-.Description
-Get-PyVenvConfig parses the values from the pyvenv.cfg file located in the
-given folder, and returns them in a map.
-
-For each line in the pyvenv.cfg file, if that line can be parsed into exactly
-two strings separated by `=` (with any amount of whitespace surrounding the =)
-then it is considered a `key = value` line. The left hand string is the key,
-the right hand is the value.
-
-If the value starts with a `'` or a `"` then the first and last character is
-stripped from the value before being captured.
-
-.Parameter ConfigDir
-Path to the directory that contains the `pyvenv.cfg` file.
-#>
-function Get-PyVenvConfig(
-    [String]
-    $ConfigDir
-) {
-    Write-Verbose "Given ConfigDir=$ConfigDir, obtain values in pyvenv.cfg"
-
-    # Ensure the file exists, and issue a warning if it doesn't (but still allow the function to continue).
-    $pyvenvConfigPath = Join-Path -Resolve -Path $ConfigDir -ChildPath 'pyvenv.cfg' -ErrorAction Continue
-
-    # An empty map will be returned if no config file is found.
-    $pyvenvConfig = @{ }
-
-    if ($pyvenvConfigPath) {
-
-        Write-Verbose "File exists, parse `key = value` lines"
-        $pyvenvConfigContent = Get-Content -Path $pyvenvConfigPath
-
-        $pyvenvConfigContent | ForEach-Object {
-            $keyval = $PSItem -split "\s*=\s*", 2
-            if ($keyval[0] -and $keyval[1]) {
-                $val = $keyval[1]
-
-                # Remove extraneous quotations around a string value.
-                if ("'""".Contains($val.Substring(0, 1))) {
-                    $val = $val.Substring(1, $val.Length - 2)
-                }
-
-                $pyvenvConfig[$keyval[0]] = $val
-                Write-Verbose "Adding Key: '$($keyval[0])'='$val'"
-            }
-        }
-    }
-    return $pyvenvConfig
-}
-
-
-<# Begin Activate script --------------------------------------------------- #>
-
-# Determine the containing directory of this script
-$VenvExecPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$VenvExecDir = Get-Item -Path $VenvExecPath
-
-Write-Verbose "Activation script is located in path: '$VenvExecPath'"
-Write-Verbose "VenvExecDir Fullname: '$($VenvExecDir.FullName)"
-Write-Verbose "VenvExecDir Name: '$($VenvExecDir.Name)"
-
-# Set values required in priority: CmdLine, ConfigFile, Default
-# First, get the location of the virtual environment, it might not be
-# VenvExecDir if specified on the command line.
-if ($VenvDir) {
-    Write-Verbose "VenvDir given as parameter, using '$VenvDir' to determine values"
-}
-else {
-    Write-Verbose "VenvDir not given as a parameter, using parent directory name as VenvDir."
-    $VenvDir = $VenvExecDir.Parent.FullName.TrimEnd("\\/")
-    Write-Verbose "VenvDir=$VenvDir"
-}
-
-# Next, read the `pyvenv.cfg` file to determine any required value such
-# as `prompt`.
-$pyvenvCfg = Get-PyVenvConfig -ConfigDir $VenvDir
-
-# Next, set the prompt from the command line, or the config file, or
-# just use the name of the virtual environment folder.
-if ($Prompt) {
-    Write-Verbose "Prompt specified as argument, using '$Prompt'"
-}
-else {
-    Write-Verbose "Prompt not specified as argument to script, checking pyvenv.cfg value"
-    if ($pyvenvCfg -and $pyvenvCfg['prompt']) {
-        Write-Verbose "  Setting based on value in pyvenv.cfg='$($pyvenvCfg['prompt'])'"
-        $Prompt = $pyvenvCfg['prompt'];
-    }
-    else {
-        Write-Verbose "  Setting prompt based on parent's directory's name. (Is the directory name passed to venv module when creating the virtual environment)"
-        Write-Verbose "  Got leaf-name of $VenvDir='$(Split-Path -Path $venvDir -Leaf)'"
-        $Prompt = Split-Path -Path $venvDir -Leaf
-    }
-}
-
-Write-Verbose "Prompt = '$Prompt'"
-Write-Verbose "VenvDir='$VenvDir'"
-
-# Deactivate any currently active virtual environment, but leave the
-# deactivate function in place.
-deactivate -nondestructive
-
-# Now set the environment variable VIRTUAL_ENV, used by many tools to determine
-# that there is an activated venv.
-$env:VIRTUAL_ENV = $VenvDir
-
-$env:VIRTUAL_ENV_PROMPT = $Prompt
-
-if (-not $Env:VIRTUAL_ENV_DISABLE_PROMPT) {
-
-    Write-Verbose "Setting prompt to '$Prompt'"
-
-    # Set the prompt to include the env name
-    # Make sure _OLD_VIRTUAL_PROMPT is global
-    function global:_OLD_VIRTUAL_PROMPT { "" }
-    Copy-Item -Path function:prompt -Destination function:_OLD_VIRTUAL_PROMPT
-    New-Variable -Name _PYTHON_VENV_PROMPT_PREFIX -Description "Python virtual environment prompt prefix" -Scope Global -Option ReadOnly -Visibility Public -Value $Prompt
-
-    function global:prompt {
-        Write-Host -NoNewline -ForegroundColor Green "($_PYTHON_VENV_PROMPT_PREFIX) "
-        _OLD_VIRTUAL_PROMPT
-    }
-}
-
-# Clear PYTHONHOME
-if (Test-Path -Path Env:PYTHONHOME) {
-    Copy-Item -Path Env:PYTHONHOME -Destination Env:_OLD_VIRTUAL_PYTHONHOME
-    Remove-Item -Path Env:PYTHONHOME
-}
-
-# Add the venv to the PATH
-Copy-Item -Path Env:PATH -Destination Env:_OLD_VIRTUAL_PATH
-$Env:PATH = "$VenvExecDir$([System.IO.Path]::PathSeparator)$Env:PATH"
-
+﻿Physics: Kinematics (Equations of Motion, Projectile, Relative Motion)
+Physics: Laws of Motion (Newton's Laws, Friction, Circular Motion)
+Physics: Work, Energy and Power (Conservative Forces, Energy Conservation)
+Physics: Rotational Motion (Moment of Inertia, Torque, Angular Momentum)
+Physics: Gravitation (Kepler's Laws, Orbital Velocity, Escape Velocity)
+Physics: Properties of Solids and Liquids (Elasticity, Viscosity, Surface Tension)
+Physics: Thermodynamics (Zeroth to Third Laws, Carnot Cycle, Entropy)
+Physics: Kinetic Theory of Gases (Maxwell's Distribution, Mean Free Path)
+Physics: Simple Harmonic Motion (Pendulum, Spring-Mass, Resonance)
+Physics: Waves and Sound (Doppler Effect, Standing Waves, Beats)
+Physics: Electrostatics (Coulomb's Law, Electric Field, Gauss's Law, Potential)
+Physics: Current Electricity (Ohm's Law, Kirchhoff's Laws, Wheatstone Bridge)
+Physics: Magnetic Effects of Current (Biot-Savart, Ampere's Law, Lorentz Force)
+Physics: Electromagnetic Induction (Faraday's Law, Lenz's Law, Mutual Inductance)
+Physics: Alternating Current (Resonance, LCR Circuits, Power Factor)
+Physics: Optics (Reflection, Refraction, Lenses, Interference, Diffraction)
+Physics: Modern Physics (Photoelectric Effect, Bohr Model, Radioactivity)
+Physics: Semiconductor Devices (p-n Junction, Transistor, Logic Gates)
+Chemistry: Mole Concept and Stoichiometry (Empirical Formula, Limiting Reagent)
+Chemistry: Atomic Structure (Quantum Numbers, Orbitals, Electronic Configuration)
+Chemistry: Chemical Bonding (VSEPR, Hybridisation, MOT, Hydrogen Bonding)
+Chemistry: Periodic Table and Periodicity (Trends in Properties)
+Chemistry: States of Matter (Gas Laws, Liquid State, van der Waals Equation)
+Chemistry: Thermodynamics (Hess's Law, Enthalpy, Gibbs Free Energy)
+Chemistry: Equilibrium (Le Chatelier's Principle, Kp, Kc, Ionic Equilibrium)
+Chemistry: Redox Reactions and Electrochemistry (Cell Potential, Nernst Equation)
+Chemistry: Chemical Kinetics (Rate Laws, Activation Energy, Arrhenius Equation)
+Chemistry: Surface Chemistry (Adsorption, Catalysis, Colloids)
+Chemistry: s-Block Elements (Alkali and Alkaline Earth Metals)
+Chemistry: p-Block Elements (Groups 13-18, Noble Gases)
+Chemistry: d- and f-Block Elements (Transition Metals, Coordination Compounds)
+Chemistry: Organic Chemistry - General Organic Chemistry (Inductive, Resonance, Hyperconjugation)
+Chemistry: Hydrocarbons (Alkanes, Alkenes, Alkynes, Aromatic Compounds)
+Chemistry: Functional Group Reactions (Haloalkanes, Alcohols, Aldehydes, Ketones, Acids)
+Chemistry: Biomolecules (Carbohydrates, Proteins, Nucleic Acids, Vitamins)
+Mathematics: Sets, Relations and Functions (Domain, Range, Composition)
+Mathematics: Complex Numbers (Polar Form, De Moivre's Theorem, Argand Plane)
+Mathematics: Sequences and Series (AP, GP, HP, AM-GM Inequality)
+Mathematics: Quadratic Equations (Discriminant, Sum and Product of Roots)
+Mathematics: Permutations and Combinations (Binomial Theorem, Pascal's Triangle)
+Mathematics: Matrices and Determinants (Inverse, Cramer's Rule, Rank)
+Mathematics: Differential Calculus (Limits, Continuity, Derivatives, L'Hopital)
+Mathematics: Applications of Derivatives (Maxima, Minima, Rate of Change, Tangents)
+Mathematics: Integral Calculus (Indefinite, Definite Integrals, Properties)
+Mathematics: Differential Equations (Order, Degree, Linear DEs, Separation of Variables)
+Mathematics: Coordinate Geometry - Straight Lines (Slope, Distance, Locus)
+Mathematics: Coordinate Geometry - Circles (Chord of Contact, Power of Point)
+Mathematics: Coordinate Geometry - Conics (Parabola, Ellipse, Hyperbola)
+Mathematics: Vectors (Dot Product, Cross Product, Scalar Triple Product)
+Mathematics: 3D Geometry (Direction Cosines, Lines, Planes, Angles)
+Mathematics: Probability and Statistics (Bayes' Theorem, Distributions, Mean, Variance)
+Mathematics: Trigonometry (Identities, Inverse Functions, Equations, Properties of Triangles)

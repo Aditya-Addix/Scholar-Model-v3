@@ -4064,9 +4064,6 @@ async def get_exam_syllabus(exam: str) -> dict[str, list[str] | str]:
     normalized_exam_name = _normalize_exam_name(requested_exam)
 
     file_topics = _load_syllabus_from_context_files(normalized_exam_name)
-    if file_topics is None:
-        return {"error": "Syllabus file not found on server"}
-
     if file_topics:
         return {"syllabus": file_topics}
 
@@ -4188,10 +4185,10 @@ async def get_exam_syllabus(exam: str) -> dict[str, list[str] | str]:
                 return {"syllabus": topics}
 
         logger.warning("No syllabus mapped for exam=%s; returning fallback syllabus.", normalized_exam_name)
-        return fallback_payload
+        return {"syllabus": _fallback_syllabus_chapters(normalized_exam_name)}
     except Exception as exc:
         logger.warning("Syllabus router failed for exam=%s; returning fallback syllabus.", normalized_exam_name, exc_info=exc)
-        return fallback_payload
+        return {"syllabus": _fallback_syllabus_chapters(normalized_exam_name)}
 
 
 @app.post("/api/pyq/generate")

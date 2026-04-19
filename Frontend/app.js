@@ -1075,19 +1075,38 @@ async function loadSyllabusForExam(examName) {
         if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
             throw new Error("syllabus-object-required");
         }
+        if (payload.error || !payload.syllabus) {
+            throw new Error("syllabus-payload-missing");
+        }
         renderSyllabusSections(payload, false, safeExamName);
     } catch (error) {
         console.error("Failed to load syllabus for exam:", safeExamName, error);
         targetSlot.classList.add("syllabus-container");
         targetSlot.hidden = false;
-        targetSlot.innerHTML = '<div class="syllabus-category"><h4>SYLLABUS ERROR</h4><div class="syllabus-chip-row"><span class="syllabus-chip syllabus-chapter-item">Failed to load syllabus. Please check your connection and try again.</span></div></div>';
+        targetSlot.innerHTML =
+            '<div class="syllabus-category">' +
+                '<h4 style="color:#ff4d5f;margin-bottom:8px;">CONNECTION ERROR</h4>' +
+                '<p style="color:#a0aec0;font-size:0.8rem;margin-bottom:12px;">Could not load the ' + safeExamName + ' syllabus. Check your connection.</p>' +
+                '<button class="syllabus-retry-btn" style="' +
+                    'background:rgba(0,255,255,0.08);' +
+                    'border:1px solid rgba(0,255,255,0.35);' +
+                    'color:#00ffff;' +
+                    'padding:8px 18px;' +
+                    'border-radius:8px;' +
+                    'font-size:0.78rem;' +
+                    'letter-spacing:0.06em;' +
+                    'text-transform:uppercase;' +
+                    'cursor:pointer;' +
+                    'transition:background 150ms ease;' +
+                    '" onclick="loadSyllabusForExam(' + JSON.stringify(safeExamName) + ')">↺ Retry</button>' +
+            '</div>';
     }
 }
 
 async function fetchSyllabus(exam) {
     const safeExam = String(exam || "NSEJS").trim() || "NSEJS";
     const encodedExam = encodeURIComponent(safeExam);
-    const syllabusUrl = "https://scholar-model-v3.onrender.com/api/syllabus/" + encodedExam;
+    const syllabusUrl = BASE_URL + "/api/syllabus/" + encodedExam;
 
     try {
         const response = await safeFetch(syllabusUrl, {

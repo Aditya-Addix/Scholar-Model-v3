@@ -1,4 +1,42 @@
-﻿Number Theory: Divisibility, Modular Arithmetic, Primes.
-Algebra: Polynomials, Inequalities, Equations.
-Geometry: Circles, Triangles, Quadrilaterals.
-Combinatorics: Counting, Probability.
+﻿Number Theory: Divisibility Rules and Tests (2, 3, 4, 5, 7, 8, 9, 11, 13)
+Number Theory: Prime Numbers (Sieve of Eratosthenes, Primality Testing, Infinitude of Primes)
+Number Theory: GCD and LCM (Euclidean Algorithm, Properties, Applications)
+Number Theory: Modular Arithmetic (Congruences, Residue Classes, Fermat's Little Theorem)
+Number Theory: Diophantine Equations (Linear Equations in Integers, Pell's Equation)
+Number Theory: Chinese Remainder Theorem (Simultaneous Congruences)
+Number Theory: Arithmetic Functions (Euler Totient Function, Number of Divisors, Sum of Divisors)
+Number Theory: Base Representations (Binary, Octal, Hexadecimal, Change of Base)
+Number Theory: Perfect, Abundant and Deficient Numbers
+Algebra: Algebraic Identities and Factorisation (Sophie Germain, Sum/Difference of Cubes)
+Algebra: Polynomials (Roots, Remainder Theorem, Factor Theorem, Rational Root Theorem)
+Algebra: Linear and Quadratic Equations (Vieta's Formulas, Discriminant, Nature of Roots)
+Algebra: Inequalities (AM-GM, Cauchy-Schwarz, Triangle Inequality, Rearrangement)
+Algebra: Sequences and Series (AP, GP, HP, Telescoping Sums, Partial Fractions)
+Algebra: Functional Equations (Cauchy's Equation, Finding Unknown Functions)
+Algebra: Logarithms and Exponents (Laws, Change of Base, Exponential Equations)
+Algebra: Systems of Equations (Substitution, Elimination, Cramer's Rule)
+Algebra: Absolute Value and Floor/Ceiling Functions
+Geometry: Properties of Triangles (Angle Bisector, Median, Altitude, Circumcircle, Incircle)
+Geometry: Congruence and Similarity (SSS, SAS, ASA, AA Criteria)
+Geometry: Circles (Chord Properties, Tangent-Secant Theorem, Power of a Point)
+Geometry: Cyclic Quadrilaterals (Ptolemy's Theorem, Brahmagupta's Formula)
+Geometry: Area Methods (Heron's Formula, Area via Trigonometry, Shoelace Formula)
+Geometry: Coordinate Geometry (Distance, Midpoint, Slope, Locus Problems)
+Geometry: Mensuration (Area and Perimeter of Polygons, Volume of Solids)
+Geometry: Transformations (Reflection, Rotation, Translation, Similarity Transformations)
+Geometry: Constructions and Geometric Proofs
+Combinatorics: Fundamental Counting Principle (Multiplication and Addition Rules)
+Combinatorics: Permutations (Arrangements with and without Repetition, Circular Permutations)
+Combinatorics: Combinations (Selection, Binomial Coefficients, Pascal's Triangle)
+Combinatorics: Binomial Theorem (Expansion, General Term, Middle Term)
+Combinatorics: Pigeonhole Principle (Basic and Generalised, Applications)
+Combinatorics: Inclusion-Exclusion Principle (Venn Diagrams, Derangements)
+Combinatorics: Discrete Probability (Sample Space, Events, Conditional Probability)
+Combinatorics: Recursion and Recurrence Relations (Fibonacci, Catalan Numbers)
+Combinatorics: Graph Theory Basics (Paths, Cycles, Trees, Euler Circuits)
+Logic and Reasoning: Mathematical Induction (Weak and Strong Induction)
+Logic and Reasoning: Invariants and Monovariants (Parity, Colouring Arguments)
+Logic and Reasoning: Extremal Principle (Finding Maximum and Minimum Arguments)
+Logic and Reasoning: Pigeonhole and Existence Proofs
+Logic and Reasoning: Proof Techniques (Direct, Contrapositive, Contradiction)
+Logic and Reasoning: Game Theory Basics (Winning and Losing Positions, Nim)
