@@ -1,5 +1,4 @@
-NMTC Number Systems and Operations
-NMTC Algebraic Expressions and Equations
-NMTC Geometry and Mensuration
-NMTC Data Interpretation and Probability
-NMTC Logical Reasoning and Problem Solving
+﻿Number Theory: Divisibility, Modular Arithmetic, Primes.
+Algebra: Polynomials, Inequalities, Equations.
+Geometry: Circles, Triangles, Quadrilaterals.
+Combinatorics: Counting, Probability.
