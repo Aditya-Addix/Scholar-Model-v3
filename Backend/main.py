@@ -1639,7 +1639,7 @@ app.add_middleware(
 
 
 @app.middleware("http")
-async def scholar_auth_middleware(request: Request, call_next):
+async def scholar_request_middleware(request: Request, call_next):
     if request.method == "OPTIONS":
         request_origin = str(request.headers.get("origin", "")).strip()
         allow_all_origins = "*" in CORS_ALLOW_ORIGINS
@@ -1696,11 +1696,6 @@ class DailyAnalyticsSyncPayload(BaseModel):
     problems_delta: int = 0
     physics_delta: int = 0
     math_delta: int = 0
-
-
-class SupabaseAuthPayload(BaseModel):
-    email: str
-    password: str = Field(..., min_length=6, max_length=128)
 
 
 def _serialize_vault_item(item: VaultItem) -> dict[str, Any]:
@@ -4044,52 +4039,6 @@ def _load_syllabus_from_context_files(exam_name: str) -> list[str]:
     return list(dict.fromkeys(chapters))
 
 
-def _require_supabase_client() -> Client:
-    if SUPABASE_CLIENT is None:
-        raise HTTPException(status_code=503, detail="Supabase auth is not configured on backend.")
-    return SUPABASE_CLIENT
-
-
-def _extract_supabase_session(auth_result: Any) -> dict[str, Any]:
-    session = getattr(auth_result, "session", None)
-    user = getattr(auth_result, "user", None)
-
-    if isinstance(auth_result, dict):
-        session = session or auth_result.get("session")
-        user = user or auth_result.get("user")
-
-    access_token = ""
-    refresh_token = ""
-    expires_in = None
-    token_type = ""
-
-    if session is not None:
-        access_token = str(getattr(session, "access_token", "") or "")
-        refresh_token = str(getattr(session, "refresh_token", "") or "")
-        expires_in = getattr(session, "expires_in", None)
-        token_type = str(getattr(session, "token_type", "") or "")
-        if isinstance(session, dict):
-            access_token = str(session.get("access_token", access_token) or access_token)
-            refresh_token = str(session.get("refresh_token", refresh_token) or refresh_token)
-            expires_in = session.get("expires_in", expires_in)
-            token_type = str(session.get("token_type", token_type) or token_type)
-
-    user_id = str(getattr(user, "id", "") or "")
-    user_email = str(getattr(user, "email", "") or "")
-    if isinstance(user, dict):
-        user_id = str(user.get("id", user_id) or user_id)
-        user_email = str(user.get("email", user_email) or user_email)
-
-    return {
-        "token": access_token,
-        "refresh_token": refresh_token,
-        "expires_in": expires_in,
-        "token_type": token_type,
-        "user": {
-            "id": user_id,
-            "email": user_email,
-        },
-    }
 @app.post("/api/upload-image")
 async def upload_image(file: UploadFile = File(...)) -> Dict[str, str]:
     if genai is None:
@@ -4953,7 +4902,7 @@ async def get_user_stats() -> Dict[str, int]:
 async def get_admin_telemetry(request: Request) -> Dict[str, int]:
     requester_email = str(request.headers.get("X-User-Email", "")).strip().lower()
     if not requester_email or requester_email != FOUNDER_EMAIL:
-        raise HTTPException(status_code=403, detail="Founder authorization required.")
+        raise HTTPException(status_code=403, detail="Founder access required.")
 
     today = date.today()
     async with AsyncSessionLocal() as session:

@@ -152,8 +152,8 @@ window.onunhandledrejection = function globalPromiseRejectionHandler(event) {
     }
 };
 
-async function authFetch(url, options = {}) {
-    if (!isGatewayAuthorized()) {
+async function apiFetch(url, options = {}) {
+    if (!isGateGranted()) {
         return buildSafeFetchErrorResponse();
     }
 
@@ -297,7 +297,7 @@ async function initializeApp() {
     await loadSyllabusForExam(activeExam);
 }
 
-function isGatewayAuthorized() {
+function isGateGranted() {
     try {
         return window.sessionStorage.getItem(ACCESS_STATUS_STORAGE_KEY) === "granted";
     } catch (error) {
@@ -305,7 +305,7 @@ function isGatewayAuthorized() {
     }
 }
 
-function setGatewayAuthorized() {
+function markGateGranted() {
     try {
         window.sessionStorage.setItem(ACCESS_STATUS_STORAGE_KEY, "granted");
     } catch (error) {
@@ -368,7 +368,7 @@ function verifyAccess() {
 
     const enteredCode = String(labsAccessInput.value || "");
     if (enteredCode === ACCESS_CODE) {
-        setGatewayAuthorized();
+        markGateGranted();
         clearGatewayError();
         unlockGatewayAndStartApp();
         return true;
@@ -406,7 +406,7 @@ function initializeAccessGateway() {
         return;
     }
 
-    if (isGatewayAuthorized()) {
+    if (isGateGranted()) {
         labsGate.classList.add("is-hidden");
         labsGate.setAttribute("hidden", "hidden");
         unlockGatewayAndStartApp();
@@ -999,7 +999,7 @@ function appendPyqVariantMessage(markdownText, topic, exam) {
     }
 }
 
-function buildScholarAuthHeaders() {
+function buildApiHeaders() {
     return new Headers({ "Content-Type": "application/json" });
 }
 
@@ -1022,7 +1022,7 @@ async function triggerPyqVariantGeneration(topic, chipButton) {
     try {
         response = await safeFetch(API_BASE_URL + "/api/pyq/generate", {
             method: "POST",
-            headers: buildScholarAuthHeaders(),
+            headers: buildApiHeaders(),
             body: JSON.stringify({ exam: examContext, topic: safeTopic }),
         });
     } catch (error) {
@@ -1076,7 +1076,7 @@ async function fetchSyllabus(exam) {
     try {
         const response = await safeFetch(syllabusUrl, {
             method: "GET",
-            headers: buildScholarAuthHeaders(),
+            headers: buildApiHeaders(),
         });
 
         if (response && response.error) {
@@ -1150,7 +1150,7 @@ function saveProgressData() {
 }
 
 async function fetchAnalyticsSnapshot() {
-    const response = await authFetch(API_BASE_URL + "/api/analytics", { method: "GET" });
+    const response = await apiFetch(API_BASE_URL + "/api/analytics", { method: "GET" });
     if (!response.ok) {
         throw new Error("analytics-fetch-failed");
     }
@@ -1158,7 +1158,7 @@ async function fetchAnalyticsSnapshot() {
 }
 
 async function fetchUserStatsSnapshot() {
-    const response = await authFetch(API_BASE_URL + "/api/stats", { method: "GET" });
+    const response = await apiFetch(API_BASE_URL + "/api/stats", { method: "GET" });
     if (!response.ok) {
         throw new Error("stats-fetch-failed");
     }
@@ -1180,7 +1180,7 @@ async function hydrateStatsFromDatabase() {
 
 async function syncAnalyticsDelta(dateKey, deltas) {
     try {
-        await authFetch(API_BASE_URL + "/api/analytics/sync", {
+        await apiFetch(API_BASE_URL + "/api/analytics/sync", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1595,7 +1595,7 @@ function recoverFromMinorInterruption() {
 }
 
 async function downloadWeaknessReportPdf() {
-    const response = await authFetch(API_BASE_URL + "/api/export/blackbox", {
+    const response = await apiFetch(API_BASE_URL + "/api/export/blackbox", {
         method: "GET",
     });
 
@@ -1623,7 +1623,7 @@ async function downloadCheatSheet() {
         return;
     }
 
-    const response = await authFetch(API_BASE_URL + "/api/export-pdf/" + encodeURIComponent(topic), {
+    const response = await apiFetch(API_BASE_URL + "/api/export-pdf/" + encodeURIComponent(topic), {
         method: "GET",
     });
 
@@ -1740,7 +1740,7 @@ function updateGlobalStatus(isOnline) {
 
 async function verifyConnection() {
     try {
-        const response = await authFetch(API_BASE_URL + "/api/vault", {
+        const response = await apiFetch(API_BASE_URL + "/api/vault", {
             method: "GET",
         });
         const isOnline = Boolean(response && response.ok);
@@ -1887,7 +1887,7 @@ async function requestSessionDebrief() {
     }
 
     try {
-        const response = await authFetch(API_BASE_URL + "/api/debrief", {
+        const response = await apiFetch(API_BASE_URL + "/api/debrief", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(conversationHistory),
@@ -1939,7 +1939,7 @@ function bindFocusMode() {
 }
 
 async function loadVaultEntries() {
-    const response = await authFetch(API_BASE_URL + "/api/vault", { method: "GET" });
+    const response = await apiFetch(API_BASE_URL + "/api/vault", { method: "GET" });
     if (!response.ok) {
         throw new Error("vault-fetch-failed");
     }
@@ -2016,7 +2016,7 @@ async function saveMessageToVault(button) {
             return;
         }
 
-        const createResponse = await authFetch(API_BASE_URL + "/api/vault", {
+        const createResponse = await apiFetch(API_BASE_URL + "/api/vault", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -2103,7 +2103,7 @@ async function deleteVaultEntry(entryId) {
     if (!id) {
         return;
     }
-    const response = await authFetch(API_BASE_URL + "/api/vault/" + encodeURIComponent(id), {
+    const response = await apiFetch(API_BASE_URL + "/api/vault/" + encodeURIComponent(id), {
         method: "DELETE",
     });
     if (!response.ok) {
@@ -2490,7 +2490,7 @@ function wireMultimodalUiHandlers() {
                 
                 const response = await safeFetch(API_BASE_URL + "/api/document/ingest", {
                     method: "POST",
-                    headers: buildScholarAuthHeaders(),
+                    headers: buildApiHeaders(),
                     body: formData
                 });
 
@@ -2520,7 +2520,7 @@ function wireMultimodalUiHandlers() {
                 appendSystemStep("[Cheat Sheet Agent]: Generating for " + escapeHtml(activeSyllabusTopic) + "...");
                 const response = await safeFetch(API_BASE_URL + "/api/generate/cheatsheet", {
                     method: "POST",
-                    headers: buildScholarAuthHeaders(),
+                    headers: buildApiHeaders(),
                     body: JSON.stringify({
                         exam: activeExam,
                         topic: activeSyllabusTopic
@@ -2976,7 +2976,7 @@ async function fetchSimulation(studentQuery) {
     }, 15000);
 
     try {
-        const response = await authFetch(API_BASE_URL + "/api/simulate", {
+        const response = await apiFetch(API_BASE_URL + "/api/simulate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -3010,7 +3010,7 @@ async function fetchSimulationStatus(taskId) {
     }, 15000);
 
     try {
-        const response = await authFetch(API_BASE_URL + "/api/status/" + encodeURIComponent(taskId), {
+        const response = await apiFetch(API_BASE_URL + "/api/status/" + encodeURIComponent(taskId), {
             method: "GET",
             headers: {
                 Accept: "application/json",
@@ -3105,7 +3105,7 @@ async function fetchUploadedImageText(file) {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await authFetch(API_BASE_URL + "/api/upload-image", {
+        const response = await apiFetch(API_BASE_URL + "/api/upload-image", {
             method: "POST",
             body: formData,
             signal: controller.signal,
@@ -3133,7 +3133,7 @@ async function fetchSystemStatus() {
     }, 15000);
 
     try {
-        const response = await authFetch(API_BASE_URL + "/api/system-status", {
+        const response = await apiFetch(API_BASE_URL + "/api/system-status", {
             method: "GET",
             headers: {
                 Accept: "application/json",

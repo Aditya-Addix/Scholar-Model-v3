@@ -208,9 +208,13 @@ body:not(.gate-locked) .addix-scholars-shell {
 }
 
 .addix-scholars-shell {
-    display: flex;
+    display: none;
     flex-direction: column;
     min-height: 100vh;
+}
+
+body:not(.gate-locked) .addix-scholars-shell {
+    display: flex;
 }
 
 ::-webkit-scrollbar {
