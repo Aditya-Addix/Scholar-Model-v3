@@ -3993,7 +3993,7 @@ def _extract_gemini_response_text(response: Any) -> str:
     return "\n".join(text_chunks).strip()
 
 
-def _load_syllabus_from_context_files(exam_name: str) -> list[str]:
+def _load_syllabus_from_context_files(exam_name: str) -> list[str] | None:
     normalized_exam = _normalize_exam_name(exam_name).upper()
     filename_map = {
         "NSEJS": "nsejs_syllabus.txt",
@@ -4008,12 +4008,12 @@ def _load_syllabus_from_context_files(exam_name: str) -> list[str]:
 
     syllabus_path = Path(__file__).resolve().parent / "contexts" / target_filename
     if not syllabus_path.exists():
-        return []
+        return None
 
     try:
         raw_text = syllabus_path.read_text(encoding="utf-8")
     except OSError:
-        return []
+        return None
 
     chapters: list[str] = []
     for line in raw_text.splitlines():
@@ -4076,12 +4076,14 @@ async def upload_image(file: UploadFile = File(...)) -> Dict[str, str]:
 
 
 @app.get("/api/syllabus/{exam}")
-async def get_exam_syllabus(exam: str) -> dict[str, list[str]]:
+async def get_exam_syllabus(exam: str) -> dict[str, list[str] | str]:
     requested_exam = str(exam or "").strip()
     normalized_exam_name = _normalize_exam_name(requested_exam)
-    fallback_payload = {"syllabus": ["General Curriculum", "Foundations", "Advanced Topics"]}
 
     file_topics = _load_syllabus_from_context_files(normalized_exam_name)
+    if file_topics is None:
+        return {"error": "Syllabus file not found on server"}
+
     if file_topics:
         return {"syllabus": file_topics}
 

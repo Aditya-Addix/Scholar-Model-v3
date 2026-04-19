@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://scholar-model-v3.onrender.com";
+const BASE_URL = "https://scholar-model-v3.onrender.com";
 const PREMIUM_STATUS_STORAGE_KEY = "addix-premium-status";
 const isPremiumUser = true; // MOCKED FOR LOCAL TESTING
 const SECURITY_PROTOCOL_MESSAGE = "Security Protocol: Resetting API Handshake";
@@ -315,6 +315,17 @@ function markGateGranted() {
 
 function setGatewayLockState(locked) {
     document.body.classList.toggle("gate-locked", Boolean(locked));
+
+    if (labsGate) {
+        labsGate.style.display = locked ? "flex" : "none";
+        if (locked) {
+            labsGate.removeAttribute("hidden");
+        }
+    }
+
+    if (addixScholarsShell) {
+        addixScholarsShell.style.display = locked ? "none" : "flex";
+    }
 }
 function showGatewayError(message) {
     if (labsGateFeedback) {
@@ -336,14 +347,19 @@ function clearGatewayError() {
     }
 }
 
-function unlockGatewayAndStartApp() {
+function showMainApp() {
     setGatewayLockState(false);
 
     if (labsGate) {
+        labsGate.style.display = "none";
         labsGate.classList.add("is-hidden");
         window.setTimeout(() => {
             labsGate.setAttribute("hidden", "hidden");
         }, 360);
+    }
+
+    if (addixScholarsShell) {
+        addixScholarsShell.style.display = "flex";
     }
 
     if (!appInitialized) {
@@ -362,7 +378,7 @@ function shakeGatewayPanel() {
 
 function verifyAccess() {
     if (!labsAccessInput) {
-        unlockGatewayAndStartApp();
+        showMainApp();
         return true;
     }
 
@@ -370,7 +386,7 @@ function verifyAccess() {
     if (enteredCode === ACCESS_CODE) {
         markGateGranted();
         clearGatewayError();
-        unlockGatewayAndStartApp();
+        showMainApp();
         return true;
     }
 
@@ -409,7 +425,7 @@ function initializeAccessGateway() {
     if (isGateGranted()) {
         labsGate.classList.add("is-hidden");
         labsGate.setAttribute("hidden", "hidden");
-        unlockGatewayAndStartApp();
+        showMainApp();
         return;
     }
 
@@ -1020,7 +1036,7 @@ async function triggerPyqVariantGeneration(topic, chipButton) {
 
     let response;
     try {
-        response = await safeFetch(API_BASE_URL + "/api/pyq/generate", {
+        response = await safeFetch(BASE_URL + "/api/pyq/generate", {
             method: "POST",
             headers: buildApiHeaders(),
             body: JSON.stringify({ exam: examContext, topic: safeTopic }),
@@ -1150,7 +1166,7 @@ function saveProgressData() {
 }
 
 async function fetchAnalyticsSnapshot() {
-    const response = await apiFetch(API_BASE_URL + "/api/analytics", { method: "GET" });
+    const response = await apiFetch(BASE_URL + "/api/analytics", { method: "GET" });
     if (!response.ok) {
         throw new Error("analytics-fetch-failed");
     }
@@ -1158,7 +1174,7 @@ async function fetchAnalyticsSnapshot() {
 }
 
 async function fetchUserStatsSnapshot() {
-    const response = await apiFetch(API_BASE_URL + "/api/stats", { method: "GET" });
+    const response = await apiFetch(BASE_URL + "/api/stats", { method: "GET" });
     if (!response.ok) {
         throw new Error("stats-fetch-failed");
     }
@@ -1180,7 +1196,7 @@ async function hydrateStatsFromDatabase() {
 
 async function syncAnalyticsDelta(dateKey, deltas) {
     try {
-        await apiFetch(API_BASE_URL + "/api/analytics/sync", {
+        await apiFetch(BASE_URL + "/api/analytics/sync", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1595,7 +1611,7 @@ function recoverFromMinorInterruption() {
 }
 
 async function downloadWeaknessReportPdf() {
-    const response = await apiFetch(API_BASE_URL + "/api/export/blackbox", {
+    const response = await apiFetch(BASE_URL + "/api/export/blackbox", {
         method: "GET",
     });
 
@@ -1623,7 +1639,7 @@ async function downloadCheatSheet() {
         return;
     }
 
-    const response = await apiFetch(API_BASE_URL + "/api/export-pdf/" + encodeURIComponent(topic), {
+    const response = await apiFetch(BASE_URL + "/api/export-pdf/" + encodeURIComponent(topic), {
         method: "GET",
     });
 
@@ -1740,7 +1756,7 @@ function updateGlobalStatus(isOnline) {
 
 async function verifyConnection() {
     try {
-        const response = await apiFetch(API_BASE_URL + "/api/vault", {
+        const response = await apiFetch(BASE_URL + "/api/vault", {
             method: "GET",
         });
         const isOnline = Boolean(response && response.ok);
@@ -1887,7 +1903,7 @@ async function requestSessionDebrief() {
     }
 
     try {
-        const response = await apiFetch(API_BASE_URL + "/api/debrief", {
+        const response = await apiFetch(BASE_URL + "/api/debrief", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(conversationHistory),
@@ -1939,7 +1955,7 @@ function bindFocusMode() {
 }
 
 async function loadVaultEntries() {
-    const response = await apiFetch(API_BASE_URL + "/api/vault", { method: "GET" });
+    const response = await apiFetch(BASE_URL + "/api/vault", { method: "GET" });
     if (!response.ok) {
         throw new Error("vault-fetch-failed");
     }
@@ -2016,7 +2032,7 @@ async function saveMessageToVault(button) {
             return;
         }
 
-        const createResponse = await apiFetch(API_BASE_URL + "/api/vault", {
+        const createResponse = await apiFetch(BASE_URL + "/api/vault", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -2103,7 +2119,7 @@ async function deleteVaultEntry(entryId) {
     if (!id) {
         return;
     }
-    const response = await apiFetch(API_BASE_URL + "/api/vault/" + encodeURIComponent(id), {
+    const response = await apiFetch(BASE_URL + "/api/vault/" + encodeURIComponent(id), {
         method: "DELETE",
     });
     if (!response.ok) {
@@ -2488,7 +2504,7 @@ function wireMultimodalUiHandlers() {
                 const formData = new FormData();
                 formData.append("file", selectedFile);
                 
-                const response = await safeFetch(API_BASE_URL + "/api/document/ingest", {
+                const response = await safeFetch(BASE_URL + "/api/document/ingest", {
                     method: "POST",
                     headers: buildApiHeaders(),
                     body: formData
@@ -2518,7 +2534,7 @@ function wireMultimodalUiHandlers() {
             }
             try {
                 appendSystemStep("[Cheat Sheet Agent]: Generating for " + escapeHtml(activeSyllabusTopic) + "...");
-                const response = await safeFetch(API_BASE_URL + "/api/generate/cheatsheet", {
+                const response = await safeFetch(BASE_URL + "/api/generate/cheatsheet", {
                     method: "POST",
                     headers: buildApiHeaders(),
                     body: JSON.stringify({
@@ -2670,7 +2686,7 @@ async function sendQueryToBackend(userText) {
         : activeExam;
     const testerModeEnabled = Boolean(engineModeToggle ? engineModeToggle.checked : isTesterMode);
     const currentImageBase64 = selectedImageBase64 || null;
-    const BACKEND_URL = API_BASE_URL + "/api/solve";
+    const BACKEND_URL = BASE_URL + "/api/solve";
 
     // 2. Build payload with frontend state.
     const payload = {
@@ -2976,7 +2992,7 @@ async function fetchSimulation(studentQuery) {
     }, 15000);
 
     try {
-        const response = await apiFetch(API_BASE_URL + "/api/simulate", {
+        const response = await apiFetch(BASE_URL + "/api/simulate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -3010,7 +3026,7 @@ async function fetchSimulationStatus(taskId) {
     }, 15000);
 
     try {
-        const response = await apiFetch(API_BASE_URL + "/api/status/" + encodeURIComponent(taskId), {
+        const response = await apiFetch(BASE_URL + "/api/status/" + encodeURIComponent(taskId), {
             method: "GET",
             headers: {
                 Accept: "application/json",
@@ -3105,7 +3121,7 @@ async function fetchUploadedImageText(file) {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await apiFetch(API_BASE_URL + "/api/upload-image", {
+        const response = await apiFetch(BASE_URL + "/api/upload-image", {
             method: "POST",
             body: formData,
             signal: controller.signal,
@@ -3133,7 +3149,7 @@ async function fetchSystemStatus() {
     }, 15000);
 
     try {
-        const response = await apiFetch(API_BASE_URL + "/api/system-status", {
+        const response = await apiFetch(BASE_URL + "/api/system-status", {
             method: "GET",
             headers: {
                 Accept: "application/json",
