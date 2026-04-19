@@ -4040,6 +4040,7 @@ def _load_syllabus_from_context_files(exam_name: str) -> list[str]:
     normalized_exam = _normalize_exam_name(exam_name).upper()
     filename_map = {
         "NSEJS": "nsejs_syllabus.txt",
+        "NMTC": "nmtc_syllabus.txt",
         "IOQM": "ioqm_syllabus.txt",
         "JEE ADVANCED": "jee_syllabus.txt",
         "JEE": "jee_syllabus.txt",

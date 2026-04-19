@@ -1,4 +1,5 @@
 const API_BASE_URL = "https://scholar-model-v3.onrender.com";
+const AUTH_API_BASE_URL = "https://scholar-model-v3.onrender.com/api";
 const AUTH_TOKEN_STORAGE_KEY = "addix-auth-token";
 const AUTH_USER_EMAIL_STORAGE_KEY = "addix-user-email";
 const SUPABASE_TOKEN_STORAGE_KEY = "supabase_token";
@@ -449,7 +450,8 @@ async function submitIdentityRequest(mode) {
     setIdentityFeedback(action === "signup" ? "Creating secure identity..." : "Verifying identity...");
 
     try {
-        const response = await safeFetch(API_BASE_URL + "/api/" + action, {
+        const authUrl = AUTH_API_BASE_URL + "/" + action;
+        const response = await safeFetch(authUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -1306,25 +1308,33 @@ async function fetchSyllabus(exam) {
     const encodedExam = encodeURIComponent(safeExam);
     const syllabusUrl = "https://scholar-model-v3.onrender.com/api/syllabus/" + encodedExam;
 
-    const response = await safeFetch(syllabusUrl, {
-        method: "GET",
-        headers: buildScholarAuthHeaders(),
-    });
+    try {
+        const response = await safeFetch(syllabusUrl, {
+            method: "GET",
+            headers: buildScholarAuthHeaders(),
+        });
 
-    if (response && response.error) {
-        console.error("[SyllabusFetch] Bridge failure", { exam: safeExam, url: syllabusUrl });
-        throw new Error("syllabus-bridge-failed");
+        if (response && response.error) {
+            console.error("[SyllabusFetch] Bridge failure", { exam: safeExam, url: syllabusUrl });
+            throw new Error("syllabus-bridge-failed");
+        }
+        if (!response || !response.ok) {
+            const statusCode = response ? response.status : "no response";
+            console.error("[SyllabusFetch] HTTP failure", { exam: safeExam, url: syllabusUrl, status: statusCode });
+            const statusError = new Error("syllabus-fetch-failed: " + statusCode);
+            statusError.statusCode = statusCode;
+            throw statusError;
+        }
+        const data = await response.json();
+        if (!data || typeof data !== "object" || Array.isArray(data)) {
+            throw new Error("syllabus-payload-invalid");
+        }
+        return data;
+    } catch (error) {
+        const statusCode = error && error.statusCode ? error.statusCode : "unknown";
+        console.error("[SyllabusFetch] Catch", { exam: safeExam, url: syllabusUrl, status: statusCode, error });
+        throw error;
     }
-    if (!response || !response.ok) {
-        const statusCode = response ? response.status : "no response";
-        console.error("[SyllabusFetch] HTTP failure", { exam: safeExam, url: syllabusUrl, status: statusCode });
-        throw new Error("syllabus-fetch-failed: " + (response ? response.status : "no response"));
-    }
-    const data = await response.json();
-    if (!data || typeof data !== "object" || Array.isArray(data)) {
-        throw new Error("syllabus-payload-invalid");
-    }
-    return data;
 }
 
 function updateQueryPlaceholder() {
