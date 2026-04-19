@@ -1,6 +1,7 @@
 const API_BASE_URL = "https://scholar-model-v3.onrender.com";
 const AUTH_TOKEN_STORAGE_KEY = "addix-auth-token";
 const AUTH_USER_EMAIL_STORAGE_KEY = "addix-user-email";
+const SUPABASE_TOKEN_STORAGE_KEY = "supabase_token";
 const PREMIUM_STATUS_STORAGE_KEY = "addix-premium-status";
 const SCHOLAR_FRONTEND_SECRET = typeof window.SCHOLAR_FRONTEND_SECRET === "string" && window.SCHOLAR_FRONTEND_SECRET.trim()
     ? window.SCHOLAR_FRONTEND_SECRET.trim()
@@ -97,6 +98,14 @@ const labsGatePanel = labsGate ? labsGate.querySelector(".labs-gate-panel") : nu
 const labsAccessInput = document.getElementById("labsAccessInput");
 const labsVerifyButton = document.getElementById("labsVerifyButton");
 const labsGateFeedback = document.getElementById("labsGateFeedback");
+const identityPortalModal = document.getElementById("auth-modal") || document.getElementById("identityPortalModal");
+const identityEmailInput = document.getElementById("identityEmailInput");
+const identityPasswordInput = document.getElementById("identityPasswordInput");
+const identityFeedback = document.getElementById("identityFeedback");
+const identitySignInButton = document.getElementById("identitySignInButton");
+const identitySignUpButton = document.getElementById("identitySignUpButton");
+const identityProfileBadge = document.getElementById("identityProfileBadge");
+const logoutButton = document.getElementById("logoutButton");
 
 const PREP_RING_CIRCUMFERENCE = 188.5;
 const PREP_GRADE_MAP = {
@@ -136,6 +145,7 @@ let thinkingTickerId = null;
 let activeSyllabusTopic = "";
 let latestSyllabusPayload = null;
 let masteryChecklistState = loadMasteryChecklistState();
+let identityBindingsAttached = false;
 const SESSION_ID = getSessionId();
 const THINKING_STATUS_FRAMES = ["Processing...", "E = mc²", "Addix Brain Online..."];
 const PREMIUM_QUERY_PROMPT = "ADDIX Scholars Online. Input PCM query for deterministic resolution...";
@@ -159,6 +169,10 @@ window.onunhandledrejection = function globalPromiseRejectionHandler(event) {
 
 async function authFetch(url, options = {}) {
     if (!isGatewayAuthorized()) {
+        return buildSafeFetchErrorResponse();
+    }
+    if (!hasSupabaseToken()) {
+        openIdentityPortal("Identity check required. Please sign in to continue.");
         return buildSafeFetchErrorResponse();
     }
 
@@ -335,6 +349,192 @@ function setGatewayLockState(locked) {
     document.body.classList.toggle("gate-locked", Boolean(locked));
 }
 
+function getSupabaseToken() {
+    return String(window.localStorage.getItem(SUPABASE_TOKEN_STORAGE_KEY) || "").trim();
+}
+
+function hasSupabaseToken() {
+    return Boolean(getSupabaseToken());
+}
+
+function setIdentityFeedback(message, isError = false) {
+    if (!identityFeedback) {
+        return;
+    }
+    identityFeedback.textContent = String(message || "");
+    identityFeedback.classList.toggle("is-error", Boolean(isError));
+}
+
+function setIdentityBusy(isBusy) {
+    const nextBusy = Boolean(isBusy);
+    if (identitySignInButton) {
+        identitySignInButton.disabled = nextBusy;
+    }
+    if (identitySignUpButton) {
+        identitySignUpButton.disabled = nextBusy;
+    }
+    if (identityEmailInput) {
+        identityEmailInput.disabled = nextBusy;
+    }
+    if (identityPasswordInput) {
+        identityPasswordInput.disabled = nextBusy;
+    }
+}
+
+function renderIdentityProfile() {
+    const email = String(window.localStorage.getItem(AUTH_USER_EMAIL_STORAGE_KEY) || "").trim();
+    if (identityProfileBadge) {
+        identityProfileBadge.textContent = email ? ("User: " + email) : "User: Guest";
+    }
+    if (logoutButton) {
+        logoutButton.disabled = !email;
+    }
+}
+
+function persistSupabaseSession(session) {
+    const token = String(session?.token || "").trim();
+    const email = String(session?.user?.email || "").trim().toLowerCase();
+    if (!token) {
+        throw new Error("No token returned from authentication service.");
+    }
+    window.localStorage.setItem(SUPABASE_TOKEN_STORAGE_KEY, token);
+    window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
+    if (email) {
+        window.localStorage.setItem(AUTH_USER_EMAIL_STORAGE_KEY, email);
+    }
+}
+
+function clearSupabaseSession() {
+    window.localStorage.removeItem(SUPABASE_TOKEN_STORAGE_KEY);
+    window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+    window.localStorage.removeItem(AUTH_USER_EMAIL_STORAGE_KEY);
+}
+
+function openIdentityPortal(message = "") {
+    if (!identityPortalModal) {
+        return;
+    }
+    document.body.classList.add("identity-locked");
+    identityPortalModal.classList.add("is-open");
+    identityPortalModal.setAttribute("aria-hidden", "false");
+    setIdentityFeedback(message, false);
+    if (identityEmailInput) {
+        window.requestAnimationFrame(() => {
+            identityEmailInput.focus();
+        });
+    }
+}
+
+function closeIdentityPortal() {
+    if (!identityPortalModal) {
+        return;
+    }
+    document.body.classList.remove("identity-locked");
+    identityPortalModal.classList.remove("is-open");
+    identityPortalModal.setAttribute("aria-hidden", "true");
+    setIdentityFeedback("");
+}
+
+async function submitIdentityRequest(mode) {
+    const action = String(mode || "login").trim().toLowerCase() === "signup" ? "signup" : "login";
+    const email = String(identityEmailInput?.value || "").trim().toLowerCase();
+    const password = String(identityPasswordInput?.value || "");
+
+    if (!email || !password) {
+        setIdentityFeedback("Email and password are required.", true);
+        return;
+    }
+
+    setIdentityBusy(true);
+    setIdentityFeedback(action === "signup" ? "Creating secure identity..." : "Verifying identity...");
+
+    try {
+        const response = await safeFetch(API_BASE_URL + "/api/" + action, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Scholar-Auth": SCHOLAR_FRONTEND_SECRET,
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            const detail = String(payload?.detail || payload?.message || "Authentication failed.");
+            throw new Error(detail);
+        }
+
+        persistSupabaseSession(payload?.session || {});
+        renderIdentityProfile();
+        closeIdentityPortal();
+        if (!appInitialized) {
+            await initializeApp();
+        }
+    } catch (error) {
+        const message = error && error.message ? String(error.message) : "Authentication failed.";
+        setIdentityFeedback(message, true);
+    } finally {
+        setIdentityBusy(false);
+    }
+}
+
+function bindIdentityPortal() {
+    if (identityBindingsAttached) {
+        return;
+    }
+    identityBindingsAttached = true;
+
+    if (identitySignInButton) {
+        identitySignInButton.addEventListener("click", () => {
+            void submitIdentityRequest("login");
+        });
+    }
+    if (identitySignUpButton) {
+        identitySignUpButton.addEventListener("click", () => {
+            void submitIdentityRequest("signup");
+        });
+    }
+    if (identityPasswordInput) {
+        identityPasswordInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                void submitIdentityRequest("login");
+            }
+        });
+    }
+    if (logoutButton) {
+        logoutButton.addEventListener("click", () => {
+            clearSupabaseSession();
+            renderIdentityProfile();
+            openIdentityPortal("Session closed. Sign in again to unlock ADDIX Scholars.");
+        });
+    }
+}
+
+async function initIdentityPortal() {
+    bindIdentityPortal();
+    renderIdentityProfile();
+
+    const token = getSupabaseToken();
+    if (token && !window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)) {
+        window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
+    }
+
+    if (!hasSupabaseToken()) {
+        openIdentityPortal("Identity Portal: Authenticate to continue.");
+        return;
+    }
+
+    closeIdentityPortal();
+    if (!appInitialized) {
+        await initializeApp();
+    }
+}
+
+async function enforceIdentityWall() {
+    await initIdentityPortal();
+}
+
 function showGatewayError(message) {
     if (labsGateFeedback) {
         labsGateFeedback.textContent = String(message || "Unauthorized Access");
@@ -365,9 +565,7 @@ function unlockGatewayAndStartApp() {
         }, 360);
     }
 
-    if (!appInitialized) {
-        void initializeApp();
-    }
+    void initIdentityPortal();
 }
 
 function shakeGatewayPanel() {
@@ -421,7 +619,7 @@ function bindAccessGateway() {
 
 function initializeAccessGateway() {
     if (!labsGate) {
-        void initializeApp();
+        void initIdentityPortal();
         return;
     }
 
@@ -1106,16 +1304,20 @@ async function loadSyllabusForExam(examName) {
 async function fetchSyllabus(exam) {
     const safeExam = String(exam || "NSEJS").trim() || "NSEJS";
     const encodedExam = encodeURIComponent(safeExam);
+    const syllabusUrl = "https://scholar-model-v3.onrender.com/api/syllabus/" + encodedExam;
 
-    const response = await safeFetch(API_BASE_URL + "/api/syllabus/" + encodedExam, {
+    const response = await safeFetch(syllabusUrl, {
         method: "GET",
         headers: buildScholarAuthHeaders(),
     });
 
     if (response && response.error) {
+        console.error("[SyllabusFetch] Bridge failure", { exam: safeExam, url: syllabusUrl });
         throw new Error("syllabus-bridge-failed");
     }
     if (!response || !response.ok) {
+        const statusCode = response ? response.status : "no response";
+        console.error("[SyllabusFetch] HTTP failure", { exam: safeExam, url: syllabusUrl, status: statusCode });
         throw new Error("syllabus-fetch-failed: " + (response ? response.status : "no response"));
     }
     const data = await response.json();

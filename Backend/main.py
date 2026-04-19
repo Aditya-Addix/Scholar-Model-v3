@@ -22,6 +22,11 @@ try:
     import google.generativeai as genai
 except ImportError:
     genai = None
+try:
+    from supabase import Client, create_client
+except ImportError:
+    Client = Any
+    create_client = None
 from dotenv import load_dotenv
 from fastapi import FastAPI, BackgroundTasks, Body, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -86,6 +91,8 @@ GEMINI_API_KEY_ENV_NAME = "GEMINI_API_KEY"
 GOOGLE_API_KEY_ENV_NAME = "GOOGLE_API_KEY"
 SCHOLAR_FRONTEND_SECRET_ENV_NAME = "SCHOLAR_FRONTEND_SECRET"
 FOUNDER_EMAIL_ENV_NAME = "FOUNDER_EMAIL"
+SUPABASE_URL_ENV_NAME = "SUPABASE_URL"
+SUPABASE_ANON_KEY_ENV_NAME = "SUPABASE_ANON_KEY"
 DEEPSEEK_BASE_URL = "https://api.deepseek.com/v1"
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 DEEPSEEK_CHAT_MODEL = "llama-3.3-70b-versatile"
@@ -247,6 +254,28 @@ PRIMARY_ASYNC_LLM_CLIENT = (
 )
 PRIMARY_ACTIVE_MODEL = PRIMARY_LLM_MODEL or PRIMARY_MODEL
 PRIMARY_LLM_TRACE = f"{PRIMARY_LLM_PROVIDER} ({PRIMARY_ACTIVE_MODEL})" if PRIMARY_LLM_PROVIDER else "LLM Not Configured"
+
+
+def _init_supabase_client() -> Client | None:
+    logger_ref = logging.getLogger("addix-deterministic-solver")
+    if create_client is None:
+        logger_ref.warning("supabase library is not installed. Auth routes will return 503.")
+        return None
+
+    supabase_url = str(os.getenv(SUPABASE_URL_ENV_NAME, "")).strip()
+    supabase_anon_key = str(os.getenv(SUPABASE_ANON_KEY_ENV_NAME, "")).strip()
+    if not supabase_url or not supabase_anon_key:
+        logger_ref.warning("Supabase auth environment is missing SUPABASE_URL or SUPABASE_ANON_KEY.")
+        return None
+
+    try:
+        return create_client(supabase_url, supabase_anon_key)
+    except Exception as exc:
+        logger_ref.error("Failed to initialize Supabase client.", exc_info=exc)
+        return None
+
+
+SUPABASE_CLIENT = _init_supabase_client()
 
 
 def _extract_live_thinking(raw_text: str) -> str:
@@ -891,6 +920,8 @@ def _validate_env_mappings() -> None:
         GEMINI_API_KEY_ENV_NAME: os.getenv(GEMINI_API_KEY_ENV_NAME),
         GOOGLE_API_KEY_ENV_NAME: os.getenv(GOOGLE_API_KEY_ENV_NAME),
         SCHOLAR_FRONTEND_SECRET_ENV_NAME: os.getenv(SCHOLAR_FRONTEND_SECRET_ENV_NAME),
+        SUPABASE_URL_ENV_NAME: os.getenv(SUPABASE_URL_ENV_NAME),
+        SUPABASE_ANON_KEY_ENV_NAME: os.getenv(SUPABASE_ANON_KEY_ENV_NAME),
     }
     missing = [name for name, value in required.items() if not value]
 
@@ -1598,7 +1629,7 @@ origins = [
 ]
 
 ALLOWED_ORIGINS = list(dict.fromkeys([*origins, *LOCAL_FRONTEND_ORIGINS, *PRODUCTION_FRONTEND_ORIGINS]))
-DEBUG_ALLOW_ALL_ORIGINS = True
+DEBUG_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_ORIGINS = ["*"] if DEBUG_ALLOW_ALL_ORIGINS else ALLOWED_ORIGINS
 CORS_ALLOW_CREDENTIALS = False if DEBUG_ALLOW_ALL_ORIGINS else True
 
@@ -1691,6 +1722,11 @@ class DailyAnalyticsSyncPayload(BaseModel):
     problems_delta: int = 0
     physics_delta: int = 0
     math_delta: int = 0
+
+
+class SupabaseAuthPayload(BaseModel):
+    email: str
+    password: str = Field(..., min_length=6, max_length=128)
 
 
 def _serialize_vault_item(item: VaultItem) -> dict[str, Any]:
@@ -4000,6 +4036,131 @@ def _extract_gemini_response_text(response: Any) -> str:
     return "\n".join(text_chunks).strip()
 
 
+def _load_syllabus_from_context_files(exam_name: str) -> list[str]:
+    normalized_exam = _normalize_exam_name(exam_name).upper()
+    filename_map = {
+        "NSEJS": "nsejs_syllabus.txt",
+        "IOQM": "ioqm_syllabus.txt",
+        "JEE ADVANCED": "jee_syllabus.txt",
+        "JEE": "jee_syllabus.txt",
+    }
+    target_filename = filename_map.get(normalized_exam)
+    if not target_filename:
+        return []
+
+    syllabus_path = Path(__file__).resolve().parent / "contexts" / target_filename
+    if not syllabus_path.exists():
+        return []
+
+    try:
+        raw_text = syllabus_path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+
+    chapters: list[str] = []
+    for line in raw_text.splitlines():
+        cleaned = re.sub(r"^[-*\d\.)\s]+", "", str(line or "")).strip()
+        if not cleaned:
+            continue
+        if len(cleaned) < 3:
+            continue
+        chapters.append(cleaned)
+
+    return list(dict.fromkeys(chapters))
+
+
+def _require_supabase_client() -> Client:
+    if SUPABASE_CLIENT is None:
+        raise HTTPException(status_code=503, detail="Supabase auth is not configured on backend.")
+    return SUPABASE_CLIENT
+
+
+def _extract_supabase_session(auth_result: Any) -> dict[str, Any]:
+    session = getattr(auth_result, "session", None)
+    user = getattr(auth_result, "user", None)
+
+    if isinstance(auth_result, dict):
+        session = session or auth_result.get("session")
+        user = user or auth_result.get("user")
+
+    access_token = ""
+    refresh_token = ""
+    expires_in = None
+    token_type = ""
+
+    if session is not None:
+        access_token = str(getattr(session, "access_token", "") or "")
+        refresh_token = str(getattr(session, "refresh_token", "") or "")
+        expires_in = getattr(session, "expires_in", None)
+        token_type = str(getattr(session, "token_type", "") or "")
+        if isinstance(session, dict):
+            access_token = str(session.get("access_token", access_token) or access_token)
+            refresh_token = str(session.get("refresh_token", refresh_token) or refresh_token)
+            expires_in = session.get("expires_in", expires_in)
+            token_type = str(session.get("token_type", token_type) or token_type)
+
+    user_id = str(getattr(user, "id", "") or "")
+    user_email = str(getattr(user, "email", "") or "")
+    if isinstance(user, dict):
+        user_id = str(user.get("id", user_id) or user_id)
+        user_email = str(user.get("email", user_email) or user_email)
+
+    return {
+        "token": access_token,
+        "refresh_token": refresh_token,
+        "expires_in": expires_in,
+        "token_type": token_type,
+        "user": {
+            "id": user_id,
+            "email": user_email,
+        },
+    }
+
+
+@app.post("/api/signup")
+async def signup_with_supabase(payload: SupabaseAuthPayload):
+    client = _require_supabase_client()
+    email = str(payload.email or "").strip().lower()
+    password = str(payload.password or "")
+    if not email or not password:
+        raise HTTPException(status_code=422, detail="email and password are required.")
+
+    try:
+        auth_result = client.auth.sign_up({"email": email, "password": password})
+    except Exception as exc:
+        logger.warning("Supabase sign_up failed.", exc_info=exc)
+        raise HTTPException(status_code=400, detail="Signup failed. Check credentials or email status.") from exc
+
+    return {
+        "success": True,
+        "session": _extract_supabase_session(auth_result),
+    }
+
+
+@app.post("/api/login")
+async def login_with_supabase(payload: SupabaseAuthPayload):
+    client = _require_supabase_client()
+    email = str(payload.email or "").strip().lower()
+    password = str(payload.password or "")
+    if not email or not password:
+        raise HTTPException(status_code=422, detail="email and password are required.")
+
+    try:
+        auth_result = client.auth.sign_in_with_password({"email": email, "password": password})
+    except Exception as exc:
+        logger.warning("Supabase sign_in_with_password failed.", exc_info=exc)
+        raise HTTPException(status_code=401, detail="Login failed. Invalid credentials.") from exc
+
+    session_payload = _extract_supabase_session(auth_result)
+    if not str(session_payload.get("token", "")).strip():
+        raise HTTPException(status_code=401, detail="Login succeeded but no session token was issued.")
+
+    return {
+        "success": True,
+        "session": session_payload,
+    }
+
+
 @app.post("/api/upload-image")
 async def upload_image(file: UploadFile = File(...)) -> Dict[str, str]:
     if genai is None:
@@ -4048,11 +4209,15 @@ async def upload_image(file: UploadFile = File(...)) -> Dict[str, str]:
     return {"extracted_text": extracted_text}
 
 
-@app.get("/api/syllabus/{exam_name}")
-async def get_exam_syllabus(exam_name: str) -> dict[str, list[str]]:
-    requested_exam = str(exam_name or "").strip()
+@app.get("/api/syllabus/{exam}")
+async def get_exam_syllabus(exam: str) -> dict[str, list[str]]:
+    requested_exam = str(exam or "").strip()
     normalized_exam_name = _normalize_exam_name(requested_exam)
     fallback_payload = {"syllabus": ["General Curriculum", "Foundations", "Advanced Topics"]}
+
+    file_topics = _load_syllabus_from_context_files(normalized_exam_name)
+    if file_topics:
+        return {"syllabus": file_topics}
 
     # Built-in universal exam map used when file data is missing or partial.
     universal_exam_store: dict[str, list[str]] = {
