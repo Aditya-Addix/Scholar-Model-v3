@@ -2260,34 +2260,32 @@ body.tester-mode #queryInput:focus {
     border-color: rgba(16, 185, 129, 0.58);
     box-shadow: inset 3px 0 0 rgba(16, 185, 129, 0.85);
     background: rgba(16, 185, 129, 0.08);
-    display: flex;
-    flex-direction: column;
+    display: block;
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
+    word-break: normal;
 }
 
-/* ADDIX Mentor / final answer body: prevent long LaTeX or URLs from overflowing on mobile */
+/* ADDIX Mentor / final answer body: prevent long LaTeX or URLs from overflowing horizontally */
 .final-step .mentor-guidance-line,
 .final-step .message-line {
+    display: block;
     max-width: 100%;
     box-sizing: border-box;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
+    word-break: normal;
 }
 
 .mentor-structured {
     position: relative;
     padding-top: 20px;
+    display: block;
     max-width: 100%;
     box-sizing: border-box;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
+    word-break: normal;
 }
 
 .mentor-guidance-line {
@@ -3455,5 +3453,24 @@ body.tester-mode #queryInput:focus {
 
     .thought-stream-box {
         padding: 6px 8px;
+    }
+}
+
+/* Mobile: tighten green AI response padding; scroll wide tables/code */
+@media (max-width: 600px) {
+    .message.final-step,
+    .final-step.mentor-structured {
+        padding: 10px;
+    }
+
+    .final-step table,
+    .final-step pre,
+    .mentor-guidance-line table,
+    .mentor-guidance-line pre,
+    .message-line table,
+    .message-line pre {
+        max-width: 100%;
+        overflow-x: auto;
+        box-sizing: border-box;
     }
 }

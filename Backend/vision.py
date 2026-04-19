@@ -6,7 +6,7 @@ import os
 from io import BytesIO
 
 from fastapi import HTTPException
-from google import genai as google_genai_sdk
+from google import genai
 from google.genai import types as genai_types
 from PIL import Image
 
@@ -39,11 +39,11 @@ def _decode_image(base64_string: str) -> Image.Image:
         raise HTTPException(status_code=400, detail="Unable to decode uploaded image.") from exc
 
 
-def _create_gemini_client() -> google_genai_sdk.Client:
+def _create_gemini_client() -> genai.Client:
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise HTTPException(status_code=503, detail="GEMINI_API_KEY is missing for image OCR.")
-    return google_genai_sdk.Client(api_key=api_key)
+    return genai.Client(api_key=api_key)
 
 
 async def extract_text_from_image(base64_string: str) -> str:

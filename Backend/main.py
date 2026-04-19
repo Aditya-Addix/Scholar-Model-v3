@@ -13,16 +13,17 @@ from datetime import date, datetime, timedelta
 from difflib import SequenceMatcher
 from io import BytesIO
 from pathlib import Path
+from collections.abc import AsyncIterator
 from typing import Any, Dict, List, Literal, Optional, TypedDict
 
 import httpx
 import sympy as sp
 import tavily
 try:
-    from google import genai as google_genai_sdk
+    from google import genai
     from google.genai import types as genai_types
 except ImportError:
-    google_genai_sdk = None
+    genai = None
     genai_types = None
 from dotenv import load_dotenv
 from fastapi import FastAPI, BackgroundTasks, Body, File, HTTPException, Request, UploadFile
@@ -191,6 +192,7 @@ WOLFRAM_RESULT_ENDPOINT = "https://api.wolframalpha.com/v1/result"
 WOLFRAM_QUERY_ENDPOINT = "https://api.wolframalpha.com/v2/query"
 TOOL_TIMEOUT_SECONDS = 3
 LLM_SOLVE_TEMPERATURE = 0.2
+GEMINI_SOLVE_MODEL = "gemini-2.0-flash"
 DETERMINISTIC_TIMEOUT_MESSAGE = "System Override: Computation exceeds deterministic time limits. Please simplify"
 COMPUTATION_FAILSAFE_MESSAGE = "Computation logic complete. Please verify units or model selection."
 GROQ_CHAT_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
@@ -3979,6 +3981,52 @@ def _extract_gemini_response_text(response: Any) -> str:
     return "\n".join(text_chunks).strip()
 
 
+def _gemini_solve_api_key() -> str:
+    return str(os.environ.get(GEMINI_API_KEY_ENV_NAME) or os.getenv(GOOGLE_API_KEY_ENV_NAME, "") or "").strip()
+
+
+def _get_gemini_client_for_solve() -> Any:
+    if genai is None:
+        raise RuntimeError("google-genai SDK is not installed.")
+    api_key = _gemini_solve_api_key()
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY is not configured for /api/solve.")
+    return genai.Client(api_key=api_key)
+
+
+async def _iter_gemini_solve_stream_deltas(
+    client: Any,
+    system_instruction: str,
+    user_text: str,
+) -> AsyncIterator[str]:
+    """Yield text deltas from Gemini ``generate_content_stream`` (cumulative or incremental chunks)."""
+    if genai_types is None:
+        raise RuntimeError("google.genai types are unavailable.")
+    prev_snapshot = ""
+    stream = await client.aio.models.generate_content_stream(
+        model=GEMINI_SOLVE_MODEL,
+        contents=user_text,
+        config=genai_types.GenerateContentConfig(
+            system_instruction=system_instruction,
+            temperature=LLM_SOLVE_TEMPERATURE,
+        ),
+    )
+    async for chunk in stream:
+        snapshot = str(getattr(chunk, "text", "") or "").strip()
+        if not snapshot:
+            snapshot = _extract_gemini_response_text(chunk)
+        if not snapshot:
+            continue
+        if snapshot.startswith(prev_snapshot):
+            delta = snapshot[len(prev_snapshot) :]
+            prev_snapshot = snapshot
+        else:
+            delta = snapshot
+            prev_snapshot = prev_snapshot + delta
+        if delta:
+            yield delta
+
+
 def _load_syllabus_from_context_files(exam_name: str) -> list[str] | None:
     normalized_exam = _normalize_exam_name(exam_name).upper()
     filename_map = {
@@ -4015,7 +4063,7 @@ def _load_syllabus_from_context_files(exam_name: str) -> list[str] | None:
 
 @app.post("/api/upload-image")
 async def upload_image(file: UploadFile = File(...)) -> Dict[str, str]:
-    if google_genai_sdk is None or genai_types is None:
+    if genai is None or genai_types is None:
         raise HTTPException(status_code=503, detail="Gemini SDK (google-genai) is not installed on the backend.")
 
     google_api_key = str(os.getenv(GOOGLE_API_KEY_ENV_NAME, "")).strip()
@@ -4034,7 +4082,7 @@ async def upload_image(file: UploadFile = File(...)) -> Dict[str, str]:
         raise HTTPException(status_code=400, detail="Uploaded file is empty.")
 
     try:
-        client = google_genai_sdk.Client(api_key=google_api_key)
+        client = genai.Client(api_key=google_api_key)
 
         def _run_vision_extract() -> Any:
             return client.models.generate_content(
@@ -4381,12 +4429,7 @@ async def generate_diagram(payload: dict = Body(...)) -> dict[str, str]:
 @app.post("/api/solve")
 @limiter.limit("5/minute")
 async def solve_student_query(request: Request, payload: SolveRequest) -> StreamingResponse:
-    """Stream tutor output over SSE.
-
-    Token streaming uses the configured OpenAI-compatible client (Groq + Llama). The deprecated
-    ``google-generativeai`` stack was replaced by ``google-genai`` for Gemini vision/OCR routes only;
-    this endpoint does not call Gemini for the main solve path.
-    """
+    """Stream tutor output over SSE using ``google-genai`` (Gemini) ``generate_content_stream``."""
     global API_SOLVE_TOTAL_CALLS
     global API_SOLVE_CACHE_HITS
 
@@ -4534,11 +4577,18 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                     "Student topic input: " + sanitized_plain.strip() + ". "
                     "Difficulty target: advanced but accessible challenge level."
                 )
-                tester_raw_text = await PRIMARY_TRANSLATOR._generate_content(
-                    system_prompt=tester_system_prompt,
-                    user_prompt=tester_user_prompt,
-                    temperature=LLM_SOLVE_TEMPERATURE,
+                if genai is None or genai_types is None:
+                    raise RuntimeError("google-genai SDK is not installed.")
+                _solve_client = _get_gemini_client_for_solve()
+                tester_resp = await _solve_client.aio.models.generate_content(
+                    model=GEMINI_SOLVE_MODEL,
+                    contents=tester_user_prompt,
+                    config=genai_types.GenerateContentConfig(
+                        system_instruction=tester_system_prompt,
+                        temperature=LLM_SOLVE_TEMPERATURE,
+                    ),
                 )
+                tester_raw_text = str(getattr(tester_resp, "text", "") or "").strip()
                 tester_payload = PRIMARY_TRANSLATOR._extract_json(tester_raw_text)
                 topics = tester_payload.get("topics", []) if isinstance(tester_payload.get("topics", []), list) else []
                 explanation = []
@@ -4551,7 +4601,7 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                     topic_mastered = inferred_topic or (subject if subject in ("Physics", "Chemistry", "Math") else None)
                 result_text = _sanitize_solver_output_text(result_text)
                 final_answer = result_text or WOLFRAM_FALLBACK_RESULT
-                engine_trace = "Llama 3.3 70B + SymPy Tester Mode"
+                engine_trace = "Gemini 2.0 Flash + SymPy Tester Mode"
                 if _is_tester_failure_signal(latest_query):
                     await _insert_black_box_record(
                         exam_type=payload.exam_context,
@@ -4618,51 +4668,40 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                     + (tavily_context_text or "None")
                 )
 
-                if PRIMARY_ASYNC_LLM_CLIENT is None:
-                    raise RuntimeError("No LLM client is configured. Set GROQ_API_KEY.")
+                if genai is None or genai_types is None:
+                    raise RuntimeError("google-genai SDK is not installed.")
 
+                solve_client = _get_gemini_client_for_solve()
                 streamed_fragments: list[str] = []
                 try:
-                    completion_stream = await PRIMARY_ASYNC_LLM_CLIENT.chat.completions.create(
-                        model=PRIMARY_MODEL,
-                        temperature=LLM_SOLVE_TEMPERATURE,
-                        messages=[
-                            {"role": "system", "content": solver_system_prompt},
-                            {"role": "user", "content": solver_user_prompt},
-                        ],
-                        stream=True,
-                    )
-
-                    async for chunk in completion_stream:
-                        chunk_text = ""
-                        choices = list(getattr(chunk, "choices", []) or [])
-                        if choices:
-                            delta = getattr(choices[0], "delta", None)
-                            chunk_text = str(getattr(delta, "content", "") or "")
-                        if chunk_text:
-                            streamed_fragments.append(chunk_text)
-                            yield _format_sse("thought", {"text": chunk_text})
+                    async for delta in _iter_gemini_solve_stream_deltas(
+                        solve_client,
+                        solver_system_prompt,
+                        solver_user_prompt,
+                    ):
+                        streamed_fragments.append(delta)
+                        yield _format_sse("thought", {"text": delta})
                 except Exception as stream_exc:
-                    logger.warning("Primary stream path failed; falling back to non-stream completion.", exc_info=stream_exc)
+                    logger.warning("Gemini stream path failed; falling back to non-stream completion.", exc_info=stream_exc)
 
                 if streamed_fragments:
                     result_text = "".join(streamed_fragments).strip() or WOLFRAM_FALLBACK_RESULT
                 else:
-                    completion = await PRIMARY_ASYNC_LLM_CLIENT.chat.completions.create(
-                        model=PRIMARY_MODEL,
-                        temperature=LLM_SOLVE_TEMPERATURE,
-                        messages=[
-                            {"role": "system", "content": solver_system_prompt},
-                            {"role": "user", "content": solver_user_prompt},
-                        ],
+                    completion = await solve_client.aio.models.generate_content(
+                        model=GEMINI_SOLVE_MODEL,
+                        contents=solver_user_prompt,
+                        config=genai_types.GenerateContentConfig(
+                            system_instruction=solver_system_prompt,
+                            temperature=LLM_SOLVE_TEMPERATURE,
+                        ),
                     )
-                    result_text = _chat_response_text(completion).strip() or WOLFRAM_FALLBACK_RESULT
+                    result_text = str(getattr(completion, "text", "") or "").strip() or WOLFRAM_FALLBACK_RESULT
 
                 topics = [subject] if subject else []
                 explanation = []
                 result_text = _sanitize_solver_output_text(result_text)
                 final_answer = result_text or WOLFRAM_FALLBACK_RESULT
-                engine_trace = "Llama 3.3 70B + SymPy Streaming"
+                engine_trace = "Gemini 2.0 Flash + SymPy Streaming"
                 if symbolic_verification_active:
                     engine_trace = f"{engine_trace} | Symbolic Verification: Active (SymPy)"
                 await _record_successful_solve()

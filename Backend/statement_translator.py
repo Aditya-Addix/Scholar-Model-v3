@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from fastapi import HTTPException
-from google import genai as google_genai_sdk
+from google import genai
 
 
 SUPPORTED_BINARY_OPS: dict[type[ast.operator], Any] = {
@@ -182,7 +182,7 @@ class AnthropicTranslator:
         self.primary_model = "claude-3-5-sonnet-20241022"
         self.gemini_api_key = os.getenv("GEMINI_API_KEY")
         if self.gemini_api_key:
-            self.gemini_client = google_genai_sdk.Client(api_key=self.gemini_api_key)
+            self.gemini_client = genai.Client(api_key=self.gemini_api_key)
         else:
             self.gemini_client = None
         self.system_prompt = (
