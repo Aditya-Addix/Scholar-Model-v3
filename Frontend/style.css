@@ -2262,11 +2262,32 @@ body.tester-mode #queryInput:focus {
     background: rgba(16, 185, 129, 0.08);
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+/* ADDIX Mentor / final answer body: prevent long LaTeX or URLs from overflowing on mobile */
+.final-step .mentor-guidance-line,
+.final-step .message-line {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .mentor-structured {
     position: relative;
     padding-top: 20px;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .mentor-guidance-line {
@@ -2418,6 +2439,13 @@ body.tester-mode #queryInput:focus {
     background: rgba(255, 53, 94, 0.12);
 }
 
+/* Cold-start / network notice (cyan) — not a hard error */
+.engine-reconnect-notice {
+    border-color: rgba(0, 255, 255, 0.42) !important;
+    background: rgba(0, 255, 255, 0.06) !important;
+    box-shadow: inset 3px 0 0 rgba(0, 255, 255, 0.55);
+}
+
 .message-line {
     margin: 0;
     color: #d9e3f3;
@@ -2511,6 +2539,10 @@ body.tester-mode #queryInput:focus {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(1, 2, 6, 0.55);
     overflow-x: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
     text-align: center;
 }
 
@@ -3401,5 +3433,27 @@ body.tester-mode #queryInput:focus {
     .scholar-sidebar {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Narrow phones: give mentor / green response more horizontal room */
+@media (max-width: 480px) {
+    .message.final-step,
+    .final-step.mentor-structured {
+        padding: 8px 9px;
+    }
+
+    .mentor-structured {
+        padding-top: 12px;
+    }
+
+    .final-step .message-line,
+    .final-step .mentor-guidance-line {
+        font-size: 0.88rem;
+        line-height: 1.48;
+    }
+
+    .thought-stream-box {
+        padding: 6px 8px;
     }
 }

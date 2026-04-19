@@ -14,7 +14,7 @@ const CONSISTENCY_MATRIX_DAYS = 28;
 const SIMULATION_COMMAND_PREFIX = "/simulate ";
 const SIMULATION_POLL_INTERVAL_MS = 3000;
 const MAX_TURN_CONTEXT = 3;
-const API_CALL_TIMEOUT_MS = 30000;
+const API_CALL_TIMEOUT_MS = 60000;
 const ACCESS_CODE = "ADDIX2026"; // Change this to your preferred code.
 const ACCESS_STATUS_STORAGE_KEY = "addix-labs-access-granted";
 const TRACE_PHASES = [
@@ -166,7 +166,8 @@ async function apiFetch(url, options = {}) {
 function buildSafeFetchErrorResponse() {
     const payload = {
         error: true,
-        message: "Connection to ADDIX Scholars Engine failed. Please verify backend status.",
+        message:
+            "Reconnecting to Engine… The cloud backend may be waking up (Render free tier can take ~60s). Please try again in a moment.",
     };
     return {
         ok: false,
@@ -2732,8 +2733,17 @@ async function sendQueryToBackend(userText) {
     }
 
     if (response && response.error) {
-        const payload = await response.json().catch(() => ({ error: true, message: "Connection to ADDIX Scholars Engine failed. Please verify backend status." }));
-        renderSystemAlertBubble(String(payload.message || "Connection to ADDIX Scholars Engine failed. Please verify backend status."));
+        const payload = await response.json().catch(() => ({
+            error: true,
+            message:
+                "Reconnecting to Engine… The cloud backend may be waking up (Render free tier can take ~60s). Please try again in a moment.",
+        }));
+        renderEngineReconnectNotice(
+            String(
+                payload.message ||
+                    "Reconnecting to Engine… The cloud backend may be waking up. Please try again in a moment.",
+            ),
+        );
         return;
     }
 
@@ -2820,7 +2830,14 @@ async function sendQueryToBackend(userText) {
     } catch (error) {
         console.error("API Bridge Failed:", error);
         const fallbackMessage = error && error.message ? String(error.message) : "Unexpected bridge failure.";
-        renderSystemAlertBubble("System Alert: " + fallbackMessage);
+        const lower = fallbackMessage.toLowerCase();
+        if (lower.includes("failed to fetch") || lower.includes("networkerror") || lower.includes("load failed")) {
+            renderEngineReconnectNotice(
+                "Reconnecting to Engine… Network request did not complete. If the backend was asleep, wait a minute and send again.",
+            );
+        } else {
+            renderSystemAlertBubble("System Alert: " + fallbackMessage);
+        }
     } finally {
         // Clean up visual activity state.
         removeComputingAnimation();
@@ -2925,6 +2942,36 @@ function buildSystemAlertMessage(statusCode, rawBody) {
         return "System Alert: Backend failsafe triggered (" + String(status) + "). " + (text || "Please retry.");
     }
     return "System Alert: Backend request failed (" + String(status) + "). " + (text || "Please retry.");
+}
+
+function renderEngineReconnectNotice(message) {
+    const text = String(
+        message ||
+            "Reconnecting to Engine… The cloud backend may be waking up. Please try again in a moment.",
+    );
+    if (activeTraceTicker) {
+        stopTraceStatusTicker(activeTraceTicker, activeTraceStatusStep, "Engine", "Reconnecting…");
+        activeTraceTicker = null;
+    }
+
+    if (activeSolveStep) {
+        activeSolveStep.classList.remove("loading-step", "error-step");
+        activeSolveStep.classList.add("engine-reconnect-notice", "system-alert-step");
+        activeSolveStep.innerHTML =
+            '<p class="message-line"><span class="agent-label">[Engine]:</span> ' + escapeHtml(text) + "</p>";
+        if (chatFeed) {
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+        }
+        return;
+    }
+
+    const html =
+        '<article class="message engine-reconnect-notice system-alert-step">' +
+            '<p class="message-line"><span class="agent-label">[Engine]:</span> ' +
+            escapeHtml(text) +
+            "</p>" +
+        "</article>";
+    appendMessage(html);
 }
 
 function renderSystemAlertBubble(message) {

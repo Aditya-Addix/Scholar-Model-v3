@@ -19,9 +19,11 @@ import httpx
 import sympy as sp
 import tavily
 try:
-    import google.generativeai as genai
+    from google import genai as google_genai_sdk
+    from google.genai import types as genai_types
 except ImportError:
-    genai = None
+    google_genai_sdk = None
+    genai_types = None
 from dotenv import load_dotenv
 from fastapi import FastAPI, BackgroundTasks, Body, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -3961,6 +3963,7 @@ def _format_sse(event: str, payload: dict[str, Any]) -> str:
 
 
 def _extract_gemini_response_text(response: Any) -> str:
+    """Normalize text from google-genai GenerateContentResponse (or legacy shapes)."""
     direct_text = str(getattr(response, "text", "") or "").strip()
     if direct_text:
         return direct_text
@@ -4012,8 +4015,8 @@ def _load_syllabus_from_context_files(exam_name: str) -> list[str] | None:
 
 @app.post("/api/upload-image")
 async def upload_image(file: UploadFile = File(...)) -> Dict[str, str]:
-    if genai is None:
-        raise HTTPException(status_code=503, detail="Gemini SDK is not installed on the backend.")
+    if google_genai_sdk is None or genai_types is None:
+        raise HTTPException(status_code=503, detail="Gemini SDK (google-genai) is not installed on the backend.")
 
     google_api_key = str(os.getenv(GOOGLE_API_KEY_ENV_NAME, "")).strip()
     if not google_api_key:
@@ -4031,18 +4034,18 @@ async def upload_image(file: UploadFile = File(...)) -> Dict[str, str]:
         raise HTTPException(status_code=400, detail="Uploaded file is empty.")
 
     try:
-        genai.configure(api_key=google_api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        response = await asyncio.to_thread(
-            model.generate_content,
-            [
-                VISION_EXTRACTION_PROMPT,
-                {
-                    "mime_type": content_type,
-                    "data": file_bytes,
-                },
-            ],
-        )
+        client = google_genai_sdk.Client(api_key=google_api_key)
+
+        def _run_vision_extract() -> Any:
+            return client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=[
+                    genai_types.Part.from_text(text=VISION_EXTRACTION_PROMPT),
+                    genai_types.Part.from_bytes(data=file_bytes, mime_type=content_type),
+                ],
+            )
+
+        response = await asyncio.to_thread(_run_vision_extract)
         extracted_text = _extract_gemini_response_text(response)
     except HTTPException:
         raise
@@ -4378,6 +4381,12 @@ async def generate_diagram(payload: dict = Body(...)) -> dict[str, str]:
 @app.post("/api/solve")
 @limiter.limit("5/minute")
 async def solve_student_query(request: Request, payload: SolveRequest) -> StreamingResponse:
+    """Stream tutor output over SSE.
+
+    Token streaming uses the configured OpenAI-compatible client (Groq + Llama). The deprecated
+    ``google-generativeai`` stack was replaced by ``google-genai`` for Gemini vision/OCR routes only;
+    this endpoint does not call Gemini for the main solve path.
+    """
     global API_SOLVE_TOTAL_CALLS
     global API_SOLVE_CACHE_HITS
 

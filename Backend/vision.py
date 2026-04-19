@@ -5,8 +5,9 @@ import base64
 import os
 from io import BytesIO
 
-import google.generativeai as genai
 from fastapi import HTTPException
+from google import genai as google_genai_sdk
+from google.genai import types as genai_types
 from PIL import Image
 
 
@@ -38,20 +39,31 @@ def _decode_image(base64_string: str) -> Image.Image:
         raise HTTPException(status_code=400, detail="Unable to decode uploaded image.") from exc
 
 
-def _create_ocr_model() -> genai.GenerativeModel:
+def _create_gemini_client() -> google_genai_sdk.Client:
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise HTTPException(status_code=503, detail="GEMINI_API_KEY is missing for image OCR.")
-    genai.configure(api_key=api_key)
-    return genai.GenerativeModel("gemini-1.5-flash")
+    return google_genai_sdk.Client(api_key=api_key)
 
 
 async def extract_text_from_image(base64_string: str) -> str:
-    model = _create_ocr_model()
+    client = _create_gemini_client()
     image = _decode_image(base64_string)
+    buffer = BytesIO()
+    image.save(buffer, format="PNG")
+    image_bytes = buffer.getvalue()
 
-    response = await asyncio.to_thread(model.generate_content, [OCR_PROMPT, image])
-    text = str(getattr(response, "text", "") or "").strip()
+    def _run_ocr() -> str:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                genai_types.Part.from_text(text=OCR_PROMPT),
+                genai_types.Part.from_bytes(data=image_bytes, mime_type="image/png"),
+            ],
+        )
+        return str(getattr(response, "text", "") or "").strip()
+
+    text = await asyncio.to_thread(_run_ocr)
     if not text:
         raise HTTPException(status_code=502, detail="Gemini OCR returned empty text.")
     return text

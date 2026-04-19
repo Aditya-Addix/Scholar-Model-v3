@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from fastapi import HTTPException
-import google.generativeai as genai
+from google import genai as google_genai_sdk
 
 
 SUPPORTED_BINARY_OPS: dict[type[ast.operator], Any] = {
@@ -182,10 +182,9 @@ class AnthropicTranslator:
         self.primary_model = "claude-3-5-sonnet-20241022"
         self.gemini_api_key = os.getenv("GEMINI_API_KEY")
         if self.gemini_api_key:
-            genai.configure(api_key=self.gemini_api_key)
-            self.gemini_model = genai.GenerativeModel("gemini-1.5-pro")
+            self.gemini_client = google_genai_sdk.Client(api_key=self.gemini_api_key)
         else:
-            self.gemini_model = None
+            self.gemini_client = None
         self.system_prompt = (
             "You are the cognitive core of ADDIX Scholars, an elite Olympiad physics and math AI. YOU MUST NOT HALLUCINATE. "
             "When heavy arithmetic is needed, you MUST call the calculate_math tool and use its deterministic output. "
@@ -614,7 +613,7 @@ class AnthropicTranslator:
         return repaired
 
     async def _call_gemini_fallback(self, user_prompt: str, system_prompt: str | None = None) -> str:
-        if not self.gemini_api_key or self.gemini_model is None:
+        if not self.gemini_api_key or self.gemini_client is None:
             raise HTTPException(status_code=500, detail="Gemini fallback key missing.")
 
         prompt_header = system_prompt or self.system_prompt
@@ -623,8 +622,15 @@ class AnthropicTranslator:
             + " Return ONLY valid JSON with keys variables, target, explanation. "
             + user_prompt
         )
-        response = await asyncio.to_thread(self.gemini_model.generate_content, prompt)
-        text = str(getattr(response, "text", "") or "").strip()
+
+        def _run_gemini() -> str:
+            response = self.gemini_client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt,
+            )
+            return str(getattr(response, "text", "") or "").strip()
+
+        text = await asyncio.to_thread(_run_gemini)
         if not text:
             raise HTTPException(status_code=500, detail="Gemini fallback returned empty content.")
         return text
