@@ -3474,3 +3474,35 @@ body.tester-mode #queryInput:focus {
         box-sizing: border-box;
     }
 }
+
+.response-container {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+    .syllabus-container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        overflow-x: visible;
+    }
+
+    .syllabus-category {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .chat-feed,
+    .message-line,
+    .mentor-guidance-line {
+        font-size: 14px;
+    }
+
+    .terminal {
+        height: calc(100vh - 120px);
+        min-height: calc(100vh - 120px);
+    }
+}

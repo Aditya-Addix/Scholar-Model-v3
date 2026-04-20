@@ -14,7 +14,9 @@ const CONSISTENCY_MATRIX_DAYS = 28;
 const SIMULATION_COMMAND_PREFIX = "/simulate ";
 const SIMULATION_POLL_INTERVAL_MS = 3000;
 const MAX_TURN_CONTEXT = 3;
-const API_CALL_TIMEOUT_MS = 60000;
+const API_CALL_TIMEOUT_MS = 120000;
+const ENGINE_WAKE_NOTICE_DELAY_MS = 3000;
+const CONNECTION_ALERT_GRACE_PERIOD_MS = 90000;
 const ACCESS_CODE = "ADDIX2026"; // Change this to your preferred code.
 const ACCESS_STATUS_STORAGE_KEY = "addix-labs-access-granted";
 const TRACE_PHASES = [
@@ -118,6 +120,10 @@ let isTesterMode = false;
 let currentStreak = 0;
 let problemsSolved = 0;
 let timeSaved = 0;
+let firstBackendResponseResolved = false;
+let firstResponseWakeNoticeShown = false;
+let warmupNoticeTimerId = null;
+const frontendBootTimeMs = Date.now();
 let marathonElapsedSeconds = 0;
 let marathonIntervalId = null;
 let progressData = loadProgressData();
@@ -183,6 +189,7 @@ async function safeFetch(url, options = {}) {
     const timeoutController = new AbortController();
     const externalSignal = options.signal;
     let externalAbortHandler = null;
+    let shouldTrackFirstResponse = false;
 
     if (externalSignal) {
         if (externalSignal.aborted) {
@@ -198,6 +205,17 @@ async function safeFetch(url, options = {}) {
     const timeoutId = window.setTimeout(() => {
         timeoutController.abort();
     }, API_CALL_TIMEOUT_MS);
+    if (!firstBackendResponseResolved) {
+        shouldTrackFirstResponse = true;
+        warmupNoticeTimerId = window.setTimeout(() => {
+            if (!firstBackendResponseResolved && !firstResponseWakeNoticeShown) {
+                renderEngineReconnectNotice(
+                    "ADDIX Engine is waking up from hibernation... (30-60s remaining)",
+                );
+                firstResponseWakeNoticeShown = true;
+            }
+        }, ENGINE_WAKE_NOTICE_DELAY_MS);
+    }
 
     try {
         return await fetch(url, {
@@ -209,6 +227,13 @@ async function safeFetch(url, options = {}) {
         return buildSafeFetchErrorResponse();
     } finally {
         window.clearTimeout(timeoutId);
+        if (shouldTrackFirstResponse) {
+            firstBackendResponseResolved = true;
+            if (warmupNoticeTimerId) {
+                window.clearTimeout(warmupNoticeTimerId);
+                warmupNoticeTimerId = null;
+            }
+        }
         if (externalSignal && externalAbortHandler) {
             externalSignal.removeEventListener("abort", externalAbortHandler);
         }
@@ -268,6 +293,8 @@ async function initializeApp() {
     bindMarathonTimer();
     initializeProgressDashboard();
     updatePremiumUiState();
+
+    checkEngineStatus();
 
     await Promise.all([
         hydrateAnalyticsFromDatabase(),
@@ -1792,6 +1819,15 @@ async function checkSystemHealth() {
     return verifyConnection();
 }
 
+function checkEngineStatus() {
+    void safeFetch(BASE_URL + "/health", {
+        method: "GET",
+        headers: new Headers({ Accept: "application/json" }),
+    }).catch(() => {
+        // Warm-up probe is best-effort and should never break UX.
+    });
+}
+
 function bindClearChatButton() {
     if (!clearChatButton) {
         return;
@@ -2976,6 +3012,14 @@ function renderEngineReconnectNotice(message) {
 
 function renderSystemAlertBubble(message) {
     const text = String(message || "System Alert: Unknown bridge failure.");
+    const inGraceWindow = Date.now() - frontendBootTimeMs < CONNECTION_ALERT_GRACE_PERIOD_MS;
+    const looksLikeConnectionFailure = /connection failed|failed to fetch|networkerror|load failed/i.test(text);
+    if (inGraceWindow && looksLikeConnectionFailure) {
+        renderEngineReconnectNotice(
+            "ADDIX Engine is waking up from hibernation... (30-60s remaining)",
+        );
+        return;
+    }
     if (activeTraceTicker) {
         stopTraceStatusTicker(activeTraceTicker, activeTraceStatusStep, "System Alert", "Intervention required.");
         activeTraceTicker = null;

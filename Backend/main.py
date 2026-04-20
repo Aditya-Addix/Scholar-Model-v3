@@ -204,6 +204,12 @@ if not str(os.getenv(GOOGLE_API_KEY_ENV_NAME, "")).strip():
     fallback_google_key = str(os.getenv(GEMINI_API_KEY_ENV_NAME, "")).strip()
     if fallback_google_key:
         os.environ[GOOGLE_API_KEY_ENV_NAME] = fallback_google_key
+GOOGLE_GENAI_API_KEY = str(
+    os.getenv(GOOGLE_API_KEY_ENV_NAME, "") or os.getenv(GEMINI_API_KEY_ENV_NAME, "")
+).strip()
+GOOGLE_GENAI_CLIENT = (
+    genai.Client(api_key=GOOGLE_GENAI_API_KEY) if genai is not None and GOOGLE_GENAI_API_KEY else None
+)
 
 VISION_EXTRACTION_PROMPT = (
     "Extract all text, variables, and mathematical equations from this image. "
@@ -3991,6 +3997,8 @@ def _get_gemini_client_for_solve() -> Any:
     api_key = _gemini_solve_api_key()
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not configured for /api/solve.")
+    if GOOGLE_GENAI_CLIENT is not None and api_key == GOOGLE_GENAI_API_KEY:
+        return GOOGLE_GENAI_CLIENT
     return genai.Client(api_key=api_key)
 
 
@@ -5112,8 +5120,8 @@ async def dashboard_stats() -> DashboardStatsResponse:
 
 
 @app.get("/health")
-async def health_check() -> Dict[str, str]:
-    return {"status": "ok"}
+def health() -> Dict[str, str]:
+    return {"status": "online"}
 
 
 if __name__ == "__main__":
