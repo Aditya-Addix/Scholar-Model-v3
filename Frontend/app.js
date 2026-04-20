@@ -15,8 +15,9 @@ const SIMULATION_COMMAND_PREFIX = "/simulate ";
 const SIMULATION_POLL_INTERVAL_MS = 3000;
 const MAX_TURN_CONTEXT = 3;
 const API_CALL_TIMEOUT_MS = 120000;
-const ENGINE_WAKE_NOTICE_DELAY_MS = 3000;
+const ENGINE_WAKE_NOTICE_DELAY_MS = 5000;
 const CONNECTION_ALERT_GRACE_PERIOD_MS = 90000;
+const RATE_LIMIT_COOLDOWN_SECONDS = 30;
 const ACCESS_CODE = "ADDIX2026"; // Change this to your preferred code.
 const ACCESS_STATUS_STORAGE_KEY = "addix-labs-access-granted";
 const TRACE_PHASES = [
@@ -120,9 +121,8 @@ let isTesterMode = false;
 let currentStreak = 0;
 let problemsSolved = 0;
 let timeSaved = 0;
-let firstBackendResponseResolved = false;
-let firstResponseWakeNoticeShown = false;
 let warmupNoticeTimerId = null;
+let statusBannerNode = null;
 const frontendBootTimeMs = Date.now();
 let marathonElapsedSeconds = 0;
 let marathonIntervalId = null;
@@ -189,7 +189,6 @@ async function safeFetch(url, options = {}) {
     const timeoutController = new AbortController();
     const externalSignal = options.signal;
     let externalAbortHandler = null;
-    let shouldTrackFirstResponse = false;
 
     if (externalSignal) {
         if (externalSignal.aborted) {
@@ -205,17 +204,9 @@ async function safeFetch(url, options = {}) {
     const timeoutId = window.setTimeout(() => {
         timeoutController.abort();
     }, API_CALL_TIMEOUT_MS);
-    if (!firstBackendResponseResolved) {
-        shouldTrackFirstResponse = true;
-        warmupNoticeTimerId = window.setTimeout(() => {
-            if (!firstBackendResponseResolved && !firstResponseWakeNoticeShown) {
-                renderEngineReconnectNotice(
-                    "ADDIX Engine is waking up from hibernation... (30-60s remaining)",
-                );
-                firstResponseWakeNoticeShown = true;
-            }
-        }, ENGINE_WAKE_NOTICE_DELAY_MS);
-    }
+    warmupNoticeTimerId = window.setTimeout(() => {
+        showEngineStatusBanner("Scholars Engine is waking up... ☕");
+    }, ENGINE_WAKE_NOTICE_DELAY_MS);
 
     try {
         return await fetch(url, {
@@ -227,17 +218,41 @@ async function safeFetch(url, options = {}) {
         return buildSafeFetchErrorResponse();
     } finally {
         window.clearTimeout(timeoutId);
-        if (shouldTrackFirstResponse) {
-            firstBackendResponseResolved = true;
-            if (warmupNoticeTimerId) {
-                window.clearTimeout(warmupNoticeTimerId);
-                warmupNoticeTimerId = null;
-            }
+        if (warmupNoticeTimerId) {
+            window.clearTimeout(warmupNoticeTimerId);
+            warmupNoticeTimerId = null;
         }
+        hideEngineStatusBanner();
         if (externalSignal && externalAbortHandler) {
             externalSignal.removeEventListener("abort", externalAbortHandler);
         }
     }
+}
+
+function getOrCreateStatusBanner() {
+    if (statusBannerNode && document.body.contains(statusBannerNode)) {
+        return statusBannerNode;
+    }
+    const banner = document.createElement("div");
+    banner.id = "engine-status-banner";
+    banner.className = "engine-status-banner";
+    banner.hidden = true;
+    document.body.appendChild(banner);
+    statusBannerNode = banner;
+    return banner;
+}
+
+function showEngineStatusBanner(message) {
+    const banner = getOrCreateStatusBanner();
+    banner.textContent = String(message || "Scholars Engine is waking up... ☕");
+    banner.hidden = false;
+    banner.classList.add("is-visible");
+}
+
+function hideEngineStatusBanner() {
+    const banner = getOrCreateStatusBanner();
+    banner.classList.remove("is-visible");
+    banner.hidden = true;
 }
 
 function setComposerBusy(isBusy) {
@@ -2786,6 +2801,16 @@ async function sendQueryToBackend(userText) {
     try {
     if (!response.ok) {
         const rawText = await response.text();
+        let parsedError = null;
+        try {
+            parsedError = JSON.parse(rawText);
+        } catch (error) {
+            parsedError = null;
+        }
+        if (String(parsedError?.error || "") === "rate_limit") {
+            renderRateLimitCountdown(RATE_LIMIT_COOLDOWN_SECONDS);
+            return;
+        }
         renderSystemAlertBubble(buildSystemAlertMessage(response.status, rawText));
         return;
     }
@@ -2851,6 +2876,10 @@ async function sendQueryToBackend(userText) {
 
         if (!finalPayload || typeof finalPayload !== "object") {
             throw new Error("No final streamed result received from backend.");
+        }
+        if (String(finalPayload.error || "") === "rate_limit") {
+            renderRateLimitCountdown(RATE_LIMIT_COOLDOWN_SECONDS);
+            return;
         }
 
         // Push the AI response to memory.
@@ -3039,6 +3068,42 @@ function renderSystemAlertBubble(message) {
             '<p class="message-line"><span class="agent-label">[System Alert]:</span> ' + escapeHtml(text) + '</p>' +
         '</article>';
     appendMessage(html);
+}
+
+function renderRateLimitCountdown(seconds = RATE_LIMIT_COOLDOWN_SECONDS) {
+    let remainingSeconds = Math.max(0, Number(seconds) || RATE_LIMIT_COOLDOWN_SECONDS);
+    const updateMessage = () =>
+        "Engine is cooling down. Please try in " + String(remainingSeconds) + " seconds.";
+
+    if (activeSolveStep) {
+        activeSolveStep.classList.remove("loading-step", "error-step");
+        activeSolveStep.classList.add("engine-reconnect-notice", "system-alert-step");
+        activeSolveStep.innerHTML =
+            '<p class="message-line"><span class="agent-label">[Rate Limit]:</span> ' + escapeHtml(updateMessage()) + "</p>";
+        scrollChatToBottom();
+    } else {
+        appendMessage(
+            '<article class="message engine-reconnect-notice system-alert-step">' +
+                '<p class="message-line"><span class="agent-label">[Rate Limit]:</span> ' +
+                escapeHtml(updateMessage()) +
+                "</p>" +
+            "</article>",
+        );
+    }
+
+    const countdownId = window.setInterval(() => {
+        remainingSeconds -= 1;
+        if (remainingSeconds <= 0) {
+            window.clearInterval(countdownId);
+            return;
+        }
+        if (activeSolveStep) {
+            activeSolveStep.innerHTML =
+                '<p class="message-line"><span class="agent-label">[Rate Limit]:</span> ' +
+                escapeHtml(updateMessage()) +
+                "</p>";
+        }
+    }, 1000);
 }
 
 function removeComputingAnimation() {

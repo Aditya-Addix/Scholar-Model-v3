@@ -3458,6 +3458,11 @@ body.tester-mode #queryInput:focus {
 
 /* Mobile: tighten green AI response padding; scroll wide tables/code */
 @media (max-width: 600px) {
+    .main-shell,
+    .app-main {
+        padding: 8px;
+    }
+
     .message.final-step,
     .final-step.mentor-structured {
         padding: 10px;
@@ -3480,6 +3485,41 @@ body.tester-mode #queryInput:focus {
     word-break: break-word;
     max-width: 100%;
     box-sizing: border-box;
+}
+
+/* [ADDIX Mentor] container hardening against narrow-screen overflow */
+.message.final-step,
+.final-step.mentor-structured,
+.final-step .message-line,
+.final-step .mentor-guidance-line {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+}
+
+/* Keep LaTeX blocks scrollable instead of widening the response box */
+.final-step .katex-display,
+.final-step .math-block {
+    overflow-x: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.engine-status-banner {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 110;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.45);
+    background: rgba(5, 5, 5, 0.92);
+    color: #00ffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.22);
 }
 
 @media (max-width: 767px) {

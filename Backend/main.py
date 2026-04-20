@@ -14,7 +14,7 @@ from difflib import SequenceMatcher
 from io import BytesIO
 from pathlib import Path
 from collections.abc import AsyncIterator
-from typing import Any, Dict, List, Literal, Optional, TypedDict
+from typing import Any, Awaitable, Callable, Dict, List, Literal, Optional, TypedDict
 
 import httpx
 import sympy as sp
@@ -4002,6 +4002,38 @@ def _get_gemini_client_for_solve() -> Any:
     return genai.Client(api_key=api_key)
 
 
+class RateLimitCoolingError(RuntimeError):
+    """Raised when upstream model API is rate-limited after retry."""
+
+
+def _is_rate_limit_error(error: Exception) -> bool:
+    message = str(error or "").lower()
+    return (
+        "429" in message
+        or "resource exhausted" in message
+        or "rate limit" in message
+        or "quota" in message
+    )
+
+
+async def _run_with_rate_limit_retry(operation: Callable[[], Awaitable[Any]]) -> Any:
+    try:
+        return await operation()
+    except Exception as first_exc:
+        if not _is_rate_limit_error(first_exc):
+            raise
+        logger.warning("Gemini rate-limited on first attempt; retrying after cooldown.", exc_info=first_exc)
+        await asyncio.sleep(2)
+        try:
+            return await operation()
+        except Exception as second_exc:
+            if _is_rate_limit_error(second_exc):
+                raise RateLimitCoolingError(
+                    "Engine is cooling down. Please try in 30 seconds."
+                ) from second_exc
+            raise
+
+
 async def _iter_gemini_solve_stream_deltas(
     client: Any,
     system_instruction: str,
@@ -4588,14 +4620,17 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                 if genai is None or genai_types is None:
                     raise RuntimeError("google-genai SDK is not installed.")
                 _solve_client = _get_gemini_client_for_solve()
-                tester_resp = await _solve_client.aio.models.generate_content(
-                    model=GEMINI_SOLVE_MODEL,
-                    contents=tester_user_prompt,
-                    config=genai_types.GenerateContentConfig(
-                        system_instruction=tester_system_prompt,
-                        temperature=LLM_SOLVE_TEMPERATURE,
-                    ),
-                )
+                async def _tester_generate() -> Any:
+                    return await _solve_client.aio.models.generate_content(
+                        model=GEMINI_SOLVE_MODEL,
+                        contents=tester_user_prompt,
+                        config=genai_types.GenerateContentConfig(
+                            system_instruction=tester_system_prompt,
+                            temperature=LLM_SOLVE_TEMPERATURE,
+                        ),
+                    )
+
+                tester_resp = await _run_with_rate_limit_retry(_tester_generate)
                 tester_raw_text = str(getattr(tester_resp, "text", "") or "").strip()
                 tester_payload = PRIMARY_TRANSLATOR._extract_json(tester_raw_text)
                 topics = tester_payload.get("topics", []) if isinstance(tester_payload.get("topics", []), list) else []
@@ -4690,19 +4725,43 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                         streamed_fragments.append(delta)
                         yield _format_sse("thought", {"text": delta})
                 except Exception as stream_exc:
-                    logger.warning("Gemini stream path failed; falling back to non-stream completion.", exc_info=stream_exc)
+                    if _is_rate_limit_error(stream_exc):
+                        logger.warning("Gemini stream rate-limited; retrying stream once after cooldown.", exc_info=stream_exc)
+                        await asyncio.sleep(2)
+                        try:
+                            async for delta in _iter_gemini_solve_stream_deltas(
+                                solve_client,
+                                solver_system_prompt,
+                                solver_user_prompt,
+                            ):
+                                streamed_fragments.append(delta)
+                                yield _format_sse("thought", {"text": delta})
+                        except Exception as stream_retry_exc:
+                            if _is_rate_limit_error(stream_retry_exc):
+                                raise RateLimitCoolingError(
+                                    "Engine is cooling down. Please try in 30 seconds."
+                                ) from stream_retry_exc
+                            logger.warning(
+                                "Gemini stream retry failed; falling back to non-stream completion.",
+                                exc_info=stream_retry_exc,
+                            )
+                    else:
+                        logger.warning("Gemini stream path failed; falling back to non-stream completion.", exc_info=stream_exc)
 
                 if streamed_fragments:
                     result_text = "".join(streamed_fragments).strip() or WOLFRAM_FALLBACK_RESULT
                 else:
-                    completion = await solve_client.aio.models.generate_content(
-                        model=GEMINI_SOLVE_MODEL,
-                        contents=solver_user_prompt,
-                        config=genai_types.GenerateContentConfig(
-                            system_instruction=solver_system_prompt,
-                            temperature=LLM_SOLVE_TEMPERATURE,
-                        ),
-                    )
+                    async def _solve_generate() -> Any:
+                        return await solve_client.aio.models.generate_content(
+                            model=GEMINI_SOLVE_MODEL,
+                            contents=solver_user_prompt,
+                            config=genai_types.GenerateContentConfig(
+                                system_instruction=solver_system_prompt,
+                                temperature=LLM_SOLVE_TEMPERATURE,
+                            ),
+                        )
+
+                    completion = await _run_with_rate_limit_retry(_solve_generate)
                     result_text = str(getattr(completion, "text", "") or "").strip() or WOLFRAM_FALLBACK_RESULT
 
                 topics = [subject] if subject else []
@@ -4729,6 +4788,14 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                     "engine_trace": engine_trace,
                     "symbolic_verification_active": symbolic_verification_active,
                     "topic_mastered": topic_mastered,
+                },
+            )
+        except RateLimitCoolingError:
+            yield _format_sse(
+                "result",
+                {
+                    "error": "rate_limit",
+                    "message": "Engine is cooling down. Please try in 30 seconds.",
                 },
             )
         except Exception as e:
