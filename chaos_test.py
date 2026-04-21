@@ -8,7 +8,7 @@ from typing import Any
 
 import requests
 
-BASE_URL = "http://localhost:8000"
+BASE_URL ="https://scholar-model-v3.onrender.com"
 SOLVE_URL = f"{BASE_URL}/api/solve"
 TIMEOUT_SECONDS = 45
 TINY_PNG_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO7Zf9kAAAAASUVORK5CYII="

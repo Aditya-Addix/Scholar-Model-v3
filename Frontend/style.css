@@ -2468,6 +2468,40 @@ body.tester-mode #queryInput:focus {
     margin-bottom: 6px;
 }
 
+.final-step .mentor-response-header {
+    align-items: flex-start;
+    flex-wrap: nowrap;
+}
+
+.final-step .response-container.mentor-box {
+    width: 100%;
+    margin-top: 6px;
+    padding: 0;
+    font-weight: 400;
+    line-height: 1.8;
+    color: #e8f2ff;
+}
+
+.final-step .response-container.mentor-box .mentor-guidance-line {
+    font-weight: 400;
+    line-height: 1.8;
+}
+
+.final-step .response-container.mentor-box :is(p, h2, h3) {
+    margin-bottom: 1.5rem;
+}
+
+.final-step .response-container.mentor-box :is(h2, h3) {
+    font-weight: 700;
+    margin-top: 1.25rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.final-step .response-container.mentor-box strong {
+    font-weight: 700;
+}
+
 .thought-stream-box {
     margin-top: 6px;
     padding: 8px 10px;
@@ -3545,8 +3579,8 @@ body.tester-mode #queryInput:focus {
 .response-container p,
 .final-step .mentor-guidance-line p,
 .final-step .message-line p {
-    line-height: 1.9;
-    margin-bottom: 20px;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
 }
 
 .final-step .katex-display::-webkit-scrollbar,
@@ -3569,22 +3603,6 @@ body.tester-mode #queryInput:focus {
 .final-step .math-block {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.08) rgba(255, 255, 255, 0.02);
-}
-
-/* Section break rhythm for mentor output headings */
-.final-step :is(h1, h2, h3, h4, h5, h6),
-.final-step p:has(> strong) {
-    margin-top: 1.25rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Highlight final answer-like blocks */
-.final-step :is(p, div):has(> strong) {
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 3px solid rgba(0, 255, 255, 0.5);
-    padding: 10px 12px;
-    border-radius: 8px;
 }
 
 .engine-status-banner {

@@ -3654,23 +3654,80 @@ function buildLogicCardsMarkup(explanation) {
     return '<section class="logic-card-stack">' + cards + '</section>';
 }
 
+function normalizeMarkdownForRender(text) {
+    let t = String(text || "").replace(/\r\n/g, "\n");
+    t = t.replace(/\n{4,}/g, "\n\n\n");
+    t = t.replace(/([^\n#])(#{1,6})(?=\S)/g, "$1\n$2");
+    t = t.replace(/^(#{1,6})([^\s#])/gm, "$1 $2");
+    t = t.replace(/\n(#{1,6})([^\s#\n])/g, "\n$1 $2");
+    return t.replace(/\n{3,}/g, "\n\n");
+}
+
+function escapeHtmlWithBoldSegments(rawLine) {
+    const line = String(rawLine || "");
+    return line.split(/(\*\*.+?\*\*)/g).map((segment) => {
+        if (/^\*\*.+\*\*$/.test(segment)) {
+            const inner = segment.slice(2, -2);
+            return "<strong>" + escapeHtml(inner) + "</strong>";
+        }
+        return escapeHtml(segment);
+    }).join("");
+}
+
+function renderMarkdownFallbackHtml(text) {
+    const normalized = normalizeMarkdownForRender(String(text || ""));
+    const blocks = normalized.split(/\n\n+/);
+    const parts = [];
+    blocks.forEach((block) => {
+        const trimmed = block.trim();
+        if (!trimmed) {
+            return;
+        }
+        const heading = trimmed.match(/^(#{2,3})\s+(.+)$/);
+        if (heading) {
+            const level = heading[1].length;
+            const tag = level === 2 ? "h2" : "h3";
+            parts.push("<" + tag + ">" + escapeHtml(heading[2].trim()) + "</" + tag + ">");
+            return;
+        }
+        const lineHtml = trimmed
+            .split("\n")
+            .map((line) => escapeHtmlWithBoldSegments(line))
+            .join("<br>");
+        parts.push("<p>" + lineHtml + "</p>");
+    });
+    return parts.length ? parts.join("") : "<p>" + escapeHtml(normalized) + "</p>";
+}
+
 function renderMarkdownContent(text) {
     const rawText = String(text || "");
-    const normalizedText = rawText.replace(/\n{3,}/g, "\n\n");
-    if (typeof window.marked !== "undefined" && window.marked && typeof window.marked.parse === "function") {
+    const normalizedText = normalizeMarkdownForRender(rawText);
+    const markedApi = window.marked && (window.marked.parse || window.marked.marked?.parse);
+    if (typeof markedApi === "function") {
         if (typeof window.marked.setOptions === "function") {
             window.marked.setOptions({
                 gfm: true,
                 breaks: true,
             });
         }
-        return window.marked.parse(normalizedText, {
-            gfm: true,
-            breaks: true,
-        });
+        try {
+            const parsed = markedApi.call(window.marked, normalizedText, {
+                gfm: true,
+                breaks: true,
+            });
+            if (parsed && typeof parsed.then === "function") {
+                return renderMarkdownFallbackHtml(normalizedText);
+            }
+            const html = String(parsed || "").trim();
+            if (html) {
+                return html;
+            }
+        } catch (error) {
+            console.warn("marked.parse failed; using fallback markdown renderer.", error);
+        }
     }
 
-    return escapeHtml(normalizedText).replace(/\n/g, "<br>");
+    return renderMarkdownFallbackHtml(normalizedText);
 }
 
 async function renderDiagrams(element) {
@@ -3718,10 +3775,12 @@ function replaceSolvingWithFinal(stepElement, finalAnswer, equationOverride, eng
     stepElement.dataset.vaultQuery = sourceQuery;
     stepElement.innerHTML =
         '<div class="message-engine-trace">' + safeEngineTrace + '</div>' +
-        '<div class="agent-row">' +
+        '<div class="agent-row mentor-response-header">' +
             '<span class="agent-pulse"></span>' +
             '<span class="agent-label">[ADDIX Mentor]:</span>' +
-            '<div class="message-line mentor-guidance-line" data-ai-response></div>' +
+        '</div>' +
+        '<div class="response-container mentor-box">' +
+            '<div class="mentor-guidance-line" data-ai-response></div>' +
         '</div>' +
         logicMarkup +
         topicMarkup;
