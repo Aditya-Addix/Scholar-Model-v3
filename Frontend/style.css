@@ -578,9 +578,9 @@ body:not(.gate-locked) .addix-scholars-shell {
     fill: none;
     stroke-width: 7;
     stroke-linecap: round;
-    stroke-dasharray: 188.5;
-    stroke-dashoffset: 188.5;
-    transition: stroke-dashoffset 320ms ease;
+    stroke-dasharray: 0 188.5;
+    stroke-dashoffset: 0;
+    transition: stroke-dasharray 0.5s ease, stroke 0.3s ease;
 }
 
 .prep-ring-physics .prep-ring-progress {
@@ -1980,14 +1980,16 @@ body.zen-mode #queryInput {
 .syllabus-chip-button.mastered,
 .syllabus-chip-button.is-complete {
     border-left: 3px solid #00ced1;
-    background: rgba(0, 206, 209, 0.1);
-    color: #00ced1;
+    background: rgba(0, 206, 209, 0.14);
+    color: #d8ffff;
     font-weight: 500;
+    box-shadow: 0 0 14px rgba(0, 206, 209, 0.18), inset 0 0 10px rgba(0, 206, 209, 0.08);
 }
 
 .syllabus-chip-button.mastered .syllabus-chip-check,
 .syllabus-chip-button.is-complete .syllabus-chip-check {
-    color: #50ffe3;
+    color: #00ffff;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.45);
 }
 
 .mode-switch {
@@ -2260,12 +2262,14 @@ body.tester-mode #queryInput:focus {
     border-color: rgba(16, 185, 129, 0.58);
     box-shadow: inset 3px 0 0 rgba(16, 185, 129, 0.85);
     background: rgba(16, 185, 129, 0.08);
+    padding: 24px;
     display: block;
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
     overflow-wrap: anywhere;
-    word-break: normal;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 /* ADDIX Mentor / final answer body: prevent long LaTeX or URLs from overflowing horizontally */
@@ -2275,17 +2279,23 @@ body.tester-mode #queryInput:focus {
     max-width: 100%;
     box-sizing: border-box;
     overflow-wrap: anywhere;
-    word-break: normal;
+    word-break: break-word;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    hyphens: auto;
 }
 
 .mentor-structured {
     position: relative;
-    padding-top: 20px;
+    padding: 24px;
     display: block;
     max-width: 100%;
     box-sizing: border-box;
     overflow-wrap: anywhere;
-    word-break: normal;
+    word-break: break-word;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    hyphens: auto;
 }
 
 .mentor-guidance-line {
@@ -2531,7 +2541,8 @@ body.tester-mode #queryInput:focus {
 }
 
 .math-block {
-    margin-top: 7px;
+    display: block;
+    margin: 1.5rem 0;
     padding: 8px 10px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -3438,7 +3449,7 @@ body.tester-mode #queryInput:focus {
 @media (max-width: 480px) {
     .message.final-step,
     .final-step.mentor-structured {
-        padding: 8px 9px;
+        padding: 20px;
     }
 
     .mentor-structured {
@@ -3465,7 +3476,7 @@ body.tester-mode #queryInput:focus {
 
     .message.final-step,
     .final-step.mentor-structured {
-        padding: 10px;
+        padding: 20px;
     }
 
     .final-step table,
@@ -3481,8 +3492,12 @@ body.tester-mode #queryInput:focus {
 }
 
 .response-container {
+    padding: 24px;
     overflow-wrap: anywhere;
     word-break: break-word;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    hyphens: auto;
     max-width: 100%;
     box-sizing: border-box;
     overflow-x: hidden;
@@ -3510,9 +3525,50 @@ body.tester-mode #queryInput:focus {
 /* Keep LaTeX blocks scrollable instead of widening the response box */
 .final-step .katex-display,
 .final-step .math-block {
+    display: block;
+    margin: 1.5rem 0;
+    text-align: center;
     overflow-x: auto;
     max-width: 100%;
     box-sizing: border-box;
+}
+
+.final-step .katex-display::-webkit-scrollbar,
+.final-step .math-block::-webkit-scrollbar {
+    height: 4px;
+}
+
+.final-step .katex-display::-webkit-scrollbar-track,
+.final-step .math-block::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.final-step .katex-display::-webkit-scrollbar-thumb,
+.final-step .math-block::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+}
+
+.final-step .katex-display,
+.final-step .math-block {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.08) rgba(255, 255, 255, 0.02);
+}
+
+/* Section break rhythm for mentor output headings */
+.final-step :is(h1, h2, h3, h4, h5, h6),
+.final-step p:has(> strong) {
+    margin-top: 1.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Highlight final answer-like blocks */
+.final-step :is(p, div):has(> strong) {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid rgba(0, 255, 255, 0.5);
+    padding: 10px 12px;
+    border-radius: 8px;
 }
 
 .engine-status-banner {

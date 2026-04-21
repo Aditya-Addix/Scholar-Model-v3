@@ -29,6 +29,10 @@ try:
     from groq import Groq
 except ImportError:
     Groq = None
+try:
+    from mistralai import Mistral
+except ImportError:
+    Mistral = None
 from dotenv import load_dotenv
 from fastapi import FastAPI, BackgroundTasks, Body, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -91,6 +95,7 @@ GROQ_API_KEY_ENV_NAME = "GROQ_API_KEY"
 TAVILY_API_KEY_ENV_NAME = "TAVILY_API_KEY"
 GEMINI_API_KEY_ENV_NAME = "GEMINI_API_KEY"
 GOOGLE_API_KEY_ENV_NAME = "GOOGLE_API_KEY"
+MISTRAL_API_KEY_ENV_NAME = "MISTRAL_API_KEY"
 SCHOLAR_FRONTEND_SECRET_ENV_NAME = "SCHOLAR_FRONTEND_SECRET"
 FOUNDER_EMAIL_ENV_NAME = "FOUNDER_EMAIL"
 DEEPSEEK_BASE_URL = "https://api.deepseek.com/v1"
@@ -218,6 +223,12 @@ GOOGLE_GENAI_CLIENT = (
 GROQ_API_KEY = str(os.getenv(GROQ_API_KEY_ENV_NAME, "")).strip()
 GROQ_SDK_CLIENT = (
     Groq(api_key=GROQ_API_KEY) if Groq is not None and GROQ_API_KEY else None
+)
+MISTRAL_API_KEY = str(os.environ.get(MISTRAL_API_KEY_ENV_NAME, "")).strip()
+mistral_client = (
+    Mistral(api_key=os.environ.get(MISTRAL_API_KEY_ENV_NAME))
+    if Mistral is not None and MISTRAL_API_KEY
+    else None
 )
 
 VISION_EXTRACTION_PROMPT = (
@@ -4067,6 +4078,58 @@ async def _generate_groq_solve_text(system_instruction: str, user_text: str) -> 
     return await asyncio.to_thread(_run_completion)
 
 
+async def _generate_mistral_vision_text(query: str, image_base64: str) -> str:
+    if Mistral is None:
+        raise RuntimeError("mistralai SDK is not installed.")
+    if mistral_client is None:
+        raise RuntimeError("MISTRAL_API_KEY is not configured for /api/solve vision route.")
+
+    raw_image = str(image_base64 or "").strip()
+    if not raw_image:
+        raise RuntimeError("Missing base64 image payload for Mistral vision route.")
+    base64_payload = raw_image.split(",", 1)[1] if "," in raw_image else raw_image
+    data_uri = f"data:image/jpeg;base64,{base64_payload}"
+    prompt_text = str(query or "").strip() or "Please solve the attached problem step-by-step."
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Carefully analyze the attached image of the problem and solve it step-by-step. User query: "
+                    + prompt_text,
+                },
+                {"type": "image_url", "image_url": data_uri},
+            ],
+        }
+    ]
+
+    def _run_completion() -> str:
+        completion = mistral_client.chat.complete(model="pixtral-12b-2409", messages=messages)
+        choices = list(getattr(completion, "choices", []) or [])
+        if not choices:
+            raise RuntimeError("Mistral returned no choices for /api/solve vision route.")
+        message = getattr(choices[0], "message", None)
+        content = getattr(message, "content", "")
+        if isinstance(content, list):
+            text_parts: list[str] = []
+            for part in content:
+                if isinstance(part, dict):
+                    text_value = str(part.get("text", "")).strip()
+                else:
+                    text_value = str(getattr(part, "text", "") or "").strip()
+                if text_value:
+                    text_parts.append(text_value)
+            resolved = "\n".join(text_parts).strip()
+        else:
+            resolved = str(content or "").strip()
+        if not resolved:
+            raise RuntimeError("Mistral returned empty content for /api/solve vision route.")
+        return resolved
+
+    return await asyncio.to_thread(_run_completion)
+
+
 class RateLimitCoolingError(RuntimeError):
     """Raised when upstream model API is rate-limited after retry."""
 
@@ -4534,7 +4597,7 @@ async def generate_diagram(payload: dict = Body(...)) -> dict[str, str]:
 @app.post("/api/solve")
 @limiter.limit("5/minute")
 async def solve_student_query(request: Request, payload: SolveRequest) -> StreamingResponse:
-    """Stream tutor output over SSE using ``google-genai`` (Gemini) ``generate_content_stream``."""
+    """Stream tutor output over SSE with Mistral vision + Groq text solver."""
     global API_SOLVE_TOTAL_CALLS
     global API_SOLVE_CACHE_HITS
 
@@ -4565,17 +4628,33 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
             )
             force_math_tool = any(token in prompt_lower for token in broad_math_triggers)
 
-            diagram_description = ""
             if image_payload:
+                mistral_result = await _generate_mistral_vision_text(latest_query, image_payload)
+                final_answer = _sanitize_solver_output_text(mistral_result) or WOLFRAM_FALLBACK_RESULT
+                engine_trace = "Mistral Pixtral-12B Vision"
+                topics = [_detect_subject(latest_query)] if latest_query else []
+                topics = [topic for topic in topics if topic]
+                explanation: list[str] = []
+                topic_mastered = _extract_mastered_topic_from_query(latest_query)
                 try:
-                    diagram_description = await _describe_image_with_groq_vision(latest_query, image_payload, payload.exam_context)
-                except Exception as vision_exc:
-                    logger.warning("Groq vision route failed; falling back to Gemini description.", exc_info=vision_exc)
-                    diagram_description = await _describe_diagram_with_gemini_flash(image_payload)
+                    await persist_query_session(latest_query, final_answer, topics[0] if topics else "Physics", True)
+                except Exception as exc:
+                    logger.warning("Failed to persist /api/solve vision session.", exc_info=exc)
+                yield _format_sse(
+                    "result",
+                    {
+                        "response_text": final_answer,
+                        "result": final_answer,
+                        "topics": topics,
+                        "explanation": explanation,
+                        "engine_trace": engine_trace,
+                        "symbolic_verification_active": False,
+                        "topic_mastered": topic_mastered,
+                    },
+                )
+                return
 
             combined_query = latest_query
-            if diagram_description:
-                combined_query = latest_query.strip() + "\n\n[Diagram Description]\n" + diagram_description.strip()
 
             sanitized_query = await sanitize_math_input(combined_query)
             sanitized_plain = urllib.parse.unquote_plus(sanitized_query)
@@ -4776,19 +4855,11 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                     + (tavily_context_text or "None")
                 )
 
-                try:
-                    result_text = await _generate_gemini_solve_text(
-                        solver_system_prompt,
-                        solver_user_prompt,
-                    )
-                    engine_trace = "Gemini 2.0 Flash + SymPy"
-                except Exception as gemini_exc:
-                    logger.exception("FALLING BACK TO GROQ", exc_info=gemini_exc)
-                    result_text = await _generate_groq_solve_text(
-                        solver_system_prompt,
-                        solver_user_prompt,
-                    )
-                    engine_trace = "Groq llama-3.3-70b-versatile Fallback + SymPy"
+                result_text = await _generate_groq_solve_text(
+                    solver_system_prompt,
+                    solver_user_prompt,
+                )
+                engine_trace = "Groq llama-3.3-70b-versatile + SymPy"
 
                 topics = [subject] if subject else []
                 explanation = []

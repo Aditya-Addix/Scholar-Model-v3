@@ -98,12 +98,7 @@ const labsVerifyButton = document.getElementById("labsVerifyButton");
 const labsGateFeedback = document.getElementById("labsGateFeedback");
 
 const PREP_RING_CIRCUMFERENCE = 188.5;
-const PREP_GRADE_MAP = {
-    NSEJS: { Physics: 92, Chemistry: 81, Math: 86 },
-    IOQM: { Physics: 58, Chemistry: 47, Math: 95 },
-    JEE: { Physics: 66, Chemistry: 63, Math: 69 },
-    "JEE ADVANCED": { Physics: 66, Chemistry: 63, Math: 69 },
-};
+const PREP_DEFAULT_PERCENT = { Physics: 0, Chemistry: 0, Math: 0 };
 
 let activeExam = "NSEJS";
 let sending = false;
@@ -562,19 +557,120 @@ function setPrepRingProgress(ringElement, valueElement, percent) {
     }
 
     const safePercent = clamp(Number(percent) || 0, 0, 100);
-    ringElement.style.strokeDasharray = String(PREP_RING_CIRCUMFERENCE);
-    ringElement.style.strokeDashoffset = String(PREP_RING_CIRCUMFERENCE * (1 - safePercent / 100));
+    const filledLength = (PREP_RING_CIRCUMFERENCE * safePercent) / 100;
+    ringElement.style.strokeDasharray = String(filledLength) + " " + String(PREP_RING_CIRCUMFERENCE);
+    ringElement.style.strokeDashoffset = "0";
     if (valueElement) {
         valueElement.textContent = String(Math.round(safePercent)) + "%";
     }
 }
 
+function getGradeFromPercent(percent) {
+    const safePercent = clamp(Number(percent) || 0, 0, 100);
+    if (safePercent >= 90) {
+        return "S";
+    }
+    if (safePercent >= 80) {
+        return "A+";
+    }
+    if (safePercent >= 70) {
+        return "A";
+    }
+    return "B";
+}
+
+function updateHudGradeDisplay(examName, grade, progressPercent) {
+    const card = getHudCardForExam(examName);
+    if (!card) {
+        return;
+    }
+
+    const safeProgress = clamp(Number(progressPercent) || 0, 0, 100);
+    const safeGrade = String(grade || "-").trim() || "-";
+    const gradeNode = card.querySelector("[data-grade-label]");
+    const gradeCenter = card.querySelector("[data-grade-center]");
+
+    if (gradeNode) {
+        gradeNode.textContent = safeGrade;
+    }
+    if (gradeCenter) {
+        gradeCenter.textContent = safeGrade;
+    }
+    card.dataset.grade = safeGrade;
+    card.dataset.progress = String(Math.round(safeProgress));
+    card.style.setProperty("--progress", String(safeProgress));
+}
+
+function calculateMastery(examName = activeExam) {
+    const resolvedExam = String(examName || activeExam || "NSEJS").trim() || "NSEJS";
+    const targetSlot = getSyllabusSlotForExam(resolvedExam);
+    if (!targetSlot) {
+        return null;
+    }
+
+    const subjects = ["Physics", "Chemistry", "Math"];
+    const subjectStats = {
+        Physics: { total: 0, completed: 0, percent: 0 },
+        Chemistry: { total: 0, completed: 0, percent: 0 },
+        Math: { total: 0, completed: 0, percent: 0 },
+    };
+
+    const categoryNodes = Array.from(targetSlot.querySelectorAll(".syllabus-category"));
+    categoryNodes.forEach((categoryNode) => {
+        const headingNode = categoryNode.querySelector("h4");
+        const heading = String(headingNode ? headingNode.textContent : "").trim().toUpperCase();
+        const subject = subjects.find((name) => heading.includes(name.toUpperCase()));
+        if (!subject) {
+            return;
+        }
+
+        const topicNodes = Array.from(categoryNode.querySelectorAll(".syllabus-chip-button[data-syllabus-topic]"));
+        topicNodes.forEach((topicNode) => {
+            const topicName = String(topicNode.dataset.syllabusTopic || "").trim();
+            if (!topicName) {
+                return;
+            }
+            subjectStats[subject].total += 1;
+            if (isTopicCompleted(resolvedExam, topicName)) {
+                subjectStats[subject].completed += 1;
+            }
+        });
+    });
+
+    subjects.forEach((subject) => {
+        const stats = subjectStats[subject];
+        stats.percent = stats.total > 0 ? (stats.completed / stats.total) * 100 : PREP_DEFAULT_PERCENT[subject];
+    });
+
+    const totalTopics = subjects.reduce((accumulator, subject) => accumulator + subjectStats[subject].total, 0);
+    const completedTopics = subjects.reduce((accumulator, subject) => accumulator + subjectStats[subject].completed, 0);
+    const overallPercent = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+    const overallGrade = getGradeFromPercent(overallPercent);
+
+    setPrepRingProgress(prepRingPhysics, prepRingPhysicsValue, subjectStats.Physics.percent);
+    setPrepRingProgress(prepRingChemistry, prepRingChemistryValue, subjectStats.Chemistry.percent);
+    setPrepRingProgress(prepRingMath, prepRingMathValue, subjectStats.Math.percent);
+    updateHudGradeDisplay(resolvedExam, overallGrade, overallPercent);
+
+    return {
+        exam: resolvedExam,
+        subjects: subjectStats,
+        totalTopics,
+        completedTopics,
+        overallPercent,
+        overallGrade,
+    };
+}
+
 function updatePreparationGradeRings(examKey) {
-    const key = String(examKey || activeExam || "NSEJS").toUpperCase();
-    const examGrades = PREP_GRADE_MAP[key] || PREP_GRADE_MAP.NSEJS;
-    setPrepRingProgress(prepRingPhysics, prepRingPhysicsValue, examGrades.Physics);
-    setPrepRingProgress(prepRingChemistry, prepRingChemistryValue, examGrades.Chemistry);
-    setPrepRingProgress(prepRingMath, prepRingMathValue, examGrades.Math);
+    const masteryResult = calculateMastery(examKey);
+    if (masteryResult) {
+        return;
+    }
+    setPrepRingProgress(prepRingPhysics, prepRingPhysicsValue, PREP_DEFAULT_PERCENT.Physics);
+    setPrepRingProgress(prepRingChemistry, prepRingChemistryValue, PREP_DEFAULT_PERCENT.Chemistry);
+    setPrepRingProgress(prepRingMath, prepRingMathValue, PREP_DEFAULT_PERCENT.Math);
+    updateHudGradeDisplay(examKey, "B", 0);
 }
 
 function bindExamContextSelector() {
@@ -825,6 +921,7 @@ function markTopicComplete(topicName, examName = activeExam) {
             applyChipCompletionUi(chipNode, true);
         }
     });
+    calculateMastery(resolvedExam);
 }
 
 function detectCompletedTopicFromUserText(text) {
@@ -929,10 +1026,12 @@ function renderSyllabusSections(payload, isLoading = false, examName = activeExa
     targetSlot.hidden = false;
     if (genericChips.length) {
         targetSlot.innerHTML = buildGroup(safeExam + " SYLLABUS", genericChips);
+        calculateMastery(safeExam);
         return;
     }
     if (!physicsChips.length && !chemistryChips.length && !mathChips.length) {
         targetSlot.innerHTML = '<div class="syllabus-category"><h4>SYLLABUS</h4><div class="syllabus-chip-row"><span class="syllabus-chip syllabus-chapter-item">No syllabus topics returned by API.</span></div></div>';
+        calculateMastery(safeExam);
         return;
     }
 
@@ -940,6 +1039,7 @@ function renderSyllabusSections(payload, isLoading = false, examName = activeExa
         buildGroup("PHYSICS", physicsChips) +
         buildGroup("CHEMISTRY", chemistryChips) +
         buildGroup("MATH", mathChips);
+    calculateMastery(safeExam);
 }
 
 function showSyllabusExplorer() {
@@ -1006,6 +1106,7 @@ function bindSyllabusChipInteractions() {
         const nextComplete = !currentlyComplete;
         setTopicCompleted(examValue, topic, nextComplete);
         applyChipCompletionUi(chipButton, nextComplete);
+        calculateMastery(examValue);
     });
 }
 
@@ -2514,7 +2615,7 @@ function bindVisionInteractions() {
             setImageUploadLoading(true);
             appendVisionStep(VISION_INIT_MESSAGE);
             const imagePayload = await readImagePayload(selectedFile);
-            selectedImageBase64 = imagePayload.dataUrl;
+            selectedImageBase64 = imagePayload.base64;
             selectedImagePreviewDataUrl = imagePayload.dataUrl;
             renderImagePreview(selectedFile.name, selectedImagePreviewDataUrl);
             if (queryInput) {

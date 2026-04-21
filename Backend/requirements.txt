@@ -36,6 +36,7 @@ hyperframe==6.1.0
 idna==3.11
 jiter==0.14.0
 limits==5.8.0
+mistralai
 mpmath==1.3.0
 openai==2.32.0
 packaging==26.1
