@@ -300,6 +300,7 @@ async function initializeApp() {
     bindBlackBoxVault();
     bindPremiumExport();
     bindMobileSidebarToggle();
+    bindDiagnosticModeShortcut();
     bindMarathonTimer();
     initializeProgressDashboard();
     updatePremiumUiState();
@@ -2126,6 +2127,89 @@ function bindFocusMode() {
     });
 }
 
+function bindDiagnosticModeShortcut() {
+    document.addEventListener("keydown", (event) => {
+        const isDiagnosticKey = String(event.key || "").toLowerCase() === "d";
+        const hasPrimaryModifier = event.ctrlKey || event.metaKey;
+        if (!isDiagnosticKey || !hasPrimaryModifier || !event.shiftKey) {
+            return;
+        }
+        event.preventDefault();
+        void runFrontendDiagnostics();
+    });
+}
+
+async function runFrontendDiagnostics() {
+    const report = {
+        mastery: false,
+        pdf: false,
+        details: [],
+    };
+
+    try {
+        const activeSlot = getSyllabusSlotForExam(activeExam);
+        if ((!activeSlot || activeSlot.hidden) && typeof loadSyllabusForExam === "function") {
+            await loadSyllabusForExam(activeExam);
+        }
+
+        const visibleSlot = getSyllabusSlotForExam(activeExam);
+        const chips = visibleSlot
+            ? Array.from(visibleSlot.querySelectorAll(".syllabus-chip-button[data-syllabus-topic]"))
+            : [];
+
+        if (!chips.length) {
+            report.details.push("Mastery diagnostic skipped: no syllabus chips available.");
+        } else {
+            const sampleChips = chips.slice(0, Math.min(3, chips.length));
+            const snapshots = sampleChips.map((chipNode) => ({
+                node: chipNode,
+                exam: String(chipNode.dataset.syllabusExam || activeExam || "NSEJS"),
+                topic: String(chipNode.dataset.syllabusTopic || ""),
+                wasComplete: chipNode.classList.contains("is-complete"),
+            }));
+
+            snapshots.forEach((entry) => {
+                if (!entry.node.classList.contains("is-complete")) {
+                    entry.node.click();
+                }
+            });
+            calculateMastery(activeExam);
+
+            const ringValues = [prepRingPhysicsValue, prepRingChemistryValue, prepRingMathValue]
+                .map((node) => parseInt(String(node ? node.textContent : "0").replace("%", "").trim(), 10))
+                .filter((value) => Number.isFinite(value));
+            report.mastery = ringValues.some((value) => value > 0);
+
+            snapshots.forEach((entry) => {
+                setTopicCompleted(entry.exam, entry.topic, entry.wasComplete);
+                applyChipCompletionUi(entry.node, entry.wasComplete);
+            });
+            calculateMastery(activeExam);
+        }
+    } catch (error) {
+        report.details.push("Mastery diagnostic failed: " + String(error && error.message ? error.message : error));
+    }
+
+    const mentorTarget = document.querySelector(".mentor-box, .mentor-structured, .final-step");
+    report.pdf = typeof window.html2pdf === "function" && Boolean(mentorTarget);
+    if (!report.pdf) {
+        report.details.push("PDF diagnostic failed: html2pdf or mentor target missing.");
+    }
+
+    const overallNominal = report.mastery && report.pdf;
+    const stamp = new Date().toISOString();
+    console.group("[ADDIX Diagnostics] " + stamp);
+    console.info("Mastery Engine:", report.mastery ? "PASS" : "FAIL");
+    console.info("PDF Capture Path:", report.pdf ? "PASS" : "FAIL");
+    report.details.forEach((line) => console.warn(line));
+    if (overallNominal) {
+        console.log("SYSTEMS NOMINAL");
+    } else {
+        console.error("SYSTEMS DEGRADED");
+    }
+    console.groupEnd();
+}
+
 async function loadVaultEntries() {
     const response = await apiFetch(BASE_URL + "/api/vault", { method: "GET" });
     if (!response.ok) {
@@ -2857,6 +2941,7 @@ async function sendQueryToBackend(userText) {
         ? examContextNode.value
         : activeExam;
     const testerModeEnabled = Boolean(engineModeToggle ? engineModeToggle.checked : isTesterMode);
+    const engineMode = testerModeEnabled ? "tester" : "solver";
     const currentImageBase64 = selectedImageBase64 || null;
     const BACKEND_URL = BASE_URL + "/api/solve";
 
@@ -2866,6 +2951,7 @@ async function sendQueryToBackend(userText) {
         messages: buildBackendConversationHistory(),
         socratic_mode: false,
         is_tester_mode: testerModeEnabled,
+        engine_mode: engineMode,
         exam_context: examContext,
         image_base64: currentImageBase64,
     };

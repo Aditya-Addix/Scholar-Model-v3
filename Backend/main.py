@@ -205,6 +205,16 @@ GEMINI_SOLVE_MODEL = "gemini-2.0-flash"
 GROQ_SOLVE_FALLBACK_MODEL = "llama-3.3-70b-versatile"
 DETERMINISTIC_TIMEOUT_MESSAGE = "System Override: Computation exceeds deterministic time limits. Please simplify"
 COMPUTATION_FAILSAFE_MESSAGE = "Computation logic complete. Please verify units or model selection."
+PROMPT_SOLVER = (
+    "You are ADDIX Mentor. The user needs help solving a problem. "
+    "Provide a step-by-step derivation, reference formulas, and a final answer. "
+    "Use LaTeX for math."
+)
+PROMPT_TESTER = (
+    "You are an elite Exam Creator. The user wants practice. DO NOT solve a problem. "
+    "You MUST generate 1 to 3 highly challenging multiple-choice questions (A, B, C, D) "
+    "about the topic, followed by an Answer Key at the end. Use LaTeX for all math."
+)
 GROQ_CHAT_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 TAVILY_SEARCH_ENDPOINT = "https://api.tavily.com/search"
 GEMINI_GENERATE_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent"
@@ -1669,6 +1679,7 @@ class SolveRequest(BaseModel):
     query: Optional[str] = None
     socratic_mode: bool = False
     is_tester_mode: StrictBool = Field(default=False)
+    engine_mode: Optional[str] = None
     exam_context: str = "General"
     image_data: Optional[str] = None
     image_base64: Optional[str] = None
@@ -3990,6 +4001,21 @@ def _format_sse(event: str, payload: dict[str, Any]) -> str:
     return f"event: {event}\ndata: {json.dumps(payload, ensure_ascii=False)}\n\n"
 
 
+def _is_valid_base64_payload(raw_value: str) -> bool:
+    value = str(raw_value or "").strip()
+    if not value:
+        return False
+    candidate = value.split(",", 1)[1] if "," in value else value
+    candidate = "".join(candidate.split())
+    if not candidate:
+        return False
+    try:
+        base64.b64decode(candidate, validate=True)
+        return True
+    except Exception:
+        return False
+
+
 def _extract_gemini_response_text(response: Any) -> str:
     """Normalize text from google-genai GenerateContentResponse (or legacy shapes)."""
     direct_text = str(getattr(response, "text", "") or "").strip()
@@ -4600,6 +4626,15 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
     """Stream tutor output over SSE with Mistral vision + Groq text solver."""
     global API_SOLVE_TOTAL_CALLS
     global API_SOLVE_CACHE_HITS
+    incoming_image = str(payload.image_base64 or payload.image_data or "").strip()
+    if incoming_image and not _is_valid_base64_payload(incoming_image):
+        return JSONResponse(
+            status_code=400,
+            content={
+                "error": True,
+                "message": "Invalid image payload. Provide valid base64-encoded image data.",
+            },
+        )
 
     async def event_stream():
         global API_SOLVE_TOTAL_CALLS
@@ -4744,51 +4779,30 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                 if visual_tutor_image_url and not tavily_image_url:
                     tavily_image_url = visual_tutor_image_url
 
-            if payload.is_tester_mode:
-                tester_system_prompt = (
-                    "You are a Senior NSEJS/JEE examiner. Generate exactly one high-level practice question. "
-                    "Do NOT provide a solution, derivation, hints, or final numeric answer. "
-                    "Return strict JSON only with this schema: "
-                    '{"result":"...","explanation":[],"topics":["..."]}. '
-                    "In 'result', output only the practice question statement. "
-                    "No markdown fences and no extra keys. "
-                    "CRITICAL FORMATTING RULE: You must NEVER wrap your entire response or standard text lists in $$ or $. "
-                    "The overall response must be standard Markdown. ONLY wrap isolated mathematical equations in $$ "
-                    "(for block math) and individual variables in $ (for inline math). Do not use LaTeX delimiters for numbering or text headers."
-                )
+            resolved_engine_mode = str(payload.engine_mode or "").strip().lower()
+            tester_mode_active = resolved_engine_mode == "tester" or bool(payload.is_tester_mode)
+
+            if tester_mode_active:
+                tester_system_prompt = PROMPT_TESTER
                 tester_user_prompt = (
                     "Exam context: " + str(payload.exam_context or "General") + ". "
                     "Student topic input: " + sanitized_plain.strip() + ". "
-                    "Difficulty target: advanced but accessible challenge level."
+                    "Generate exam-paper ready output with clear MCQ numbering and an Answer Key section."
                 )
-                if genai is None or genai_types is None:
-                    raise RuntimeError("google-genai SDK is not installed.")
-                _solve_client = _get_gemini_client_for_solve()
-                async def _tester_generate() -> Any:
-                    return await _solve_client.aio.models.generate_content(
-                        model=GEMINI_SOLVE_MODEL,
-                        contents=tester_user_prompt,
-                        config=genai_types.GenerateContentConfig(
-                            system_instruction=tester_system_prompt,
-                            temperature=LLM_SOLVE_TEMPERATURE,
-                        ),
-                    )
-
-                tester_resp = await _run_with_rate_limit_retry(_tester_generate)
-                tester_raw_text = str(getattr(tester_resp, "text", "") or "").strip()
-                tester_payload = PRIMARY_TRANSLATOR._extract_json(tester_raw_text)
-                topics = tester_payload.get("topics", []) if isinstance(tester_payload.get("topics", []), list) else []
+                result_text = await _generate_groq_solve_text(
+                    tester_system_prompt,
+                    tester_user_prompt,
+                )
+                topics = [subject] if subject else []
                 explanation = []
-                result_text = str(tester_payload.get("result") or "").strip() or (
-                    "Create one advanced practice question from: " + sanitized_plain.strip()
-                )
+                result_text = str(result_text or "").strip() or ("Create advanced MCQs for: " + sanitized_plain.strip())
                 tester_mastery_tokens = ("correct", "solved", "done", "mastered", "answer")
                 if not topic_mastered and any(token in sanitized_plain.lower() for token in tester_mastery_tokens):
                     inferred_topic = str(topics[0]).strip() if topics else ""
                     topic_mastered = inferred_topic or (subject if subject in ("Physics", "Chemistry", "Math") else None)
                 result_text = _sanitize_solver_output_text(result_text)
                 final_answer = result_text or WOLFRAM_FALLBACK_RESULT
-                engine_trace = "Gemini 2.0 Flash + SymPy Tester Mode"
+                engine_trace = "Groq llama-3.3-70b-versatile Tester Mode"
                 if _is_tester_failure_signal(latest_query):
                     await _insert_black_box_record(
                         exam_type=payload.exam_context,
@@ -4797,21 +4811,13 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                     )
             else:
                 solver_system_prompt = (
-                    "CRITICAL RENDER RULES:\n"
-                    "1. NEVER wrap plain English text or full sentences in $ or $$.\n"
-                    "2. ONLY use $ for isolated inline variables (e.g., let $x = 5$).\n"
-                    "3. ONLY use $$ for isolated standalone equations on their own lines.\n"
-                    "4. DO NOT wrap numbered lists or headers in math delimiters. Use standard Markdown for structure.\n\n"
-                    "Act as the ADDIX Expert Mentor.\n"
-                    "You are the ADDIX Scholars Expert Academic Mentor. The user has submitted a physics, chemistry, or math problem. You must NOT just give the final answer. You must teach them how to solve it.\n"
-                    "Explain concepts with extreme academic rigor but high clarity. Assume a teacher is reviewing the logic. Always clearly state the underlying principle before showing the math.\n\n"
-                    "CRITICAL EXAM DIRECTIVE: If the user provides multiple statements (e.g., 'Statement I', 'Statement II', 'Assertion', 'Reason'), you MUST address each one individually. First, mathematically prove or disprove Statement I. Then, mathematically prove or disprove Statement II. Conclude with the final correct option. Show all intermediate calculus or algebra steps using LaTeX.\n\n"
-                    "Format your response strictly in this structure:\n"
-                    "1. **[ REFERENCE FORMULAS ]**: List the core equations needed for this problem (in LaTeX).\n"
-                    "2. **[ STEP-BY-STEP DERIVATION ]**: Walk through the math line-by-line. Explain the *why* behind each step.\n"
-                    "3. **[ FINAL ANSWER ]**: Provide the mathematically verified result.\n"
-                    "4. **[ MENTOR'S TAKEAWAY ]**: One brief sentence explaining the core concept to remember for the exam (JEE/NSEJS level).\n\n"
-                    "Tone: Highly rigorous, encouraging, and clear. Format all math inside LaTeX delimiters.\n\n"
+                    PROMPT_SOLVER
+                    + "\n\n"
+                    + "CRITICAL RENDER RULES:\n"
+                    + "1. NEVER wrap plain English text or full sentences in $ or $$.\n"
+                    + "2. ONLY use $ for isolated inline variables (e.g., let $x = 5$).\n"
+                    + "3. ONLY use $$ for isolated standalone equations on their own lines.\n"
+                    + "4. DO NOT wrap numbered lists or headers in math delimiters. Use standard Markdown for structure.\n\n"
                     "CRITICAL FORMATTING RULE: You must NEVER wrap your entire response or standard text lists in $$ or $. "
                     "The overall response must be standard Markdown. ONLY wrap isolated mathematical equations in $$ "
                     "(for block math) and individual variables in $ (for inline math). Do not use LaTeX delimiters for numbering or text headers.\n\n"
