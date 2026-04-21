@@ -197,7 +197,7 @@ WOLFRAM_QUERY_ENDPOINT = "https://api.wolframalpha.com/v2/query"
 TOOL_TIMEOUT_SECONDS = 3
 LLM_SOLVE_TEMPERATURE = 0.2
 GEMINI_SOLVE_MODEL = "gemini-2.0-flash"
-GROQ_SOLVE_FALLBACK_MODEL = "llama3-8b-8192"
+GROQ_SOLVE_FALLBACK_MODEL = "llama-3.3-70b-versatile"
 DETERMINISTIC_TIMEOUT_MESSAGE = "System Override: Computation exceeds deterministic time limits. Please simplify"
 COMPUTATION_FAILSAFE_MESSAGE = "Computation logic complete. Please verify units or model selection."
 GROQ_CHAT_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
@@ -4788,7 +4788,7 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                         solver_system_prompt,
                         solver_user_prompt,
                     )
-                    engine_trace = "Groq llama3-8b-8192 Fallback + SymPy"
+                    engine_trace = "Groq llama-3.3-70b-versatile Fallback + SymPy"
 
                 topics = [subject] if subject else []
                 explanation = []
@@ -4816,20 +4816,44 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                 },
             )
         except Exception as e:
-            fallback_notice = (
-                "### [ ADDIX System Notice ]\n\n"
-                "The cognitive engine experienced a temporary interruption while processing that complex request. "
-                "Please try asking your question again, or rephrase it."
+            print(f"CRITICAL ENGINE CRASH: {str(e)}")
+            logger.error("Low-latency solve endpoint failed — invoking god-mode fallback.", exc_info=e)
+            _crash_query = str(getattr(payload, "prompt", "") or getattr(payload, "query", "") or "").strip() or "the student's question"
+            _safety_net_msg = (
+                "I am currently routing peak computational traffic. "
+                "To ensure accuracy, please ask a slightly simpler version of this query, "
+                "or let's pivot to another topic."
             )
-            logger.error("Low-latency solve endpoint failed.", exc_info=e)
+            _fallback_text = _safety_net_msg
+            _fallback_trace = "Safety-Net"
+            try:
+                _emergency_groq = _get_groq_client_for_solve()
+
+                def _run_emergency_completion() -> str:
+                    _comp = _emergency_groq.chat.completions.create(
+                        model="llama-3.3-70b-versatile",
+                        messages=[{"role": "user", "content": "Briefly evaluate: " + _crash_query}],
+                    )
+                    _choices = list(getattr(_comp, "choices", []) or [])
+                    if not _choices:
+                        return ""
+                    _msg = getattr(_choices[0], "message", None)
+                    return str(getattr(_msg, "content", "") or "").strip()
+
+                _groq_result = await asyncio.to_thread(_run_emergency_completion)
+                if _groq_result:
+                    _fallback_text = _groq_result
+                    _fallback_trace = "Groq God-Mode Fallback"
+            except Exception:
+                pass
             yield _format_sse(
                 "result",
                 {
-                    "response": fallback_notice,
-                    "response_text": fallback_notice,
-                    "result": fallback_notice,
+                    "response_text": _fallback_text,
+                    "result": _fallback_text,
                     "explanation": [],
-                    "topics": ["System Notice"],
+                    "topics": ["Fallback"],
+                    "engine_trace": _fallback_trace,
                     "symbolic_verification_active": False,
                     "topic_mastered": None,
                 },
@@ -4837,15 +4861,49 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
         finally:
             yield _format_sse("done", {"ok": True})
 
-    return StreamingResponse(
-        event_stream(),
-        media_type="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "X-Accel-Buffering": "no",
-        },
-    )
+    try:
+        return StreamingResponse(
+            event_stream(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
+    except Exception as outer_exc:
+        print(f"CRITICAL ENGINE CRASH (outer): {str(outer_exc)}")
+        logger.error("solve_student_query outer-level crash — returning safety-net stream.", exc_info=outer_exc)
+        _outer_safety_msg = (
+            "I am currently routing peak computational traffic. "
+            "To ensure accuracy, please ask a slightly simpler version of this query, "
+            "or let's pivot to another topic."
+        )
+
+        async def _outer_safety_stream() -> AsyncIterator[str]:
+            yield _format_sse(
+                "result",
+                {
+                    "response_text": _outer_safety_msg,
+                    "result": _outer_safety_msg,
+                    "explanation": [],
+                    "topics": ["Safety-Net"],
+                    "engine_trace": "Safety-Net",
+                    "symbolic_verification_active": False,
+                    "topic_mastered": None,
+                },
+            )
+            yield _format_sse("done", {"ok": True})
+
+        return StreamingResponse(
+            _outer_safety_stream(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
 
 
 @app.post("/api/ocr", response_model=OCRResponse)
