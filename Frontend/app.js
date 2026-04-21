@@ -3570,11 +3570,21 @@ function buildLogicCardsMarkup(explanation) {
 
 function renderMarkdownContent(text) {
     const rawText = String(text || "");
+    const normalizedText = rawText.replace(/\n{3,}/g, "\n\n");
     if (typeof window.marked !== "undefined" && window.marked && typeof window.marked.parse === "function") {
-        return window.marked.parse(rawText);
+        if (typeof window.marked.setOptions === "function") {
+            window.marked.setOptions({
+                gfm: true,
+                breaks: true,
+            });
+        }
+        return window.marked.parse(normalizedText, {
+            gfm: true,
+            breaks: true,
+        });
     }
 
-    return escapeHtml(rawText).replace(/\n/g, "<br>");
+    return escapeHtml(normalizedText).replace(/\n/g, "<br>");
 }
 
 async function renderDiagrams(element) {

@@ -3533,6 +3533,22 @@ body.tester-mode #queryInput:focus {
     box-sizing: border-box;
 }
 
+.katex-display {
+    display: block !important;
+    margin: 1.8em 0 !important;
+    padding: 12px 0;
+    overflow-x: auto;
+    text-align: center;
+    clear: both;
+}
+
+.response-container p,
+.final-step .mentor-guidance-line p,
+.final-step .message-line p {
+    line-height: 1.9;
+    margin-bottom: 20px;
+}
+
 .final-step .katex-display::-webkit-scrollbar,
 .final-step .math-block::-webkit-scrollbar {
     height: 4px;
