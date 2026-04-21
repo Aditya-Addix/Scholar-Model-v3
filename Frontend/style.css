@@ -3485,6 +3485,16 @@ body.tester-mode #queryInput:focus {
     word-break: break-word;
     max-width: 100%;
     box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.response-container pre,
+.response-container code,
+.response-container .katex,
+.response-container .katex-display {
+    overflow-x: auto;
+    white-space: pre-wrap;
+    max-width: 100%;
 }
 
 /* [ADDIX Mentor] container hardening against narrow-screen overflow */

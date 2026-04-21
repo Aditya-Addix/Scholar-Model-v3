@@ -14,10 +14,11 @@ const CONSISTENCY_MATRIX_DAYS = 28;
 const SIMULATION_COMMAND_PREFIX = "/simulate ";
 const SIMULATION_POLL_INTERVAL_MS = 3000;
 const MAX_TURN_CONTEXT = 3;
-const API_CALL_TIMEOUT_MS = 120000;
+const API_CALL_TIMEOUT_MS = 120 * 1000;
 const ENGINE_WAKE_NOTICE_DELAY_MS = 5000;
 const CONNECTION_ALERT_GRACE_PERIOD_MS = 90000;
 const RATE_LIMIT_COOLDOWN_SECONDS = 30;
+const LONG_RUNNING_ENGINE_MESSAGE = "Thinking... the response is taking longer than usual. Please hold.";
 const ACCESS_CODE = "ADDIX2026"; // Change this to your preferred code.
 const ACCESS_STATUS_STORAGE_KEY = "addix-labs-access-granted";
 const TRACE_PHASES = [
@@ -172,8 +173,7 @@ async function apiFetch(url, options = {}) {
 function buildSafeFetchErrorResponse() {
     const payload = {
         error: true,
-        message:
-            "Reconnecting to Engine… The cloud backend may be waking up (Render free tier can take ~60s). Please try again in a moment.",
+        message: LONG_RUNNING_ENGINE_MESSAGE,
     };
     return {
         ok: false,
@@ -2727,7 +2727,7 @@ async function sendMessage(userText) {
         } else if (isSecurityErrorMessage(errorText)) {
             emitError(SECURITY_PROTOCOL_MESSAGE);
         } else {
-            emitError("System Error: " + (errorText || "Scholar Engine: Reconnecting to Tri-Core..."));
+            emitError(errorText || "Scholar Engine: Reconnecting to Tri-Core...");
         }
     } finally {
         if (activeTraceTicker) {
@@ -2786,13 +2786,11 @@ async function sendQueryToBackend(userText) {
     if (response && response.error) {
         const payload = await response.json().catch(() => ({
             error: true,
-            message:
-                "Reconnecting to Engine… The cloud backend may be waking up (Render free tier can take ~60s). Please try again in a moment.",
+            message: LONG_RUNNING_ENGINE_MESSAGE,
         }));
         renderEngineReconnectNotice(
             String(
-                payload.message ||
-                    "Reconnecting to Engine… The cloud backend may be waking up. Please try again in a moment.",
+                payload.message || LONG_RUNNING_ENGINE_MESSAGE,
             ),
         );
         return;
@@ -2808,10 +2806,10 @@ async function sendQueryToBackend(userText) {
             parsedError = null;
         }
         if (String(parsedError?.error || "") === "rate_limit") {
-            renderRateLimitCountdown(RATE_LIMIT_COOLDOWN_SECONDS);
+            renderEngineReconnectNotice("Thinking... fallback engine engaged. Please hold.");
             return;
         }
-        renderSystemAlertBubble(buildSystemAlertMessage(response.status, rawText));
+        renderEngineReconnectNotice(LONG_RUNNING_ENGINE_MESSAGE);
         return;
     }
 
@@ -2878,7 +2876,7 @@ async function sendQueryToBackend(userText) {
             throw new Error("No final streamed result received from backend.");
         }
         if (String(finalPayload.error || "") === "rate_limit") {
-            renderRateLimitCountdown(RATE_LIMIT_COOLDOWN_SECONDS);
+            renderEngineReconnectNotice("Thinking... fallback engine engaged. Please hold.");
             return;
         }
 
@@ -2897,11 +2895,9 @@ async function sendQueryToBackend(userText) {
         const fallbackMessage = error && error.message ? String(error.message) : "Unexpected bridge failure.";
         const lower = fallbackMessage.toLowerCase();
         if (lower.includes("failed to fetch") || lower.includes("networkerror") || lower.includes("load failed")) {
-            renderEngineReconnectNotice(
-                "Reconnecting to Engine… Network request did not complete. If the backend was asleep, wait a minute and send again.",
-            );
+            renderEngineReconnectNotice(LONG_RUNNING_ENGINE_MESSAGE);
         } else {
-            renderSystemAlertBubble("System Alert: " + fallbackMessage);
+            renderEngineReconnectNotice(LONG_RUNNING_ENGINE_MESSAGE);
         }
     } finally {
         // Clean up visual activity state.
@@ -2983,7 +2979,7 @@ function renderAIResponse(data, userText) {
 }
 
 function renderErrorInChat(message) {
-    const text = String(message || "System Error: Unknown bridge failure.");
+    const text = String(message || "Scholar Engine: Unknown bridge failure.");
     if (activeTraceTicker) {
         stopTraceStatusTicker(activeTraceTicker, activeTraceStatusStep, "Bridge", "Failed.");
         activeTraceTicker = null;

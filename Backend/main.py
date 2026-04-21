@@ -25,6 +25,10 @@ try:
 except ImportError:
     genai = None
     genai_types = None
+try:
+    from groq import Groq
+except ImportError:
+    Groq = None
 from dotenv import load_dotenv
 from fastapi import FastAPI, BackgroundTasks, Body, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -193,6 +197,7 @@ WOLFRAM_QUERY_ENDPOINT = "https://api.wolframalpha.com/v2/query"
 TOOL_TIMEOUT_SECONDS = 3
 LLM_SOLVE_TEMPERATURE = 0.2
 GEMINI_SOLVE_MODEL = "gemini-2.0-flash"
+GROQ_SOLVE_FALLBACK_MODEL = "llama3-8b-8192"
 DETERMINISTIC_TIMEOUT_MESSAGE = "System Override: Computation exceeds deterministic time limits. Please simplify"
 COMPUTATION_FAILSAFE_MESSAGE = "Computation logic complete. Please verify units or model selection."
 GROQ_CHAT_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
@@ -209,6 +214,10 @@ GOOGLE_GENAI_API_KEY = str(
 ).strip()
 GOOGLE_GENAI_CLIENT = (
     genai.Client(api_key=GOOGLE_GENAI_API_KEY) if genai is not None and GOOGLE_GENAI_API_KEY else None
+)
+GROQ_API_KEY = str(os.getenv(GROQ_API_KEY_ENV_NAME, "")).strip()
+GROQ_SDK_CLIENT = (
+    Groq(api_key=GROQ_API_KEY) if Groq is not None and GROQ_API_KEY else None
 )
 
 VISION_EXTRACTION_PROMPT = (
@@ -4002,6 +4011,62 @@ def _get_gemini_client_for_solve() -> Any:
     return genai.Client(api_key=api_key)
 
 
+def _get_groq_client_for_solve() -> Any:
+    if Groq is None:
+        raise RuntimeError("groq SDK is not installed.")
+    api_key = str(os.getenv(GROQ_API_KEY_ENV_NAME, "")).strip()
+    if not api_key:
+        raise RuntimeError("GROQ_API_KEY is not configured for /api/solve.")
+    if GROQ_SDK_CLIENT is not None and api_key == GROQ_API_KEY:
+        return GROQ_SDK_CLIENT
+    return Groq(api_key=api_key)
+
+
+async def _generate_gemini_solve_text(system_instruction: str, user_text: str) -> str:
+    if genai is None or genai_types is None:
+        raise RuntimeError("google-genai SDK is not installed.")
+
+    solve_client = _get_gemini_client_for_solve()
+    completion = await solve_client.aio.models.generate_content(
+        model=GEMINI_SOLVE_MODEL,
+        contents=user_text,
+        config=genai_types.GenerateContentConfig(
+            system_instruction=system_instruction,
+            temperature=LLM_SOLVE_TEMPERATURE,
+        ),
+    )
+    result_text = str(getattr(completion, "text", "") or "").strip()
+    if not result_text:
+        result_text = _extract_gemini_response_text(completion)
+    if not result_text:
+        raise RuntimeError("Gemini returned empty content for /api/solve.")
+    return result_text
+
+
+async def _generate_groq_solve_text(system_instruction: str, user_text: str) -> str:
+    groq_client = _get_groq_client_for_solve()
+
+    def _run_completion() -> str:
+        completion = groq_client.chat.completions.create(
+            model=GROQ_SOLVE_FALLBACK_MODEL,
+            temperature=LLM_SOLVE_TEMPERATURE,
+            messages=[
+                {"role": "system", "content": system_instruction},
+                {"role": "user", "content": user_text},
+            ],
+        )
+        choices = list(getattr(completion, "choices", []) or [])
+        if not choices:
+            raise RuntimeError("Groq returned no choices for /api/solve.")
+        message = getattr(choices[0], "message", None)
+        content = str(getattr(message, "content", "") or "").strip()
+        if not content:
+            raise RuntimeError("Groq returned empty content for /api/solve.")
+        return _strip_think_tags(content)
+
+    return await asyncio.to_thread(_run_completion)
+
+
 class RateLimitCoolingError(RuntimeError):
     """Raised when upstream model API is rate-limited after retry."""
 
@@ -4711,64 +4776,24 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                     + (tavily_context_text or "None")
                 )
 
-                if genai is None or genai_types is None:
-                    raise RuntimeError("google-genai SDK is not installed.")
-
-                solve_client = _get_gemini_client_for_solve()
-                streamed_fragments: list[str] = []
                 try:
-                    async for delta in _iter_gemini_solve_stream_deltas(
-                        solve_client,
+                    result_text = await _generate_gemini_solve_text(
                         solver_system_prompt,
                         solver_user_prompt,
-                    ):
-                        streamed_fragments.append(delta)
-                        yield _format_sse("thought", {"text": delta})
-                except Exception as stream_exc:
-                    if _is_rate_limit_error(stream_exc):
-                        logger.warning("Gemini stream rate-limited; retrying stream once after cooldown.", exc_info=stream_exc)
-                        await asyncio.sleep(2)
-                        try:
-                            async for delta in _iter_gemini_solve_stream_deltas(
-                                solve_client,
-                                solver_system_prompt,
-                                solver_user_prompt,
-                            ):
-                                streamed_fragments.append(delta)
-                                yield _format_sse("thought", {"text": delta})
-                        except Exception as stream_retry_exc:
-                            if _is_rate_limit_error(stream_retry_exc):
-                                raise RateLimitCoolingError(
-                                    "Engine is cooling down. Please try in 30 seconds."
-                                ) from stream_retry_exc
-                            logger.warning(
-                                "Gemini stream retry failed; falling back to non-stream completion.",
-                                exc_info=stream_retry_exc,
-                            )
-                    else:
-                        logger.warning("Gemini stream path failed; falling back to non-stream completion.", exc_info=stream_exc)
-
-                if streamed_fragments:
-                    result_text = "".join(streamed_fragments).strip() or WOLFRAM_FALLBACK_RESULT
-                else:
-                    async def _solve_generate() -> Any:
-                        return await solve_client.aio.models.generate_content(
-                            model=GEMINI_SOLVE_MODEL,
-                            contents=solver_user_prompt,
-                            config=genai_types.GenerateContentConfig(
-                                system_instruction=solver_system_prompt,
-                                temperature=LLM_SOLVE_TEMPERATURE,
-                            ),
-                        )
-
-                    completion = await _run_with_rate_limit_retry(_solve_generate)
-                    result_text = str(getattr(completion, "text", "") or "").strip() or WOLFRAM_FALLBACK_RESULT
+                    )
+                    engine_trace = "Gemini 2.0 Flash + SymPy"
+                except Exception as gemini_exc:
+                    logger.exception("FALLING BACK TO GROQ", exc_info=gemini_exc)
+                    result_text = await _generate_groq_solve_text(
+                        solver_system_prompt,
+                        solver_user_prompt,
+                    )
+                    engine_trace = "Groq llama3-8b-8192 Fallback + SymPy"
 
                 topics = [subject] if subject else []
                 explanation = []
                 result_text = _sanitize_solver_output_text(result_text)
                 final_answer = result_text or WOLFRAM_FALLBACK_RESULT
-                engine_trace = "Gemini 2.0 Flash + SymPy Streaming"
                 if symbolic_verification_active:
                     engine_trace = f"{engine_trace} | Symbolic Verification: Active (SymPy)"
                 await _record_successful_solve()
@@ -4788,14 +4813,6 @@ async def solve_student_query(request: Request, payload: SolveRequest) -> Stream
                     "engine_trace": engine_trace,
                     "symbolic_verification_active": symbolic_verification_active,
                     "topic_mastered": topic_mastered,
-                },
-            )
-        except RateLimitCoolingError:
-            yield _format_sse(
-                "result",
-                {
-                    "error": "rate_limit",
-                    "message": "Engine is cooling down. Please try in 30 seconds.",
                 },
             )
         except Exception as e:
