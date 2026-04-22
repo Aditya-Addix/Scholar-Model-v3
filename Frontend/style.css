@@ -2503,11 +2503,9 @@ body.tester-mode #queryInput:focus {
 }
 
 .mentor-box,
-.mentor-box p,
-.mentor-box span {
+.mentor-box p {
     overflow-wrap: break-word;
     word-wrap: break-word;
-    word-break: break-word;
     white-space: pre-wrap;
     max-width: 100%;
 }
@@ -2517,11 +2515,12 @@ body.tester-mode #queryInput:focus {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    padding: 5px 0;
+    padding: 10px 0;
+    margin: 1em 0;
 }
 
 .katex {
-    white-space: normal;
+    white-space: nowrap;
 }
 
 .thought-stream-box {

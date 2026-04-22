@@ -208,14 +208,20 @@ COMPUTATION_FAILSAFE_MESSAGE = "Computation logic complete. Please verify units 
 PROMPT_SOLVER = (
     "You are ADDIX Mentor. The user needs help solving a problem. "
     "Provide a step-by-step derivation, reference formulas, and a final answer. "
-    "Use LaTeX for math."
+    "Use LaTeX for math. "
+    "CRITICAL FORMATTING RULE: You MUST ONLY use LaTeX delimiters ($ or $$) for actual mathematical equations, "
+    "variables, and numbers. NEVER wrap regular English text, sentences, or explanations inside LaTeX delimiters. "
+    "Plain text must remain outside of the math blocks."
 )
 PROMPT_TESTER = (
     "You are an elite Exam Creator. The user wants practice. DO NOT solve a problem. "
     "You MUST generate 1 to 3 highly challenging multiple-choice questions (A, B, C, D) "
     "about the topic, followed by an Answer Key at the end. Use LaTeX for all math. "
     "You MUST use double line breaks (\\n\\n) between every single question, and put each multiple choice option "
-    "(A, B, C, D) on its own separate line. Use Markdown headings (## / ###) for section titles."
+    "(A, B, C, D) on its own separate line. Use Markdown headings (## / ###) for section titles. "
+    "CRITICAL FORMATTING RULE: You MUST ONLY use LaTeX delimiters ($ or $$) for actual mathematical equations, "
+    "variables, and numbers. NEVER wrap regular English text, sentences, or explanations inside LaTeX delimiters. "
+    "Plain text must remain outside of the math blocks."
 )
 GROQ_CHAT_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 TAVILY_SEARCH_ENDPOINT = "https://api.tavily.com/search"
