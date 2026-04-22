@@ -2502,6 +2502,28 @@ body.tester-mode #queryInput:focus {
     font-weight: 700;
 }
 
+.mentor-box,
+.mentor-box p,
+.mentor-box span {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+}
+
+.katex-display {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 5px 0;
+}
+
+.katex {
+    white-space: normal;
+}
+
 .thought-stream-box {
     margin-top: 6px;
     padding: 8px 10px;
