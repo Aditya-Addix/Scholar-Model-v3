@@ -1,4 +1,16 @@
-/**
- * ADDIX Scholars ships the interactive UI from `app.js` (see `index.html`).
- * Keep all logic in `app.js`; this file exists only so paths named `script.js` resolve in tooling and docs.
- */
+// --- PREMIUM THEME ENGINE ---
+(function initTheme() {
+const savedTheme = localStorage.getItem('addix_theme');
+if (savedTheme === 'light') { document.body.classList.add('light-theme'); }
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+const themeBtn = document.getElementById('theme-toggle');
+if (themeBtn) {
+themeBtn.addEventListener('click', () => {
+document.body.classList.toggle('light-theme');
+const isLight = document.body.classList.contains('light-theme');
+localStorage.setItem('addix_theme', isLight ? 'light' : 'dark');
+});
+}
+});

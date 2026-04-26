@@ -29,6 +29,7 @@
     <script defer src="app.js"></script>
 </head>
 <body class="gate-locked">
+    <script src="script.js"></script>
     <div id="labs-gate" class="labs-gate" aria-live="assertive">
         <div class="labs-gate-panel">
             <img src="logo.png" alt="ADDIX Labs" class="labs-gate-logo">
@@ -63,9 +64,10 @@
                 <button id="marathonStopButton" class="marathon-control-button" type="button">⏹ Stop</button>
             </div>
         </div>
-        <div class="title-container">
-            <h1 class="site-title">ADDIX Labs // ADDIX Scholars</h1>
+        <div class="title-container addix-premium-header">
+            <h1 class="site-title addix-premium-header">ADDIX Labs // ADDIX Scholars</h1>
         </div>
+        <button id="theme-toggle" class="glass-btn" style="cursor: pointer; padding: 8px 12px; border-radius: 8px; margin-left: auto;">☀️/🌙</button>
     </header>
 
     <main class="app-main">
@@ -149,14 +151,14 @@
                     <h2>NSEJS</h2>
                     <span class="card-subtitle">Olympiad Track</span>
                 </div>
-                <div class="ring-shell">
+                <div class="ring-shell addix-premium-track">
                     <svg class="ring-svg" viewBox="0 0 52 52" aria-hidden="true">
                         <circle class="ring-track" cx="26" cy="26" r="20"></circle>
                         <circle class="ring-progress" cx="26" cy="26" r="20"></circle>
                     </svg>
                     <span class="ring-grade" data-grade-center>A+</span>
                 </div>
-                <div class="hud-card-syllabus-slot syllabus-container" data-syllabus-slot="NSEJS" hidden aria-live="polite"></div>
+                <div class="hud-card-syllabus-slot syllabus-container addix-premium-surface" data-syllabus-slot="NSEJS" hidden aria-live="polite"></div>
                 <div class="card-metrics" data-metrics>
                     <span id="nsejs-days" class="days-pill" data-days-label>219d</span>
                     <p class="grade-line">Preparation Grade: <strong data-grade-label>A+</strong></p>
@@ -168,14 +170,14 @@
                     <h2>NMTC</h2>
                     <span class="card-subtitle">Math Combat</span>
                 </div>
-                <div class="ring-shell">
+                <div class="ring-shell addix-premium-track">
                     <svg class="ring-svg" viewBox="0 0 52 52" aria-hidden="true">
                         <circle class="ring-track" cx="26" cy="26" r="20"></circle>
                         <circle class="ring-progress" cx="26" cy="26" r="20"></circle>
                     </svg>
                     <span class="ring-grade" data-grade-center>A</span>
                 </div>
-                <div class="hud-card-syllabus-slot syllabus-container" data-syllabus-slot="NMTC" hidden aria-live="polite"></div>
+                <div class="hud-card-syllabus-slot syllabus-container addix-premium-surface" data-syllabus-slot="NMTC" hidden aria-live="polite"></div>
                 <div class="card-metrics" data-metrics>
                     <span id="nmtc-days" class="days-pill" data-days-label>183d</span>
                     <p class="grade-line">Preparation Grade: <strong data-grade-label>A</strong></p>
@@ -187,14 +189,14 @@
                     <h2>IOQM</h2>
                     <span class="card-subtitle">Proof Engine</span>
                 </div>
-                <div class="ring-shell">
+                <div class="ring-shell addix-premium-track">
                     <svg class="ring-svg" viewBox="0 0 52 52" aria-hidden="true">
                         <circle class="ring-track" cx="26" cy="26" r="20"></circle>
                         <circle class="ring-progress" cx="26" cy="26" r="20"></circle>
                     </svg>
                     <span class="ring-grade" data-grade-center>S</span>
                 </div>
-                <div class="hud-card-syllabus-slot syllabus-container" data-syllabus-slot="IOQM" hidden aria-live="polite"></div>
+                <div class="hud-card-syllabus-slot syllabus-container addix-premium-surface" data-syllabus-slot="IOQM" hidden aria-live="polite"></div>
                 <div class="card-metrics" data-metrics>
                     <span id="ioqm-days" class="days-pill" data-days-label>146d</span>
                     <p class="grade-line">Preparation Grade: <strong data-grade-label>S</strong></p>
@@ -206,14 +208,14 @@
                     <h2>JEE Advanced</h2>
                     <span class="card-subtitle">Foundation Arc</span>
                 </div>
-                <div class="ring-shell">
+                <div class="ring-shell addix-premium-track">
                     <svg class="ring-svg" viewBox="0 0 52 52" aria-hidden="true">
                         <circle class="ring-track" cx="26" cy="26" r="20"></circle>
                         <circle class="ring-progress" cx="26" cy="26" r="20"></circle>
                     </svg>
                     <span class="ring-grade" data-grade-center>-</span>
                 </div>
-                <div class="hud-card-syllabus-slot syllabus-container" data-syllabus-slot="JEE Advanced" hidden aria-live="polite"></div>
+                <div class="hud-card-syllabus-slot syllabus-container addix-premium-surface" data-syllabus-slot="JEE Advanced" hidden aria-live="polite"></div>
                 <div class="card-metrics" data-metrics>
                     <span id="jee-days" class="days-pill" data-days-label>287d</span>
                     <p class="grade-line">Preparation Grade: <strong data-grade-label>-</strong></p>
@@ -268,7 +270,7 @@
                     <div class="syllabus-explorer-actions">
                         <p class="syllabus-explorer-copy">Select a standard exam to load the complete chapter-by-chapter matrix, or switch to custom data to route a bespoke syllabus flow.</p>
                         <button id="generateCheatSheetButton" class="premium-outline-btn" type="button" aria-label="Generate cheat sheet for selected topic">📋 Generate Cheat Sheet</button>
-                        <button id="exportFormulaSheetButton" class="formula-sheet-export-button" type="button" aria-label="Export formula sheet">📥 Export Formula Sheet</button>
+                        <button id="exportFormulaSheetButton" class="formula-sheet-export-button addix-premium-btn" type="button" aria-label="Export formula sheet">📥 Export Formula Sheet</button>
                     </div>
                 </div>
             </section>

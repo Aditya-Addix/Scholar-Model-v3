@@ -1,16 +1,46 @@
 :root {
-    --bg: #0a0a0a;
-    --panel: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.1);
-    --text: #a0aec0;
-    --text-bold: #ffffff;
-    --muted: #7a8a9a;
-    --cyan: #00ced1;
-    --purple: #3b6270;
+    --bg-app: #0a0a0c;
+    --bg-panel: rgba(20, 20, 24, 0.75);
+    --border-glass: rgba(255, 255, 255, 0.12);
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --text-placeholder: #71717a;
+    --accent: #5e6ad2;
+    --input-bg: rgba(0, 0, 0, 0.5);
+    --shadow-premium: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    --bg: var(--bg-app);
+    --panel: var(--bg-panel);
+    --border: var(--border-glass);
+    --text: var(--text-secondary);
+    --text-bold: var(--text-primary);
+    --muted: var(--text-secondary);
+    --cyan: var(--accent);
+    --purple: #7c5cbf;
     --red: #ff355e;
     --green: #10b981;
     --radius: 12px;
     --ring-circumference: 125.66;
+}
+
+.light-theme {
+    --bg-app: #f4f4f7;
+    --bg-panel: rgba(255, 255, 255, 0.85);
+    --border-glass: rgba(0, 0, 0, 0.12);
+    --text-primary: #09090b;
+    --text-secondary: #52525b;
+    --text-placeholder: #71717a;
+    --accent: #4338ca;
+    --input-bg: #ffffff;
+    --shadow-premium: 0 12px 36px rgba(67, 56, 202, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* 1. PREMIUM GLOBAL MOTION */
+body, .mentor-box, .glass-panel, .user-query, .ai-response, input, textarea, button {
+transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
@@ -26,13 +56,14 @@ body {
 body {
     min-height: 100vh;
     font-family: "Montserrat", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: var(--text);
+    color: var(--text-secondary);
     background:
-        radial-gradient(900px 600px at 50% 50%, rgba(0, 206, 209, 0.02), transparent 60%),
-        radial-gradient(1200px 800px at 85% -10%, rgba(0, 206, 209, 0.01), transparent 70%),
-        linear-gradient(135deg, #0a0a0a 0%, #0f0f15 100%);
+        radial-gradient(900px 600px at 50% 50%, rgba(94, 106, 210, 0.05), transparent 60%),
+        radial-gradient(1200px 800px at 85% -10%, rgba(94, 106, 210, 0.04), transparent 70%),
+        linear-gradient(135deg, var(--bg-app) 0%, var(--bg-app) 100%);
     -webkit-font-smoothing: antialiased;
     scrollbar-color: #1a1a1a #0a0a0a;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
 body.gate-locked {
@@ -3666,4 +3697,611 @@ body.tester-mode #queryInput:focus {
         height: calc(100vh - 120px);
         min-height: calc(100vh - 120px);
     }
+}
+
+/* Frost Light / Obsidian Dark dynamic color architecture */
+body.light-theme {
+    scrollbar-color: rgba(0, 0, 0, 0.2) var(--bg-app);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb,
+body.light-theme .chat-feed::-webkit-scrollbar-thumb,
+body.light-theme .rapid-math-keyboard::-webkit-scrollbar-thumb,
+body.light-theme .hud-card-syllabus-slot::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme ::-webkit-scrollbar-track,
+body.light-theme .chat-feed::-webkit-scrollbar-track,
+body.light-theme .rapid-math-keyboard::-webkit-scrollbar-track,
+body.light-theme .hud-card-syllabus-slot::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.panel-surface,
+.site-header,
+.scholar-sidebar,
+.terminal,
+.hud-card,
+.syllabus-explorer,
+.preparation-grade-panel,
+.my-progress-panel,
+.consistency-matrix-panel,
+.mastery-breakdown-panel,
+.analytics-metric,
+.terminal-header,
+.mode-toggle-bar,
+.query-form,
+.message,
+.math-key,
+.inline-upload-button,
+.send-button,
+.glass-btn,
+.exam-context-select,
+#queryInput {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+.panel-surface,
+.site-header,
+.scholar-sidebar,
+.terminal,
+.hud-card,
+.syllabus-explorer,
+.black-box-modal-panel,
+.debrief-modal-panel,
+.premium-modal-panel {
+    background: var(--bg-panel);
+    border-color: var(--border-glass);
+    color: var(--text-primary);
+}
+
+.terminal-header,
+.mode-toggle-bar,
+.query-form,
+.analytics-metric,
+.preparation-grade-panel,
+.my-progress-panel,
+.consistency-matrix-panel,
+.mastery-breakdown-panel,
+.logic-card,
+.message,
+.math-block,
+.thought-stream-box {
+    border-color: var(--border-glass);
+    background-color: var(--bg-panel);
+}
+
+.site-title,
+.scholar-logo,
+.analytics-value,
+.card-head h2,
+.ring-grade,
+.grade-line strong,
+.my-progress-title,
+.consistency-label,
+.prep-ring-value,
+.mastery-value,
+.message-line,
+.mentor-guidance-line,
+.response-container,
+.black-box-title,
+.debrief-title,
+.premium-title {
+    color: var(--text-primary);
+}
+
+.brand-version,
+.sidebar-subtext,
+.analytics-label,
+.card-subtitle,
+.grade-line,
+.prep-ring-label,
+.mastery-label,
+.exam-context-label,
+.engine-mode-title,
+.engine-mode-target,
+.timestamp,
+.terminal-title,
+.syllabus-explorer-copy {
+    color: var(--text-secondary);
+}
+
+.sidebar-kicker,
+.marathon-timer-display,
+.marathon-control-button,
+.days-pill,
+.premium-outline-btn,
+.formula-sheet-export-button,
+.engine-mode-label,
+.syllabus-explorer-kicker,
+.syllabus-category h4,
+.trace-engine,
+.engine-badge,
+.topic-tag {
+    color: var(--accent);
+}
+
+.chat-feed {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg-app) 82%, transparent), var(--bg-app));
+}
+
+.user-step {
+    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+    background: var(--accent);
+}
+
+.user-step .message-line,
+.user-step .agent-label {
+    color: #ffffff;
+}
+
+.agent-step,
+.system-step,
+.final-step,
+.message:not(.user-step) {
+    background: var(--bg-panel);
+    border-color: var(--border-glass);
+}
+
+body.light-theme .agent-step,
+body.light-theme .system-step,
+body.light-theme .final-step,
+body.light-theme .message:not(.user-step) {
+    background: rgba(255, 255, 255, 0.82);
+}
+
+body.light-theme .user-step {
+    background: rgba(79, 94, 229, 0.14);
+    border-color: rgba(79, 94, 229, 0.45);
+}
+
+body.light-theme .user-step .message-line,
+body.light-theme .user-step .agent-label {
+    color: var(--accent);
+}
+
+#queryInput,
+.exam-context-select,
+.math-key,
+.syllabus-chip {
+    background: var(--input-bg);
+    border-color: var(--border-glass);
+    color: var(--text-primary);
+}
+
+#queryInput::placeholder {
+    color: color-mix(in srgb, var(--text-secondary) 72%, transparent);
+}
+
+body.light-theme #queryInput,
+body.light-theme .exam-context-select,
+body.light-theme .math-key,
+body.light-theme .syllabus-chip,
+body.light-theme .inline-upload-button {
+    background: var(--input-bg);
+    color: #111113;
+    border-color: var(--border-glass);
+}
+
+body.light-theme .math-key:hover,
+body.light-theme .syllabus-chip-button:hover,
+body.light-theme #queryInput:focus {
+    color: #111113;
+    border-color: rgba(79, 94, 229, 0.55);
+}
+
+.send-button {
+    background: linear-gradient(120deg, var(--accent), color-mix(in srgb, var(--accent) 72%, #ffffff));
+    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+    color: #ffffff;
+}
+
+.ring-progress,
+.prep-ring-progress,
+.mastery-fill,
+.consistency-high {
+    stroke: var(--accent);
+    background: var(--accent);
+}
+
+body.light-theme .ring-track,
+body.light-theme .prep-ring-track {
+    stroke: rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .math-block .katex,
+body.light-theme .math-block .katex-display,
+body.light-theme .logic-card-text,
+body.light-theme .thought-stream-copy,
+body.light-theme .debrief-copy,
+body.light-theme .debrief-list,
+body.light-theme .premium-copy,
+body.light-theme .black-box-question {
+    color: var(--text-primary);
+    text-shadow: none;
+}
+
+body.light-theme .logo {
+    mix-blend-mode: normal;
+}
+
+.glass-btn {
+    min-width: 42px;
+    min-height: 42px;
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-btn:hover {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border-glass));
+    box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+/* Surgical contrast hardening: colors/backgrounds/borders only */
+#queryInput,
+textarea,
+input[type="text"],
+input[type="password"],
+.exam-context-select,
+.labs-gate-input {
+    background: var(--input-bg);
+    color: var(--text-primary) !important;
+    border-color: var(--border-glass);
+}
+
+#queryInput::placeholder,
+textarea::placeholder,
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+.labs-gate-input::placeholder {
+    color: var(--text-placeholder);
+}
+
+.math-key,
+.rapid-math-keyboard button {
+    color: var(--text-primary);
+    background: var(--input-bg);
+    border-color: var(--border-glass);
+}
+
+.mentor-box,
+.mentor-box *,
+.chat-history,
+.chat-history *,
+.chat-feed,
+.chat-feed .message-line,
+.chat-feed .mentor-guidance-line,
+.final-step .response-container.mentor-box,
+.final-step .response-container.mentor-box * {
+    color: var(--text-primary);
+}
+
+.message:not(.user-step),
+.agent-step,
+.system-step,
+.final-step {
+    background: var(--bg-panel);
+    border-color: var(--border-glass);
+}
+
+.user-step {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.user-step,
+.user-step *,
+.user-step .message-line,
+.user-step .agent-label {
+    color: #ffffff;
+}
+
+.light-theme .user-step {
+    background: rgba(67, 56, 202, 0.14);
+    border-color: rgba(67, 56, 202, 0.45);
+}
+
+.light-theme .user-step,
+.light-theme .user-step *,
+.light-theme .user-step .message-line,
+.light-theme .user-step .agent-label {
+    color: var(--accent);
+}
+
+/* 4. EDGE CASE OVERRIDES (Append to bottom of file) */
+.light-theme input, .light-theme textarea { color: var(--text-primary) !important; background: var(--input-bg) !important; border: 1px solid var(--border-glass) !important; }
+.light-theme .math-btn { color: var(--text-primary) !important; }
+.light-theme .nav-brand, .light-theme .header-title, .light-theme h1, .light-theme h2 { color: var(--text-primary) !important; font-weight: 700; }
+.light-theme .error-card, .light-theme .connection-error { background: #fff1f2 !important; border: 1px solid #fda4af !important; color: #881337 !important; }
+.light-theme .error-card h3 { color: #e11d48 !important; }
+.light-theme .error-card button { background: #e11d48 !important; color: #ffffff !important; }
+.light-theme .system, .light-theme .system-message, .light-theme .pcm-coverage-map { color: var(--accent) !important; font-weight: 600; }
+
+/* --- ABSOLUTE TEXT VISIBILITY OVERRIDES --- */
+
+/* 1. Light Theme: Explicitly fix Headers, Navbars, and Branding */
+.light-theme header,
+.light-theme header *,
+.light-theme .top-nav,
+.light-theme .top-nav *,
+.light-theme .nav-brand,
+.light-theme .logo-text,
+.light-theme h1,
+.light-theme h2,
+.light-theme h3 {
+    color: #09090b !important;
+}
+
+/* 2. Light Theme: Fix Inputs, Textareas, and Math Buttons */
+.light-theme input,
+.light-theme textarea {
+    background-color: #ffffff !important;
+    color: #09090b !important;
+    border: 1px solid rgba(0,0,0,0.2) !important;
+}
+.light-theme input::placeholder,
+.light-theme textarea::placeholder {
+    color: #52525b !important;
+}
+.light-theme .math-btn,
+.light-theme .glass-btn {
+    color: #09090b !important;
+}
+
+/* 3. Light Theme: Fix System Messages & Subtitles */
+.light-theme .system,
+.light-theme .system-message,
+.light-theme .mentor-box .system,
+.light-theme .pcm-coverage-map {
+    color: #4338ca !important;
+    font-weight: 600 !important;
+}
+
+/* 4. Dark Theme Safety Net: Ensure all text defaults to crisp white/light gray */
+header, .top-nav, .nav-brand, .logo-text { color: #ffffff !important; }
+input, textarea { color: #ffffff !important; }
+input::placeholder, textarea::placeholder { color: #a1a1aa !important; }
+
+/* --- NUCLEAR TEXT CONTRAST OVERRIDES --- */
+
+/* 1. LIGHT THEME - FORCE ALL TEXT TO BE DARK (BLACK/DARK GREY) */
+.light-theme header, .light-theme header *,
+.light-theme .top-nav, .light-theme .top-nav *,
+.light-theme .nav-brand, .light-theme .nav-brand *,
+.light-theme .logo-text, .light-theme .logo-text *,
+.light-theme h1, .light-theme h2, .light-theme h3, .light-theme h1 *, .light-theme h2 *,
+.light-theme .syllabus-explorer, .light-theme .syllabus-explorer *,
+.light-theme .target-exam, .light-theme .target-exam *,
+.light-theme button, .light-theme .glass-btn, .light-theme .math-btn {
+color: #09090b !important;
+}
+
+/* 2. LIGHT THEME - EXCEPTIONS (Keep errors red and system text blue) */
+.light-theme .error-card, .light-theme .error-card * {
+color: #881337 !important;
+}
+.light-theme .system, .light-theme .system-message, .light-theme .system * {
+color: #4338ca !important;
+}
+
+/* 3. DARK THEME - FORCE ALL TEXT TO BE CRISP WHITE */
+header, header *,
+.top-nav, .top-nav *,
+.nav-brand, .nav-brand *,
+.logo-text, .logo-text *,
+h1, h2, h1 *, h2 *,
+.syllabus-explorer, .syllabus-explorer *,
+.target-exam, .target-exam * {
+color: #ffffff !important;
+}
+
+/* 4. BUTTONS IN DARK THEME */
+.glass-btn, .math-btn {
+color: #ffffff !important;
+}
+
+/* --- ULTRA-PREMIUM LIGHT THEME REFINEMENTS --- */
+
+/* 1. THE "//" TITLE SEPARATOR (Elegant & Muted) */
+/* Forces separators to step out of hidden opacity states and use an expensive, soft grey */
+.light-theme header span,
+.light-theme .top-nav span,
+.light-theme .nav-brand span,
+.light-theme .logo-text span,
+.light-theme [class*="separator"] {
+color: #a1a1aa !important;
+opacity: 1 !important;
+visibility: visible !important;
+letter-spacing: 1px !important;
+font-weight: 300 !important;
+}
+
+/* 2. SYLLABUS ERROR BOX & PROGRESS TRACKS (Frosted Ruby Glass) */
+/* Overrides hardcoded bg-dark utility classes with premium frosted glass */
+.light-theme .exam-card [class*="bg-dark"],
+.light-theme .exam-card [class*="bg-black"],
+.light-theme .exam-card [class*="error"],
+.light-theme [class*="connection-error"] {
+background: rgba(255, 241, 242, 0.7) !important;
+backdrop-filter: blur(12px) !important;
+-webkit-backdrop-filter: blur(12px) !important;
+border: 1px solid rgba(253, 164, 175, 0.4) !important;
+box-shadow: 0 8px 32px rgba(225, 29, 72, 0.06), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+color: #9f1239 !important;
+}
+.light-theme .exam-card [class*="bg-dark"] *,
+.light-theme .exam-card [class*="bg-black"] *,
+.light-theme .exam-card [class*="error"] * {
+color: #9f1239 !important;
+font-weight: 500 !important;
+}
+
+/* 3. PROGRESS BAR INSET TRACKS */
+.light-theme [class*="progress-track"],
+.light-theme [class*="progress-bg"] {
+background: rgba(0, 0, 0, 0.04) !important;
+border: 1px solid rgba(0, 0, 0, 0.02) !important;
+box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
+}
+
+/* 4. EXPORT FORMULA SHEET BUTTON (Physics-Based Hover Motion) */
+/* Transforms dark utility buttons into premium light-mode elements with hover lift */
+.light-theme button[class*="export"],
+.light-theme .btn-dark,
+.light-theme .syllabus-explorer button[class*="dark"] {
+background: rgba(255, 255, 255, 0.8) !important;
+backdrop-filter: blur(10px) !important;
+color: #09090b !important;
+border: 1px solid rgba(0, 0, 0, 0.1) !important;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0,0,0,0.02) !important;
+transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.light-theme button[class*="export"] *,
+.light-theme .syllabus-explorer button[class*="dark"] * {
+color: #09090b !important;
+font-weight: 600 !important;
+}
+
+.light-theme button[class*="export"]:hover,
+.light-theme .btn-dark:hover,
+.light-theme .syllabus-explorer button[class*="dark"]:hover {
+background: #ffffff !important;
+border-color: rgba(0, 0, 0, 0.2) !important;
+box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0,0,0,0.04) !important;
+transform: translateY(-2px) !important;
+}
+
+/* =========================================================
+   ULTRA-PREMIUM GLOBAL UI OPTIMIZATION & EDGE CASE OVERRIDES
+   ========================================================= */
+
+/* --- 1. GLOBAL PREMIUM MOTION & SCROLLING --- */
+html { scroll-behavior: smooth !important; }
+body, .glass-panel, button, input, .exam-card, .mentor-box {
+transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* --- 2. SURGICAL BUG FIX: THE HEADER "//" SEPARATOR --- */
+/* Target the specific separator class found in Step 1 */
+.light-theme header span,
+.light-theme .top-nav span,
+.light-theme [class*="separator"],
+.light-theme .nav-brand::after,
+.light-theme .logo-text::after {
+color: #a1a1aa !important;
+-webkit-text-fill-color: #a1a1aa !important;
+opacity: 1 !important;
+visibility: visible !important;
+font-weight: 400 !important;
+text-shadow: none !important;
+}
+
+/* --- 3. SURGICAL BUG FIX: THE NMTC SYLLABUS BLACK BOX --- */
+/* Target the specific black syllabus wrapper found in Step 1 */
+.light-theme .exam-card [class*="bg-dark"],
+.light-theme .exam-card [class*="bg-black"],
+.light-theme .exam-card .syllabus-list-wrapper,
+.light-theme .exam-card div[style*="background"] {
+background: rgba(255, 255, 255, 0.6) !important;
+backdrop-filter: blur(12px) !important;
+-webkit-backdrop-filter: blur(12px) !important;
+border: 1px solid rgba(0, 0, 0, 0.08) !important;
+box-shadow: inset 0 2px 10px rgba(0,0,0,0.02) !important;
+color: #09090b !important;
+}
+.light-theme .exam-card [class*="bg-dark"] *,
+.light-theme .exam-card [class*="bg-black"] * {
+color: #3f3f46 !important;
+}
+
+/* --- 4. SURGICAL BUG FIX: EXPORT FORMULA SHEET BUTTON --- */
+/* Target the specific export button class found in Step 1 */
+.light-theme button[class*="export"],
+.light-theme .syllabus-explorer button[class*="dark"],
+.light-theme .btn-dark {
+background: #ffffff !important;
+color: #09090b !important;
+border: 1px solid rgba(0, 0, 0, 0.15) !important;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0,0,0,0.02) !important;
+font-weight: 600 !important;
+}
+.light-theme button[class*="export"]:hover,
+.light-theme .syllabus-explorer button[class*="dark"]:hover {
+background: #f4f4f5 !important;
+border-color: rgba(0, 0, 0, 0.3) !important;
+box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+transform: translateY(-2px) !important;
+}
+
+/* --- 5. PREMIUM LIGHT THEME GLASSMORPHISM PANELS --- */
+.light-theme .glass-panel,
+.light-theme .mentor-box,
+.light-theme .sidebar {
+background: rgba(255, 255, 255, 0.75) !important;
+backdrop-filter: blur(20px) !important;
+-webkit-backdrop-filter: blur(20px) !important;
+border: 1px solid rgba(0, 0, 0, 0.06) !important;
+border-top: 1px solid rgba(255, 255, 255, 0.8) !important; /* Premium top-edge highlight */
+box-shadow: 0 16px 40px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* =========================================
+   THE NUCLEAR PREMIUM OVERRIDES
+   ========================================= */
+
+/* 1. THE HEADER */
+.addix-premium-header, .addix-premium-header * {
+opacity: 1 !important;
+visibility: visible !important;
+font-weight: 600 !important;
+}
+.light-theme .addix-premium-header, .light-theme .addix-premium-header * {
+color: #09090b !important;
+-webkit-text-fill-color: #09090b !important;
+}
+
+/* 2. THE ERROR/SYLLABUS SURFACE */
+.light-theme .addix-premium-surface {
+background: rgba(255, 255, 255, 0.6) !important;
+backdrop-filter: blur(12px) !important;
+border: 1px solid rgba(0, 0, 0, 0.08) !important;
+color: #09090b !important;
+}
+.light-theme .addix-premium-surface * { color: #09090b !important; }
+
+/* Turn it red ONLY if it contains an error */
+.light-theme .addix-premium-surface:has(.connection-error),
+.light-theme .addix-premium-surface:has(h3) {
+background: rgba(255, 241, 242, 0.8) !important;
+border-color: rgba(253, 164, 175, 0.6) !important;
+color: #9f1239 !important;
+}
+.light-theme .addix-premium-surface:has(.connection-error) *,
+.light-theme .addix-premium-surface:has(h3) * {
+color: #9f1239 !important;
+}
+
+/* 3. THE PREMIUM BUTTON */
+.light-theme .addix-premium-btn {
+background: #ffffff !important;
+color: #09090b !important;
+border: 1px solid rgba(0, 0, 0, 0.15) !important;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+.light-theme .addix-premium-btn * { color: #09090b !important; font-weight: 600 !important; }
+
+/* 4. THE PROGRESS TRACKS */
+.light-theme .addix-premium-track {
+background: #e4e4e7 !important;
+box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important;
 }
