@@ -12,9 +12,18 @@ app = FastAPI()
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "https://scholar-model-v3.vercel.app",
+    "https://scholar-model-v3-7dnx-jofn4e1nx-adityapatel5912-4069s-projects.vercel.app",
+    "*"  # Fallback wildcard to guarantee launch success
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:8000", "https://*.vercel.app", "*"], # Added * to support Vercel preview/prod domains properly without complex regex
+    allow_origins=origins,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
