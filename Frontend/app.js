@@ -2943,11 +2943,11 @@ async function sendQueryToBackend(userText) {
     const testerModeEnabled = Boolean(engineModeToggle ? engineModeToggle.checked : isTesterMode);
     const engineMode = testerModeEnabled ? "tester" : "solver";
     const currentImageBase64 = selectedImageBase64 || null;
-    const BACKEND_URL = BASE_URL + "/api/solve";
+    const BACKEND_URL = "https://scholar-model-v3.onrender.com/api/solve";
 
     // 2. Build payload with frontend state.
     const payload = {
-        prompt: userText || (selectedImageBase64 ? "Please analyze the attached image and solve the problem." : ""),
+        query: userText || (selectedImageBase64 ? "Please analyze the attached image and solve the problem." : ""),
         messages: buildBackendConversationHistory(),
         socratic_mode: false,
         is_tester_mode: testerModeEnabled,
