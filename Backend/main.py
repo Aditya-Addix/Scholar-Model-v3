@@ -43,6 +43,11 @@ from groq import Groq
 # Initialize the Groq client (requires GROQ_API_KEY in the environment)
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
+@app.get("/api/vault")
+async def get_vault():
+    return {"status": "online", "message": "Engine is awake"}
+
+
 @app.post("/api/solve")
 @limiter.limit("15/minute")
 async def solve(request: Request, payload: SolveRequest):
