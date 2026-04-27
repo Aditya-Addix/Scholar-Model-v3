@@ -2935,35 +2935,17 @@ async function sendQueryToBackend(userText) {
         return;
     }
 
-    // 1. Gather UI States
-    const examContextNode = document.getElementById("exam-context-selector");
-    const examContext = examContextNode && typeof examContextNode.value === "string" && examContextNode.value.trim()
-        ? examContextNode.value
-        : activeExam;
-    const testerModeEnabled = Boolean(engineModeToggle ? engineModeToggle.checked : isTesterMode);
-    const engineMode = testerModeEnabled ? "tester" : "solver";
-    const currentImageBase64 = selectedImageBase64 || null;
-    const BACKEND_URL = "https://scholar-model-v3.onrender.com/api/solve";
-
-    // 2. Build payload with frontend state.
-    const payload = {
-        query: userText || (selectedImageBase64 ? "Please analyze the attached image and solve the problem." : ""),
-        messages: buildBackendConversationHistory(),
-        socratic_mode: false,
-        is_tester_mode: testerModeEnabled,
-        engine_mode: engineMode,
-        exam_context: examContext,
-        image_base64: currentImageBase64,
-    };
+    const BACKEND_URL = BASE_URL + "/api/solve";
+    const query = userText || (selectedImageBase64 ? "Please analyze the attached image and solve the problem." : "");
 
     let response;
 
     try {
-        // 3. Fire the request with a plain JSON payload.
+        // Fire the request with the strict backend schema: { query }.
         response = await safeFetch(BACKEND_URL, {
             method: "POST",
             headers: new Headers({ "Content-Type": "application/json" }),
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ query }),
         });
     } catch (error) {
         console.log("API Bridge Failed:", error);
